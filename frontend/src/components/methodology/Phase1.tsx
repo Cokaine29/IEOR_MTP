@@ -56,7 +56,7 @@ export default function Phase1() {
               <div className="border border-zinc-200 rounded-3xl overflow-hidden bg-white mt-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] font-mono">
                 <div className="bg-zinc-50 p-4 flex items-center justify-between border-b border-zinc-200">
                   <h4 className="font-bold text-zinc-900 flex items-center gap-2 text-sm"><Map className="w-4 h-4 text-indigo-600"/> Terminal Layout Schematic</h4>
-                  <div className="text-xs text-indigo-700 font-semibold bg-indigo-100 px-3 py-1 rounded-full border border-indigo-200">Calibrated to 1–4 Ships (random), 26 QCs, 61 YBs, 130 AGVs</div>
+                  <div className="text-xs text-indigo-700 font-semibold bg-indigo-100 px-3 py-1 rounded-full border border-indigo-200">Calibrated to 1 to 4 Ships (random), 26 QCs, 61 YBs, 130 AGVs</div>
                 </div>
                 
                 <div className="w-full relative py-8 px-4 flex flex-col gap-1 bg-white">
@@ -281,7 +281,7 @@ export default function Phase1() {
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">AGV Operating Depth (Y-axis)</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">117.0 m</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, Table 4 (Scheme 3 — SIPG chief engineer's layout)</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, Table 4 (Scheme 3 (SIPG chief engineer's layout))</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Perpendicular Zone Breakdown</td>
@@ -300,7 +300,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Yard Block Depth</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Average 396.5 m (range: 210–446.5 m, perpendicular to berth)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Average 396.5 m (range: 210 to 446.5 m, perpendicular to berth)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Section 1, Params file</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -310,7 +310,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Number of Berths</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">7 deep-water berths</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">7 Deep water berths</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -320,12 +320,12 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">DG / OOG Handling</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Manual perimeter yard — excluded from simulation</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Manual perimeter yard (excluded from simulation)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">8 non-automated blocks confirmed by C3S 2019 field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Transshipment Ratio</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">50% water-to-water</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">50% water to water</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Multiple SIPG papers</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -343,12 +343,12 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">QC Type</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Double-Trolley: Main trolley (remote-controlled) + Portal trolley (fully automated)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Double Trolley: Main trolley (remote-controlled) + Portal trolley (fully automated)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Gu Qin 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Twin-Lift Spreader</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">RAM Singflex Single-Hoist Twin-Spreader — lifts 2×40ft simultaneously</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">RAM Singflex Single Hoist Twin Spreader capable of lifting 2×40ft simultaneously</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Paper 18</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -396,7 +396,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">AGV Type</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">L-AGV (Lift-AGV) — hydraulic platform that raises/lowers to deposit containers without ARMG intervention</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">L-AGV (Lift AGV) with a hydraulic platform that raises/lowers to deposit containers without ARMG intervention</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -436,7 +436,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Navigation System</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Underground magnetic nail grid — &gt;60,000 transponders, ±25 mm precision</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Underground magnetic nail grid featuring &gt;60,000 transponders, ±25 mm precision</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -466,7 +466,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Usable Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">304 kWh (at 10%–90% SOC window)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">304 kWh (at 10% to 90% SOC window)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Derived</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -491,7 +491,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Swap Mechanism</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Fully automated robot in a climate-controlled station (20–35°C)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Fully automated robot in a climate controlled station (20 to 35°C)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Tang Jie 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -514,7 +514,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">ARMG Types</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">(1) Standard, (2) Single-cantilever, (3) Double-cantilever — all 3 types work collaboratively</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">(1) Standard, (2) Single-cantilever, (3) Double-cantilever. All 3 types work collaboratively.</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">He Ji-hong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -529,12 +529,12 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">ARMG Micro-Positioning</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">TMEIC MAXVIEW: 5 laser scanners + 4 micro-motion push rods. Corrects ±200 mm lateral, ±5° rotation.</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">TMEIC MAXVIEW: 5 laser scanners + 4 micro motion push rods. Corrects ±200 mm lateral, ±5° rotation.</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Wu Zhao-yang 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">ARMG Gantry Positioning</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Same magnetic nail grid as QCs and AGVs — unified coordinate system</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Same magnetic nail grid as QCs and AGVs, sharing a unified coordinate system</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Huang Ju-yuan 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
@@ -577,31 +577,31 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">YB Features (per YB × 61)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Rack fill level (0–4), Current ARMG service time elapsed</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Rack fill level (0 to 4), Current ARMG service time elapsed</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">2 features × 61 = 122</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Action Space</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">27 discrete actions: Dispatch to one of 26 QCs + 1 Wait (Hold)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">YB destinations are pre-assigned by TOS stowage plan — agent does NOT choose YB</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">YB destinations are pre-assigned by TOS stowage plan, meaning the agent does NOT choose YB</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Decision Trigger</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">"AGV becomes free" event (event-driven, not time-stepped)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">"AGV becomes free" event (Event driven, not time stepped)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Speeds up training ~100×</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward — Primary</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Primary</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">−∑ (QC idle time in seconds)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Every second a QC waits for an AGV = negative reward</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward — Deadlock Penalty</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Deadlock Penalty</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">−λ (large constant ≈ 300s equivalent)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Triggered when AGV sent to a full node</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward — Priority Violation</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Priority Violation</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">−α × delay when Gate/Reshuffle task delays a Ship task</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
                     </tr>
@@ -630,7 +630,7 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">ARMG Breakdowns</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Exponential (MTBF-based) — 1 ARMG offline → rescue push (20–30 min out of service)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Exponential (MTBF-based) where 1 ARMG going offline triggers a rescue push → rescue push (20 to 30 min out of service)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
@@ -639,7 +639,7 @@ export default function Phase1() {
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Episode Duration</td>
                       <td className="px-4 py-3 font-bold text-indigo-600">24 hours</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Full diurnal cycle — forces agent to manage multi-shift battery swapping and dynamic vessel arrivals</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Full diurnal cycle which forces the agent to manage multi-shift battery swapping and dynamic vessel arrivals</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Vessel Arrival</td>

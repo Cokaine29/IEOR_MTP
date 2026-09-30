@@ -54,7 +54,7 @@ export default function Phase3() {
                 </div>
                 <div className="flex flex-col h-full w-full">
                   <h4 className="font-bold text-zinc-900 mb-1">ARMG Service Variability</h4>
-                  <p className="text-sm text-zinc-600 mb-3 flex-grow text-justify"><strong>Modeled via a Normal(µ=60s, σ=10s) distribution.</strong> The σ=10s is physically caused by the TMEIC MAXVIEW micro-motion system making ±200mm lateral and ±5° rotation corrections on every lift.</p>
+                  <p className="text-sm text-zinc-600 mb-3 flex-grow text-justify"><strong>Modeled via a Normal(µ=60s, σ=10s) distribution.</strong> The σ=10s is physically caused by the TMEIC MAXVIEW micro motion system making ±200mm lateral and ±5° rotation corrections on every lift.</p>
                   <div className="bg-white border border-zinc-200 p-3 rounded-lg mb-4 shadow-sm text-xs text-zinc-600 text-justify">
                     <span className="font-bold text-indigo-600">e.g.</span> A misaligned container forces the ARMG to take 80s instead of 60s to latch properly.
                   </div>
@@ -96,7 +96,7 @@ export default function Phase3() {
                 </div>
                 <div className="flex flex-col h-full w-full">
                   <h4 className="font-bold text-zinc-900 mb-1">ARMG Breakdowns</h4>
-                  <p className="text-sm text-zinc-600 mb-3 flex-grow text-justify"><strong>Modeled via an Exponential distribution.</strong> Defines the time-between-failures for 1 ARMG going offline, forcing a rescue push (20–30 min out of service).</p>
+                  <p className="text-sm text-zinc-600 mb-3 flex-grow text-justify"><strong>Modeled via an Exponential distribution.</strong> Defines the time-between-failures for 1 ARMG going offline, forcing a rescue push (20 to 30 min out of service).</p>
                   <div className="bg-white border border-zinc-200 p-3 rounded-lg mb-4 shadow-sm text-xs text-zinc-600 text-justify">
                     <span className="font-bold text-indigo-600">e.g.</span> An ARMG breaks down and is pushed to the maintenance zone by its partner at 5% speed.
                   </div>

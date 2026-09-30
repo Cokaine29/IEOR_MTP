@@ -97,7 +97,7 @@ export default function Phase2() {
                 </div>
                 <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Yard State (122 values)</h4>
                 <ul className="text-sm text-zinc-700 space-y-2">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Rack fill level (0–4)</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Rack fill level (0 to 4)</li>
                   <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Current ARMG service time elapsed</li>
                 </ul>
               </div>
@@ -238,10 +238,10 @@ export default function Phase2() {
                 <div className="bg-zinc-100 p-6 rounded-2xl border border-zinc-300 shadow-sm flex flex-col">
                   <h4 className="font-bold text-zinc-900 text-lg mb-3">8. Transitions (The "Clock")</h4>
                   <p className="text-sm text-zinc-700 leading-relaxed mb-3">
-                    <strong>Event-Driven vs. Time-Step:</strong> In a standard physics simulation (like a video game), the clock ticks every single millisecond and updates the world. For our port, that is computationally wasteful.
+                    <strong>Event driven vs. Time-Step:</strong> In a standard physics simulation (like a video game), the clock ticks every single millisecond and updates the world. For our port, that is computationally wasteful.
                   </p>
                   <p className="text-sm text-zinc-700 leading-relaxed mb-3">
-                    Instead, we use an <strong>Event-Driven Transition</strong> model. The simulation clock "fast-forwards" directly to the exact second an AGV finishes a task or a crane becomes idle. The AI is only woken up to read the State Space when a decision is actually required.
+                    Instead, we use an <strong>Event driven Transition</strong> model. The simulation clock "fast-forwards" directly to the exact second an AGV finishes a task or a crane becomes idle. The AI is only woken up to read the State Space when a decision is actually required.
                   </p>
                   <div className="mt-auto pt-3 border-t border-zinc-200">
                     <p className="text-xs text-zinc-500 italic">This speeds up RL training by 100x while ensuring the Markov Property holds true.</p>
