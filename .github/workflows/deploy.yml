@@ -1,4 +1,4 @@
-name: Deploy to Kanjur Server
+name: Deploy to Server (Passpoli/Kanjur)
 
 on:
   push:
@@ -15,10 +15,15 @@ jobs:
 
       - name: Build and Restart PM2
         run: |
+          # Since the home directory is mapped to /scratch/25m1528, 
+          # we must explicitly load NVM so the runner knows where Node.js and PM2 are.
+          export HOME=/scratch/25m1528
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
           cd frontend
-          # Install dependencies
           npm ci
-          # Build Next.js
           npm run build
+          
           # Start or restart with PM2
           pm2 restart mtp-frontend || pm2 start npm --name "mtp-frontend" -- run start
