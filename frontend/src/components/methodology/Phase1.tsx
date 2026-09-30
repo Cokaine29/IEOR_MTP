@@ -229,14 +229,14 @@ export default function Phase1() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-zinc-50 p-5 rounded-2xl border border-zinc-200 text-center">
-                <div className="text-3xl font-bold text-zinc-900 mb-1">28</div>
+                <div className="text-3xl font-bold text-zinc-900 mb-1">26</div>
                   <div className="text-sm font-semibold text-zinc-700">Quay Cranes</div>
-                <div className="text-xs text-zinc-500 mt-1">Liu (2001)</div>
+                <div className="text-xs text-zinc-500 mt-1">Gu Qin 2016</div>
               </div>
               <div className="bg-zinc-50 p-5 rounded-2xl border border-zinc-200 text-center">
-                <div className="text-3xl font-bold text-zinc-900 mb-1">145</div>
-                  <div className="text-sm font-semibold text-zinc-700">AGVs</div>
-                <div className="text-xs text-zinc-500 mt-1">5 per QC ratio</div>
+                <div className="text-3xl font-bold text-zinc-900 mb-1">130</div>
+                  <div className="text-sm font-semibold text-zinc-700">L-AGVs</div>
+                <div className="text-xs text-zinc-500 mt-1">Jin et al. 2016</div>
               </div>
               <div className="bg-zinc-50 p-5 rounded-2xl border border-zinc-200 text-center">
                 <div className="text-3xl font-bold text-zinc-900 mb-1">61</div>
@@ -624,9 +624,9 @@ export default function Phase1() {
                       <td className="px-4 py-3 text-xs text-zinc-500">TMEIC MAXVIEW spec (±200mm correction noise)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Workload Imbalance</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Multinomial (asymmetric)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Tasks distributed unevenly across 26 QCs per ship stowage plan</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800">QC Workload Distribution (Per Vessel)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Dirichlet distribution with bell-curve prior over the 4 to 5 assigned QCs</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Correcher et al. 2024 (BACASP). Ship hull widest at midships — middle QCs receive heavier workloads than bow or stern QCs. Flat equal-split is physically incorrect.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">ARMG Breakdowns</td>
@@ -643,13 +643,28 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">Vessel Arrival</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Random (1–4 ships at t=0) along the 2,350 m berth</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Tests generalization; prevents memorization of fixed QC layout</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Random (1 to 4 ships at t=0) along the 2,350 m berth. Each ship assigned 4 to 5 QCs with workload drawn from Dirichlet distribution (heavier at amidships bays).</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Correcher et al. 2024 (BACASP); Gu Qin 2016. Tests generalization and prevents memorization of fixed QC loading patterns.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">YB Initial Fill</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Random (0–4 containers per rack)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Random (0 to 4 containers per rack)</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">Terminal is never empty mid-operation</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800">Ship Bay Plan (per vessel at reset)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">Pure Stack heuristic: stacks designated as Import, Empty, ROB (Remain on Board), or Mixed (1 to 2 per bay only)</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Avriel &amp; Penn 1993. Real planners minimize shifting by filling columns with same-destination containers. Mixed stacks are rare remainders. Eliminates need for 3D bin-packing at reset.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800">Import / Export Task Ratio</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">51% Import (Discharge) / 49% Export (Load)</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Bruzzone et al. 2012, Table 2. Empirical data from 30 real vessel calls at a major transshipment hub. Near-perfect balance reflects high water-to-water transshipment ratio at Yangshan.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800">QC Task Sequence (per bay)</td>
+                      <td className="px-4 py-3 font-bold text-indigo-600">3-Phase: (1) Burst Imports, (2) Alternating Dual-Cycle (Import + Export), (3) Burst Exports</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">Goodchild &amp; Daganzo 2006 (Transportation Science). Stack access constraint: a stack must be fully discharged before exports can be loaded into it. Phase 2 requires the RL agent to coordinate 2 AGVs simultaneously at one QC.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800">AGV Initial State</td>
