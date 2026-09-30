@@ -32,4 +32,4 @@ jobs:
           npm run build
           
           # Start or restart with PM2
-          pm2 restart mtp-frontend || pm2 start npm --name "mtp-frontend" -- run start
+          pm2 restart mtp-frontend --update-env || pm2 start npm --name "mtp-frontend" -- run start
