@@ -15,11 +15,15 @@ jobs:
 
       - name: Build and Restart PM2
         run: |
-          # Since the home directory is mapped to /scratch/25m1528, 
-          # we must explicitly load NVM so the runner knows where Node.js and PM2 are.
+          # Load NVM
           export HOME=/scratch/25m1528
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          
+          # Force Node 22 for modern Next.js and dependencies
+          nvm install 22
+          nvm use 22
+          npm install -g pm2
           
           cd frontend
           npm ci
