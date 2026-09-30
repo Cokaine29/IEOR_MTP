@@ -269,412 +269,412 @@ export default function Phase1() {
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🏗️ Port Infrastructure & Layout</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Terminal Identity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Yangshan Phase IV, Shanghai</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">World's largest single fully-automated container terminal</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Terminal Identity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Yangshan Phase IV, Shanghai</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">World's largest single fully-automated container terminal</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Berth Length (X-axis)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">2,350 m</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec Sheet 2025</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Berth Length (X-axis)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">2,350 m</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec Sheet 2025</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Operating Depth (Y-axis)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">117.0 m</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, Table 4 (Scheme 3 (SIPG chief engineer's layout))</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Operating Depth (Y-axis)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">117.0 m</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Luo 2016, Table 4 (Scheme 3 (SIPG chief engineer's layout))</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Perpendicular Zone Breakdown</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Zone 1: 25m (QC ops) + Zone 2: 22m (buffer) + Zone 3: 20m (highway) + Zone 4: 18m (turn) + Zone 5: 41m (yard)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, Table 4</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Perpendicular Zone Breakdown</td>
+                      <td className="px-4 py-3"><div className="flex flex-wrap gap-1 items-center"><span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100/50 shadow-sm">Zone 1: 25m (QC ops)</span> <span className="text-zinc-300 text-xs font-bold">+</span> <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100/50 shadow-sm">Zone 2: 22m (buffer)</span> <span className="text-zinc-300 text-xs font-bold">+</span> <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100/50 shadow-sm">Zone 3: 20m (highway)</span> <span className="text-zinc-300 text-xs font-bold">+</span> <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100/50 shadow-sm">Zone 4: 18m (turn)</span> <span className="text-zinc-300 text-xs font-bold">+</span> <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100/50 shadow-sm">Zone 5: 41m (yard)</span></div></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Luo 2016, Table 4</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Yard Block Count</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">61 blocks (41 non-cantilever + 20 single-cantilever)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wang Yan 2021 (ZPMC), He Ji-hong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Count</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">61 blocks</span> <span className="text-sm font-normal text-zinc-500">(41 non-cantilever + 20 single-cantilever)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wang Yan 2021 (ZPMC), He Ji-hong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Yard Block Lateral Spacing</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">~37.5 m (2,290m ÷ 61 blocks)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Derived</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Lateral Spacing</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">~37.5 m</span> <span className="text-sm font-normal text-zinc-500">(2,290m ÷ 61 blocks)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Derived</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Yard Block Depth</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Average 396.5 m (range: 210 to 446.5 m, perpendicular to berth)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Section 1, Params file</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Depth</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Average 396.5 m</span> <span className="text-sm font-normal text-zinc-500">(range: 210 to 446.5 m, perpendicular to berth)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Section 1, Params file</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Yard Block Width</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">27 m (10 container slots × 2.7 m)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">He Ji-hong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Width</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">27 m</span> <span className="text-sm font-normal text-zinc-500">(10 container slots × 2.7 m)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">He Ji-hong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Number of Berths</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">7 Deep water berths</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Number of Berths</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">7 Deep water berths</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reefer Blocks</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">6 out of 61</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wu Sha-ping 2016 (Paper 22)</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reefer Blocks</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">6 out of 61</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wu Sha-ping 2016 (Paper 22)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">DG / OOG Handling</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Manual perimeter yard (excluded from simulation)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">8 non-automated blocks confirmed by C3S 2019 field visit</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">DG / OOG Handling</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Manual perimeter yard</span> <span className="text-sm font-normal text-zinc-500">(excluded from simulation)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">8 non-automated blocks confirmed by C3S 2019 field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Transshipment Ratio</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">50% water to water</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Multiple SIPG papers</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Transshipment Ratio</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">50% water to water</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Multiple SIPG papers</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Layout Type</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Perpendicular (yard blocks ⊥ to shoreline)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">All Yangshan sources</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Layout Type</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Perpendicular</span> <span className="text-sm font-normal text-zinc-500">(yard blocks ⊥ to shoreline)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">All Yangshan sources</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🏗️ Quay Crane (QC) System</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Count</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">26 double-trolley QCs</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Gu Qin 2016; confirmed by 2019 C3S field visit</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Count</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">26 double-trolley QCs</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Gu Qin 2016; confirmed by 2019 C3S field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Type</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Double Trolley: Main trolley (remote-controlled) + Portal trolley (fully automated)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Gu Qin 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Type</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Double Trolley: Main trolley</span> <span className="text-sm font-normal text-zinc-500">(remote-controlled) + Portal trolley (fully automated)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Gu Qin 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Twin-Lift Spreader</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">RAM Singflex Single Hoist Twin Spreader capable of lifting 2×40ft simultaneously</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Paper 18</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Twin-Lift Spreader</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">RAM Singflex Single Hoist Twin Spreader capable of lifting 2×40ft simultaneously</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Paper 18</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Mean Cycle Time</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">~128 seconds (= 28 moves/hour)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec + Ding et al. 2023 (real ACT4 data)</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Mean Cycle Time</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">~128 seconds</span> <span className="text-sm font-normal text-zinc-500">(= 28 moves/hour)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec + Ding et al. 2023 (real ACT4 data)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Peak Throughput</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">57.4 TEU/hour</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Peak Throughput</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">57.4 TEU/hour</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Ideal Rate (5 AGVs/QC)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">47 moves/hour</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, TBA simulation</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Ideal Rate (5 AGVs/QC)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">47 moves/hour</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Luo 2016, TBA simulation</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Optical Systems</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">SPSS (soft-landing), TDS (trolley detection), SDS (spreader detection)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">He Guang-yuan 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Optical Systems</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">SPSS</span> <span className="text-sm font-normal text-zinc-500">(soft-landing), TDS (trolley detection), SDS (spreader detection)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">He Guang-yuan 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Operation Area Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">4 operation lanes (out of 7 total; 3 are bypass/crossing lanes for transit AGVs)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wu Sha-ping 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Operation Area Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">4 operation lanes</span> <span className="text-sm font-normal text-zinc-500">(out of 7 total; 3 are bypass/crossing lanes for transit AGVs)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wu Sha-ping 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Gantry Positioning</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">BTG RFM100 magnetic nail scanning, ±2 mm precision</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Huang Ju-yuan 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Gantry Positioning</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">BTG RFM100 magnetic nail scanning, ±2 mm precision</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Huang Ju-yuan 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Bay Assignment</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Each QC handles one ship bay for both import + export (dual-cycle capable)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Li et al. 2025</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Bay Assignment</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Each QC handles one ship bay for both import + export</span> <span className="text-sm font-normal text-zinc-500">(dual-cycle capable)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Li et al. 2025</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🚛 AGV System (L-AGV)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Fleet Size</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">130 L-AGVs</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016; confirmed by 2019 C3S field visit</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Fleet Size</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">130 L-AGVs</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016; confirmed by 2019 C3S field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Type</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">L-AGV (Lift AGV) with a hydraulic platform that raises/lowers to deposit containers without ARMG intervention</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Type</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">L-AGV</span> <span className="text-sm font-normal text-zinc-500">(Lift AGV) with a hydraulic platform that raises/lowers to deposit containers without ARMG intervention</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Dimensions</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">14.8 m (L) × 3.0 m (W)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Luo 2016, Table 3</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Dimensions</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">14.8 m</span> <span className="text-sm font-normal text-zinc-500">(L) × 3.0 m (W)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Luo 2016, Table 3</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Self-Weight</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">25 t (standard) / 29 t (with equipment)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016, Table 1</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Self-Weight</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">25 t</span> <span className="text-sm font-normal text-zinc-500">(standard) / 29 t (with equipment)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016, Table 1</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Load Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">70 t (twin 20 ft at 35 t each)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016, Table 1</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Load Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">70 t</span> <span className="text-sm font-normal text-zinc-500">(twin 20 ft at 35 t each)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016, Table 1</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Max Speed</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">6 m/s (21.6 km/h)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016, Table 1</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Max Speed</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">6 m/s</span> <span className="text-sm font-normal text-zinc-500">(21.6 km/h)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016, Table 1</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Operational Speed (Loaded)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">3 m/s</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016 / Yang 2025</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Operational Speed (Loaded)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">3 m/s</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016 / Yang 2025</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Operational Speed (Empty)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">5 m/s</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016 / Yang 2025</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Operational Speed (Empty)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">5 m/s</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016 / Yang 2025</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Turning Speed</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">3 m/s</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016, Table 1</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Turning Speed</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">3 m/s</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016, Table 1</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Navigation System</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Underground magnetic nail grid featuring &gt;60,000 transponders, ±25 mm precision</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Navigation System</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Underground magnetic nail grid featuring &gt;60,000 transponders, ±25 mm precision</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Deposit Mechanism</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">AGV drives into rack → lowers platform → container rests on steel platform → AGV reverses out. AGV does NOT wait for ARMG. Total deposit time ≈ 45 seconds</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin et al. 2016, Figure 2</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Deposit Mechanism</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">AGV drives into rack → lowers platform → container rests on steel platform → AGV reverses out. AGV does NOT wait for ARMG. Total deposit time ≈ 45 seconds</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin et al. 2016, Figure 2</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Highway Layout</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Zone 3: 6 lanes (3 eastbound + 3 westbound)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wang Shi-en 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Highway Layout</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Zone 3: 6 lanes</span> <span className="text-sm font-normal text-zinc-500">(3 eastbound + 3 westbound)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wang Shi-en 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Zone Entry</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Zone 1: 7 lanes total (4 operation + 3 bypass/crossing). SimPy capacity = 4.</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wu Sha-ping 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Zone Entry</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Zone 1: 7 lanes total</span> <span className="text-sm font-normal text-zinc-500">(4 operation + 3 bypass/crossing). SimPy capacity = 4.</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wu Sha-ping 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Battery Model</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">GSY LIM50H-12 15S10P (LFP chemistry, lithium iron phosphate)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Chen Di-mao 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Battery Model</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">GSY LIM50H-12 15S10P</span> <span className="text-sm font-normal text-zinc-500">(LFP chemistry, lithium iron phosphate)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Chen Di-mao 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Total Battery Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">338 kWh</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Chen Di-mao 2016 (official SIPG battery selection paper)</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Total Battery Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">338 kWh</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Chen Di-mao 2016 (official SIPG battery selection paper)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Usable Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">304 kWh (at 10% to 90% SOC window)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Derived</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Usable Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">304 kWh</span> <span className="text-sm font-normal text-zinc-500">(at 10% to 90% SOC window)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Derived</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Energy Consumption</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">21.0 kWh/h (nominal) / 35.1 kWh/h (active, 9 cycles/hr)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin Qi 2016 + Chen Di-mao 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Energy Consumption</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">21.0 kWh/h</span> <span className="text-sm font-normal text-zinc-500">(nominal) / 35.1 kWh/h (active, 9 cycles/hr)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin Qi 2016 + Chen Di-mao 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Operating Shift on One Charge</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">~8 hours (≈ one shift)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Operating Shift on One Charge</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">~8 hours</span> <span className="text-sm font-normal text-zinc-500">(≈ one shift)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Battery Swap Trigger</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">SOC &lt; 15%</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Standard industrial threshold</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Battery Swap Trigger</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">SOC &lt; 15%</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Standard industrial threshold</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Swap Duration</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Exactly 6 minutes (360 seconds)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Swap Duration</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Exactly 6 minutes</span> <span className="text-sm font-normal text-zinc-500">(360 seconds)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Swap Mechanism</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Fully automated robot in a climate controlled station (20 to 35°C)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Tang Jie 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Swap Mechanism</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Fully automated robot in a climate controlled station</span> <span className="text-sm font-normal text-zinc-500">(20 to 35°C)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Tang Jie 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Swap Station Location</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">East end of terminal (Large + Small stations) + West end fallback</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin Qi 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Swap Station Location</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">East end of terminal</span> <span className="text-sm font-normal text-zinc-500">(Large + Small stations) + West end fallback</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin Qi 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Fleet Swap Rate</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">13 swaps/hour (fleet-wide, for 130 AGVs)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Jin Qi 2016, Table 1</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Fleet Swap Rate</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">13 swaps/hour</span> <span className="text-sm font-normal text-zinc-500">(fleet-wide, for 130 AGVs)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Jin Qi 2016, Table 1</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🏗️ ARMG / Yard Crane System</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Count</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">120 ARMGs (2 per block × 61 blocks, accounting for shared cantilever pairs)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Multiple papers; confirmed by C3S field visit</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Count</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">120 ARMGs</span> <span className="text-sm font-normal text-zinc-500">(2 per block × 61 blocks, accounting for shared cantilever pairs)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Multiple papers; confirmed by C3S field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Types</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">(1) Standard, (2) Single-cantilever, (3) Double-cantilever. All 3 types work collaboratively.</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">He Ji-hong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Types</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">(1) Standard, (2) Single-cantilever, (3) Double-cantilever. All 3 types work collaboratively.</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">He Ji-hong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Rail Gauge</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">31 m (spans 10 container columns with 2 m clearance each side)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">He Ji-hong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Rail Gauge</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">31 m</span> <span className="text-sm font-normal text-zinc-500">(spans 10 container columns with 2 m clearance each side)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">He Ji-hong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Sea-Side ARMG Service Time</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Normal (µ = 60s, σ = 10s)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Derived from TMEIC MAXVIEW specs</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Sea-Side ARMG Service Time</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Normal</span> <span className="text-sm font-normal text-zinc-500">(µ = 60s, σ = 10s)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Derived from TMEIC MAXVIEW specs</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Micro-Positioning</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">TMEIC MAXVIEW: 5 laser scanners + 4 micro motion push rods. Corrects ±200 mm lateral, ±5° rotation.</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wu Zhao-yang 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Micro-Positioning</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">TMEIC MAXVIEW: 5 laser scanners + 4 micro motion push rods. Corrects ±200 mm lateral, ±5° rotation.</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wu Zhao-yang 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Gantry Positioning</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Same magnetic nail grid as QCs and AGVs, sharing a unified coordinate system</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Huang Ju-yuan 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Gantry Positioning</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Same magnetic nail grid as QCs and AGVs, sharing a unified coordinate system</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Huang Ju-yuan 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Non-Cantilever Rack Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">4 physical rack slots per block (confirmed by real video footage)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">User observation</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Non-Cantilever Rack Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">4 physical rack slots per block</span> <span className="text-sm font-normal text-zinc-500">(confirmed by real video footage)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">User observation</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Cantilever Alley Capacity</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">4 logical slots per block (2 ARMGs × [1 Waiting + 1 Operation])</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Wang Yan 2021 (ZPMC)</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Cantilever Alley Capacity</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">4 logical slots per block</span> <span className="text-sm font-normal text-zinc-500">(2 ARMGs × [1 Waiting + 1 Operation])</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wang Yan 2021 (ZPMC)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Priority Rules</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Ship Ops &gt; Gate Ops &gt; Yard Reshuffling</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Priority Rules</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Ship Ops &gt; Gate Ops &gt; Yard Reshuffling</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Failure / Rescue</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Broken ARMG is pushed to end-of-block maintenance zone at 5% of normal speed by partner ARMG</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Failure / Rescue</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Broken ARMG is pushed to end-of-block maintenance zone at 5% of normal speed by partner ARMG</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🧠 MDP Formulation</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">State Space (Total Features)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">1,084 features</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">130 AGVs × 7 + 26 QCs × 2 + 61 YBs × 2</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">State Space (Total Features)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">1,084 features</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">130 AGVs × 7 + 26 QCs × 2 + 61 YBs × 2</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Features (per AGV × 130)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">X-pos, Y-pos, Vx, Vy, Status, Job_ID, Battery SOC</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">7 features × 130 = 910</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Features (per AGV × 130)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">X-pos, Y-pos, Vx, Vy, Status, Job_ID, Battery SOC</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">7 features × 130 = 910</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Features (per QC × 26)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Queue density, Elapsed cycle time (seconds into current lift)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">2 features × 26 = 52. Elapsed cycle time enables predictive dispatching.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Features (per QC × 26)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Queue density, Elapsed cycle time</span> <span className="text-sm font-normal text-zinc-500">(seconds into current lift)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">2 features × 26 = 52. Elapsed cycle time enables predictive dispatching.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">YB Features (per YB × 61)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Rack fill level (0 to 4), Current ARMG service time elapsed</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">2 features × 61 = 122</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">YB Features (per YB × 61)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Rack fill level</span> <span className="text-sm font-normal text-zinc-500">(0 to 4), Current ARMG service time elapsed</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">2 features × 61 = 122</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Action Space</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">27 discrete actions: Dispatch to one of 26 QCs + 1 Wait (Hold)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">YB destinations are pre-assigned by TOS stowage plan, meaning the agent does NOT choose YB</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Action Space</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">27 discrete actions: Dispatch to one of 26 QCs + 1 Wait</span> <span className="text-sm font-normal text-zinc-500">(Hold)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">YB destinations are pre-assigned by TOS stowage plan, meaning the agent does NOT choose YB</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Decision Trigger</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">"AGV becomes free" event (Event driven, not time stepped)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Speeds up training ~100×</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Decision Trigger</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">"AGV becomes free" event</span> <span className="text-sm font-normal text-zinc-500">(Event driven, not time stepped)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Speeds up training ~100×</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Primary</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">−∑ (QC idle time in seconds)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Every second a QC waits for an AGV = negative reward</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Primary</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−∑</span> <span className="text-sm font-normal text-zinc-500">(QC idle time in seconds)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Every second a QC waits for an AGV = negative reward</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Deadlock Penalty</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">−λ (large constant ≈ 300s equivalent)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Triggered when AGV sent to a full node</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Deadlock Penalty</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−λ</span> <span className="text-sm font-normal text-zinc-500">(large constant ≈ 300s equivalent)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Triggered when AGV sent to a full node</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Reward: Priority Violation</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">−α × delay when Gate/Reshuffle task delays a Ship task</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Priority Violation</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−α × delay when Gate/Reshuffle task delays a Ship task</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Discount Factor γ</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">0.95</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Prioritizes near-term QC utilization</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Discount Factor γ</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">0.95</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Prioritizes near-term QC utilization</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">🎲 Stochasticity Model (4 Disruptions)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Cycle Variability</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Log-Normal (µ = 128s, σ tunable (0 → extreme))</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">CHEC Spec / Ding 2023</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Cycle Variability</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Log-Normal</span> <span className="text-sm font-normal text-zinc-500">(µ = 128s, σ tunable (0 → extreme))</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec / Ding 2023</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Service Variability</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Normal (µ = 60s, σ = 10s)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">TMEIC MAXVIEW spec (±200mm correction noise)</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Service Variability</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Normal</span> <span className="text-sm font-normal text-zinc-500">(µ = 60s, σ = 10s)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">TMEIC MAXVIEW spec (±200mm correction noise)</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Workload Distribution (Per Vessel)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Dirichlet distribution with bell-curve prior over the 4 to 5 assigned QCs</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Correcher et al. 2024 (BACASP). Ship hull widest at midships — middle QCs receive heavier workloads than bow or stern QCs. Flat equal-split is physically incorrect.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Workload Distribution (Per Vessel)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Dirichlet distribution with bell-curve prior over the 4 to 5 assigned QCs</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Correcher et al. 2024 (BACASP). Ship hull widest at midships — middle QCs receive heavier workloads than bow or stern QCs. Flat equal-split is physically incorrect.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">ARMG Breakdowns</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Exponential (MTBF-based) where 1 ARMG going offline triggers a rescue push → rescue push (20 to 30 min out of service)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Xie Xi-cong 2016</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Breakdowns</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Exponential</span> <span className="text-sm font-normal text-zinc-500">(MTBF-based) where 1 ARMG going offline triggers a rescue push → rescue push (20 to 30 min out of service)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="bg-zinc-100/80 border-t-2 border-zinc-200">
                       <td colSpan={3} className="px-4 py-3 font-bold text-zinc-900">⏱️ Episode Design</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Episode Duration</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">24 hours</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Full diurnal cycle which forces the agent to manage multi-shift battery swapping and dynamic vessel arrivals</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Episode Duration</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">24 hours</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Full diurnal cycle which forces the agent to manage multi-shift battery swapping and dynamic vessel arrivals</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Vessel Arrival</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Random (1 to 4 ships at t=0) along the 2,350 m berth. Each ship assigned 4 to 5 QCs with workload drawn from Dirichlet distribution (heavier at amidships bays).</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Correcher et al. 2024 (BACASP); Gu Qin 2016. Tests generalization and prevents memorization of fixed QC loading patterns.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Vessel Arrival</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Random</span> <span className="text-sm font-normal text-zinc-500">(1 to 4 ships at t=0) along the 2,350 m berth. Each ship assigned 4 to 5 QCs with workload drawn from Dirichlet distribution (heavier at amidships bays).</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Correcher et al. 2024 (BACASP); Gu Qin 2016. Tests generalization and prevents memorization of fixed QC loading patterns.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">YB Initial Fill</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Random (0 to 4 containers per rack)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Terminal is never empty mid-operation</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">YB Initial Fill</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Random</span> <span className="text-sm font-normal text-zinc-500">(0 to 4 containers per rack)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Terminal is never empty mid-operation</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Ship Bay Plan (per vessel at reset)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Pure Stack heuristic: stacks designated as Import, Empty, ROB (Remain on Board), or Mixed (1 to 2 per bay only)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Avriel &amp; Penn 1993. Real planners minimize shifting by filling columns with same-destination containers. Mixed stacks are rare remainders. Eliminates need for 3D bin-packing at reset.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Ship Bay Plan (per vessel at reset)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Pure Stack heuristic: stacks designated as Import, Empty, ROB</span> <span className="text-sm font-normal text-zinc-500">(Remain on Board), or Mixed (1 to 2 per bay only)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Avriel &amp; Penn 1993. Real planners minimize shifting by filling columns with same-destination containers. Mixed stacks are rare remainders. Eliminates need for 3D bin-packing at reset.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Import / Export Task Ratio</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">51% Import (Discharge) / 49% Export (Load)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Bruzzone et al. 2012, Table 2. Empirical data from 30 real vessel calls at a major transshipment hub. Near-perfect balance reflects high water-to-water transshipment ratio at Yangshan.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Import / Export Task Ratio</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">51% Import</span> <span className="text-sm font-normal text-zinc-500">(Discharge) / 49% Export (Load)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Bruzzone et al. 2012, Table 2. Empirical data from 30 real vessel calls at a major transshipment hub. Near-perfect balance reflects high water-to-water transshipment ratio at Yangshan.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">QC Task Sequence (per bay)</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">3-Phase: (1) Burst Imports, (2) Alternating Dual-Cycle (Import + Export), (3) Burst Exports</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Goodchild &amp; Daganzo 2006 (Transportation Science). Stack access constraint: a stack must be fully discharged before exports can be loaded into it. Phase 2 requires the RL agent to coordinate 2 AGVs simultaneously at one QC.</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Task Sequence (per bay)</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">3-Phase:</span> <span className="text-sm font-normal text-zinc-500">(1) Burst Imports, (2) Alternating Dual-Cycle (Import + Export), (3) Burst Exports</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Goodchild &amp; Daganzo 2006 (Transportation Science). Stack access constraint: a stack must be fully discharged before exports can be loaded into it. Phase 2 requires the RL agent to coordinate 2 AGVs simultaneously at one QC.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">AGV Initial State</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Randomly distributed (some at QCs, some in transit, some swapping)</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Avoids artificial cold-start bias</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">AGV Initial State</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Randomly distributed</span> <span className="text-sm font-normal text-zinc-500">(some at QCs, some in transit, some swapping)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Avoids artificial cold-start bias</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800">Episode Termination</td>
-                      <td className="px-4 py-3 font-bold text-indigo-600">Whichever comes first: (a) All lifts completed, or (b) 24-hour clock expires</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">Prevents infinite loops from bad policies</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Episode Termination</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">Whichever comes first:</span> <span className="text-sm font-normal text-zinc-500">(a) All lifts completed, or (b) 24-hour clock expires</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Prevents infinite loops from bad policies</td>
                     </tr>
                   </tbody>
                 </table>
