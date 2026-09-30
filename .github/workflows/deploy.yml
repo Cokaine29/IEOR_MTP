@@ -14,6 +14,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and Restart PM2
+        env:
+          RUNNER_TRACKING_ID: "" # Prevents GitHub from killing background processes
         run: |
           # Load NVM
           export HOME=/scratch/25m1528
