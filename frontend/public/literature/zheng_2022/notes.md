@@ -1,0 +1,193 @@
+# Multi-AGV Dynamic Scheduling in an Automated Container Terminal: A Deep Reinforcement Learning Approach
+**Authors:** Xiyan Zheng, Chengji Liang, Yu Wang, Jian Shi, Gino Lim  
+**Journal:** Mathematics (2022)  
+**Methodology:** Deep Q-Network (DQN), Markov Decision Process (MDP), Tecnomatix Plant Simulation
+
+## 1. The Death of Q-Tables (Curse of Dimensionality)
+In their Literature Review, the authors outline exactly why traditional Reinforcement Learning (like Q-Learning) fails in a container terminal. Traditional RL relies on a "Policy Table" (a massive Excel sheet) to store every possible state and action. 
+
+> *"As RL relies on storing all possible states and actions in policy tables, when the number of state variables becomes larger... the state space becomes so large that the learning problem becomes intractable."*
+
+**Thesis Application:** This formally justifies our use of **Deep** Reinforcement Learning (DQN/PPO/MAPPO). By using a Deep Neural Network instead of a lookup table, the agent can generalize patterns from complex, high-dimensional state spaces without running out of memory.
+
+## 2. The DRL Agent Architecture (Heuristic Selector)
+![Figure 2: DQN-based dynamic scheduling method architecture](/literature/zheng_2022/figure2.png)
+
+Based on Figure 2 and their stated contributions, this paper takes a unique approach to the Action Space. The neural network does **not** directly steer the AGVs (e.g., "move forward 10 meters"). Instead, it acts as a **Meta-Controller**. 
+
+The output (Scheduling decisions) has two parts:
+1. Select AGV
+2. Select scheduling rule
+
+**Thesis Application:** Instead of predicting physical movements, their DQN agent looks at the state of the terminal and decides *which classical heuristic rule* to apply at that exact second (e.g., Should we use First-Come-First-Serve right now? Or Shortest-Travel-Distance?). For our MAPPO agent, we must decide early on if our Action Space will be a **Heuristic Selector** (like this paper) or a **Direct Dispatcher** (assigning specific AGVs to specific QC nodes directly).
+
+## 3. Defining the State Space
+The authors explicitly list the dynamic information they feed into the Neural Network as the State Vector:
+1. Number of tasks
+2. Task waiting time
+3. Task transportation distance
+4. Working/idle status of the AGVs
+5. Position of the AGVs
+
+**Thesis Application:** Notice feature #2: *Task waiting time*. This is exactly what Angeloudis & Bell (2010) proved was necessary to prevent starvation! Zheng et al. have successfully converted the classical math "Benefit" parameter into a neural network input feature. Our State Space must include these exact 5 features at a minimum.
+
+## 4. The Objective Function (Reward Basis)
+The paper states their objective is to: *"minimize the total completion time of AGVs and the total waiting time of QCs."*
+
+**Thesis Application:** Once again, this perfectly validates our Reward Function design. We cannot solely minimize AGV travel time. We must jointly minimize AGV empty travel *and* Quay Crane wait time. If the DRL agent achieves a high score on this joint objective, it has successfully balanced the port.
+
+## 5. Mathematical State Definition ($S_t$)
+The authors mathematically define the state vector $s_t$ as a 5-tuple:
+$$ s_t = (N_t, T_{awt}, D_{adt}, A_{st}, A_{iloc}) $$
+
+1. **$N_t$:** Current workload (Number of container tasks waiting).
+2. **$T_{awt}$:** Average waiting time of the tasks ($\frac{\sum t_k}{N_t}$). Represents **Urgency**.
+3. **$D_{adt}$:** Average transport distance ($\frac{\sum d_k}{N_t}$). Represents **Workload per task**.
+4. **$A_{st}$:** Binary vector of AGV working status (1 = Working, 0 = Idle).
+5. **$A_{iloc}$:** Dynamic coordinate positions of the AGVs $(x_i, y_i)$.
+
+**Thesis Application:** Notice how they use *averages* ($T_{awt}$ and $D_{adt}$) for the container tasks rather than listing every single container. This is a common Single-Agent RL trick to keep the state size fixed (so the neural network doesn't crash if there are 10 containers today but 500 containers tomorrow). For our MAPPO setup, we will need to decide if we want to use aggregate averages like this, or give each AGV localized information.
+
+## 6. The Action Space (The Heuristic Selector)
+![Table 1: Scheduling rules](/literature/zheng_2022/table1.png)
+
+The action space is formally defined as $a_t = (Ru_t, AGV_t)$. 
+The neural network outputs two things:
+1. Which AGV to control ($AGV_t$)
+2. Which scheduling rule to apply ($Ru_t$)
+
+The agent chooses between three classical rules:
+- **FCFS** (First Come, First Serve)
+- **STD** (Shortest Task Distance)
+- **LWT** (Longest Wait Task)
+
+**Thesis Application:** The AI acts like a manager. It doesn't tell the AGV *how* to drive; it looks at the state of the port and says *"Traffic is bad, let's switch from STD to LWT for AGV 3"*. This is called a **Meta-Controller**. 
+For your thesis, you must decide: Do you want your MAPPO agent to be a Meta-Controller (selecting heuristics), or do you want it to be a **Direct Controller** (literally outputting "Assign AGV 3 to Quay Crane 5")? Direct control is harder to train but has a higher performance ceiling!
+
+## 7. The Reward Function ($R_t$)
+To train the neural network, they formulate a step reward $R_t$ composed of two parts:
+1. **Completion Time Reward ($C^r_{ik}$):** $\alpha(M - t^r_{ik})$
+2. **QC Wait Time Penalty ($C^w_{ik}$):** $\beta(N - t^w_{ik})$
+
+Total Step Reward: 
+$$ R_t = \mu_1 C^r_{ik} + \mu_2 C^w_{ik} $$
+
+*(Note: $M$ and $N$ are just large constants used to keep the reward mathematically positive, which helps Neural Networks learn faster).*
+
+**Thesis Application:** The reward function strictly balances the AGV completion time ($\mu_1$) and the Quay Crane wait time ($\mu_2$). This is the mathematical realization of what Angeloudis & Bell hypothesized. Your DRL reward function will look almost identical to this!
+
+## 8. The Neural Network Architecture
+The authors use a standard Multi-Layer Perceptron (MLP) for their DQN. 
+- **Input Layer:** Takes the 5 features from the state space.
+- **Hidden Layers:** 2 fully connected hidden layers using **ReLU** activation functions (to capture non-linear relationships and prevent overfitting).
+- **Output Layer:** Outputs the combination of AGV and Rule selections.
+
+**Thesis Application:** For your thesis, since terminal states are highly complex, a 2-layer or 3-layer MLP with ReLU activations is the industry standard starting point for the "Brain" (the Actor and Critic networks in PPO).
+
+## 9. DQN Stabilization Mechanisms
+![Figure 3: DQN training process flowchart](/literature/zheng_2022/figure3.png)
+
+Training an AI in a chaotic environment is notoriously unstable. To prevent the neural network from collapsing, the authors use two critical RL mechanisms:
+
+1. **Replay Memory (Experience Replay):** As the AI explores the port, it stores its experiences $(s_t, a_t, R_t, s_{t+1})$ in a massive database. During training, it pulls a *random batch* of past memories to learn from. 
+   - *Why?* If the AI only learns from what is happening *right now*, it forgets how to handle situations from 10 minutes ago. Pulling random past memories prevents this catastrophic forgetting.
+2. **The Target Network:** They actually use *two* neural networks. The "Main Network" makes the decisions, and the "Target Network" calculates the goal score. The Target network is frozen and only updates every $C$ steps.
+   - *Why?* If the Main network tries to learn while the goal score is constantly changing, it's like a dog chasing its own tail. Freezing the Target network provides a stable target to aim for (Equation 14 calculates the Loss/Error between these two networks).
+
+**Thesis Application:** Since you are using **PPO** (Proximal Policy Optimization) for your thesis, you won't need a "Target Network" (PPO is an Actor-Critic algorithm that solves this instability using a clipped surrogate objective). However, you *will* use a variation of Replay Memory (called a Rollout Buffer) to store batches of port simulation data before updating your agent!
+
+## 10. Event-Driven Decision Triggers
+![Algorithm 1: Deep Q-learning with experience replay](/literature/zheng_2022/algorithm1.png)
+![Figure 4: Optimal mixed rule scheduling flowchart](/literature/zheng_2022/figure4.png)
+
+In Section 4.2, the authors detail exactly *when* the neural network is asked to make a decision. The AI does not make decisions every single second. A scheduling request is only triggered under two specific events:
+1. When a QC spreader grabs a new container task.
+2. When an AGV completes its transportation and becomes idle.
+
+**Thesis Application:** This is a crucial architectural design called **Event-Driven RL** (as opposed to Time-Driven RL). If your Python simulation asks the Neural Network for an action every 1 second, 99% of those actions will just be "Keep driving". This wastes massive amounts of computational power. By writing your environment to only trigger the RL agent when an AGV actually needs instructions, your training will be exponentially faster. 
+
+## 11. Simulation Environment & The Centralization Bottleneck
+![Figure 5: Schematic of the automated container terminal in Tecnomatix](/literature/zheng_2022/figure5.png)
+
+The authors built their simulation in Siemens Tecnomatix Plant Simulation 15.0. 
+Their terminal layout consisted of: 8 QCs, 8 YCs, and only **12 AGVs**. 
+Each training episode consisted of processing 384 container tasks.
+
+**Thesis Application (The Transition to Multi-Agent):** This section exposes the fatal flaw of Single-Agent DQN, and perfectly justifies the core of your thesis (MAPPO). Zheng et al. had to limit their fleet to just 12 AGVs. Why? Because in a centralized Single-Agent system, the Action Space grows exponentially with every AGV added. If they tried to simulate a real port with 60 AGVs, the DQN's output layer would be impossibly massive, and the AI would fail to train. 
+By upgrading their methodology to **Multi-Agent** Reinforcement Learning, your thesis solves this bottleneck. In MAPPO, each AGV acts as an independent agent sharing a "hive-mind" brain, meaning the neural network stays small and lightning-fast, whether you simulate 10 AGVs or 1,000 AGVs!
+
+## 12. Separation of Dispatching and Pathfinding
+In their list of assumptions, the authors state: *"All AGVs' navigation methods are the shortest path policy."*
+
+**Thesis Application:** This is a vital distinction for your thesis scope. The Deep Reinforcement Learning agent does **not** do pathfinding (it does not steer the vehicle around corners or avoid collisions). Pathfinding is handled by a standard algorithm (like A* or Dijkstra's) built into the simulator. The DRL agent only does **Dispatching** (deciding *which* AGV should take *which* container). This drastically simplifies what the neural network needs to learn.
+
+## 13. Software Architecture (TCP/IP Sockets)
+![Figure 6: Dynamic scheduling based on DQN integrating TensorFlow and Tecnomatix](/literature/zheng_2022/figure6.png)
+
+The DQN algorithm is programmed in Python (TensorFlow), while the simulation is built in Siemens Tecnomatix. To make them talk to each other, the authors built a communication subprogram using **TCP/IP Sockets**. When an event triggers in Tecnomatix, it pauses, sends the state vector over the socket to Python, Python calculates the action, and sends the action integer back to Tecnomatix to resume.
+
+**Thesis Application:** If you build your custom grid environment natively in Python (using Gymnasium/PettingZoo), you get to skip this nightmare! Your RL algorithm and your simulator will live in the exact same Python memory space, making training thousands of times faster than sending TCP packets back and forth.
+
+## 14. Sizing the Neural Network (36 Output Nodes)
+Table 2 reveals the exact size of their Neural Network:
+- Input Layer: 28 nodes
+- Hidden Layer 1: 350 nodes
+- Hidden Layer 2: 140 nodes
+- **Output Layer: 36 nodes**
+
+Where does the number 36 come from? 
+Since they have **12 AGVs** and **3 Scheduling Rules** (FCFS, STD, LWT), the neural network must choose one combination. 
+$$ 12 \times 3 = 36 \text{ possible combinations} $$
+
+**Thesis Application:** This proves exactly how their "Meta-Controller" action space works. The Neural Network outputs a single integer between 0 and 35. For example, if it outputs "9", the system translates that to: *"Assign AGV number 3 to use the STD rule"*. 
+
+## 15. Training Convergence
+![Figure 7: Final reward changing process during training](/literature/zheng_2022/figure7.png)
+
+They trained the AI for 5,000 episodes on a standard i7 CPU with 16GB RAM. 
+Figure 7 shows that for the first 1,500 episodes, the AI is essentially guessing randomly (high variance, low reward). Around episode 1,500, the reward sharply increases and stabilizes as the neural network "figures out" the optimal policy.
+
+**Thesis Application:** This proves you do not need a massive supercomputer to train RL for AGV dispatching. Because the state space is just an array of numbers (not high-resolution images), training on a standard CPU is perfectly viable and will converge in a matter of hours.
+
+## 16. Benchmark Results (The Starvation Trade-off)
+![Figure 8: AGV scheduling Gantt charts](/literature/zheng_2022/figure8.png)
+![Table 4: Comparison of DQN and GA results](/literature/zheng_2022/table4.png)
+
+The authors benchmarked their DQN against a classic Genetic Algorithm (GA). Table 4 reveals an absolutely fascinating trade-off:
+- **Total Completion Time of AGVs:** The Genetic Algorithm actually won. The GA found routes that required less AGV driving time (829 min vs 937 min).
+- **QC Waiting Time:** The DQN utterly crushed the GA. The DQN reduced crane waiting time from 801 min down to 397 min.
+- **Makespan (Total time to finish the ship):** The DQN won easily (93 min vs 143 min).
+
+**Thesis Application (The Holy Grail Argument):** Table 4 is the physical proof of what Angeloudis & Bell theorized! The Genetic Algorithm acted "lazy"—it optimized solely for the shortest AGV routes, which meant it kept serving the closest cranes and starved the distant ones. The DQN learned to *sacrifice* AGV efficiency (making them drive further/longer) in order to feed the starved cranes. By keeping all the Quay Cranes fed, the entire ship was unloaded significantly faster (Makespan). You must explicitly discuss this trade-off in your thesis defense when justifying your Reward Function.
+
+## 17. The DRL Superpower: Inference Speed
+![Table 5: Comparison of computational efficiency](/literature/zheng_2022/table5.png)
+
+Table 5 highlights the biggest advantage of Deep Reinforcement Learning over classical solvers. For the largest instance (12 AGVs, 384 tasks):
+- **Genetic Algorithm:** Took 135 minutes to calculate a schedule.
+- **DQN:** Took 21 seconds.
+
+**Thesis Application:** A real container terminal cannot wait 2 hours for a schedule. If a crane breaks down, the schedule is instantly voided. DRL shifts all the heavy computational lifting to the *training phase* (which can be done offline). Once the neural network is trained, it takes milliseconds to run forward propagation (Inference). This allows the DRL agent to react to dynamic terminal breakdowns instantly, whereas traditional algorithms like GA or CPLEX must start their 2-hour calculation over from scratch.
+
+## 18. Meta-Controller vs. Static Heuristics
+![Figure 10: Results comparison of DQN vs individual rules](/literature/zheng_2022/figure10.png)
+
+In Section 6.2.2, the authors compare their DQN against simply using one of the three rules (FCFS, STD, LWT) statically forever. The DQN won across all metrics.
+
+**Thesis Application:** Why use a Neural Network just to pick a rule, when you could just program the port to run "Shortest Distance" all day? Because port traffic is highly dynamic! Sometimes the port is empty, so Shortest Distance is best. But an hour later, the port might be heavily congested, meaning Shortest Distance will cause a traffic jam and Longest Wait Time is better to clear out the backlog. The Neural Network learns to recognize these traffic patterns and dynamically swaps the rule to match the current situation. 
+
+## 19. Conclusions & The Setup for MAPPO
+In their conclusion, the authors make a fascinating admission: *"DQN does not have a particularly obvious advantage in small-scale cases compared with rule-based scheduling and GA; however, as the number of tasks and AGV numbers increases, the optimization performance... becomes increasingly obvious."*
+In their Future Directions, they state they want to extend the AI to include **AGV collision avoidance and dynamic path planning.**
+
+**Thesis Application:** This is the perfect setup for your thesis! Zheng et al. realized that Single-Agent DQN hits a wall when trying to do detailed collision avoidance for a large fleet. By transitioning the field to **Multi-Agent PPO (MAPPO)**, your thesis intrinsically fulfills their "future work." In a Multi-Agent system, each AGV acts independently, allowing the AI to easily handle collision avoidance and path planning without the central Neural Network becoming bloated.
+
+---
+
+# Final Thesis Takeaways from Zheng et al. (2022)
+1. **The Death of Q-Tables:** The state space of a container terminal is too large for classical RL (Q-Tables). Deep Neural Networks are strictly required to compress the state space and generalize patterns.
+2. **The "Meta-Controller" Action Space:** Instead of directly steering AGVs, you can design your AI to simply output a discrete integer that selects a classical heuristic rule (FCFS, STD, LWT) to apply at that exact second. This is much easier to train.
+3. **Event-Driven RL is Mandatory:** Do not ask the AI for an action every 1 second of simulation time. Only trigger the AI when an event occurs (e.g., a crane grabs a container or an AGV becomes idle). This speeds up training exponentially.
+4. **The Positive Constant Reward Trick:** To keep Neural Networks learning smoothly, use the formula $\alpha(M - \text{penalty})$ where $M$ is a massively large constant. This ensures the reward stays positive.
+5. **The Starvation Trade-Off:** DQN proved mathematically that to optimize the whole port (Makespan), the AI *must* sacrifice AGV efficiency (make them drive further) to feed distant, starved Quay Cranes.
+6. **The Single-Agent Bottleneck:** Zheng et al. had to limit their simulation to 12 AGVs because Single-Agent DQN action spaces explode exponentially. This perfectly justifies your use of MAPPO to scale to massive fleets.

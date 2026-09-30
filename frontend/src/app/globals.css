@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
+
+/* Custom scrollbar - Soft Minimalist */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f4f5; /* zinc-100 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8; /* zinc-300 */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa; /* zinc-400 */
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base theme */
+@layer base {
+  body {
+    @apply bg-zinc-50 text-zinc-900 font-sans;
+  }
+}
+
+@layer utilities {
+  .soft-shadow {
+    @apply shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] transition-shadow duration-300;
+  }
+}
