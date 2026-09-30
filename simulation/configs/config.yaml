@@ -1,0 +1,60 @@
+# AGV Terminal Simulation -- Config
+# All values sourced from literature (see simulation_parameters.md)
+
+terminal:
+  n_qcs: 4              # Number of Quay Cranes -- Zheng et al. (2022)
+  n_agvs: 10            # Number of AGVs -- Zheng et al. (2022)
+  n_yard_blocks: 4      # Number of yard drop-off blocks -- Xie et al. (2025)
+  grid_width: 200       # Terminal width in units (meters)
+  grid_height: 100      # Terminal height in units (meters)
+  quay_road_y: 15       # Quay corridor y-position -- Liu et al. (2001)
+  yard_road_y: 85       # Yard corridor y-position -- Liu et al. (2001)
+
+network:
+  node_spacing: 20      # meters between intersection nodes -- Lou et al. (2023)
+
+agv:
+  speed_empty: 5.0      # m/s -- Lou et al. (2023), Yang et al. (2023)
+  speed_loaded: 3.0     # m/s -- Liu et al. (2002): loaded AGVs are slower
+  speed: 5.0            # m/s -- legacy (used if speed_empty not specified)
+  pickup_time: 30       # seconds at QC -- Liu et al. (2001)
+  dropoff_time: 20      # seconds at yard -- Liu et al. (2001)
+  max_queue_at_qc: 3    # max AGVs waiting at one QC -- Xie et al. (2025)
+  turning_time: 5       # seconds per 90-degree turn -- Liu et al. (2001)
+  safety_distance: 15   # meters between AGVs -- Lou et al. (2023)
+
+crane:
+  handling_time_mean: 90    # seconds -- Liu et al. (2001)
+  handling_time_std: 10     # seconds -- Liu et al. (2001)
+  max_container_queue: 5    # max containers waiting -- Yang et al. (2025)
+
+stochasticity:
+  mode: "medium"        # options: "deterministic", "low", "medium", "high"
+  arrival_rates:
+    deterministic: 0.0
+    low: 0.2
+    medium: 0.5
+    high: 0.8
+  travel_noise_std:
+    deterministic: 0.0
+    low: 2.0
+    medium: 5.0
+    high: 10.0
+  congestion_factor:
+    deterministic: 0.0
+    low: 0.1
+    medium: 0.2
+    high: 0.3
+
+episode:
+  max_steps: 1000
+  initial_tasks: 5
+  max_total_tasks: 50
+  timestep_seconds: 1.0
+
+reward:
+  alpha: 1.0    # QC idle penalty
+  beta: 0.5     # Conflict penalty
+  gamma: 2.0    # Task completion reward
+  delta: 0.1    # Empty travel penalty
+  terminal_penalty: -10.0

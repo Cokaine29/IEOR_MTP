@@ -1,0 +1,295 @@
+--- PAGE 2 ---
+Mathematics 2023, 11, 2678 3 of 25
+The remainder of this paper is organized as follows. Section 2 reviews the relevant
+literature. Section 3 describes the AGV scheduling and routing problem and establishes a
+bi-level mixed integer programming model. The DT-based AGV scheduling and routing
+framework is discussed in Section 4. Section 5 gives examples to verify the effectiveness of
+the proposed method. Finally, Section 6 concludes the paper and points out future works.
+2. Related Works
+2.1. AGV Scheduling
+There have been many studies on the AGV scheduling problem in recent years. A
+brief review of previous works is provided on AGV scheduling.
+Existing studies on AGV static scheduling in the ACT have provided very valuable
+information. Rashidi and Tsang [13] propose a novel algorithm, NSA+, to solve the AGV
+scheduling problem considering minimizing const ﬂow in container terminals. Ma et al. [14]
+used an improved mathematical model to describe the multi-load AGV scheduling problem
+in the ACT; they built a shufﬂed frog leaping algorithm with a mutant process (SFLAMUT)
+to solve the problem. Given the high potential synergy between automated quayside cranes
+(AQCs) and AGVs, Zhao et al. [15] built a collaborative model for AQCs and AGVs; they
+used a two-stage taboo search algorithm to solve the scheduling problem.
+AGV static scheduling usually is infeasible and impractical due to uncertainties; thus,
+AGV dynamic scheduling has become a growing concern. Angeloudis and Bell [16] propose
+a novel algorithm structured around a cost/beneﬁt concept to solve the AGV dis-patching
+problem under an indeterministic ACT environment, mainly including uncertain task
+durations for future events. Xin et al. [ 17] propose a rescheduling method to rearrange
+AGVs, quay cranes (QCs), and automated stacking cranes (ASCs) in ACT, including two
+types of methods: the time-efﬁcient schedule and the energy-efﬁcient schedule. Sahin
+et al. [18] develop a multi-agent-based system to simultaneously schedule ﬂexible machine
+groups and AGVs under an uncertain manufacturing environment. Xu et al. [19] present
+a response method with AGVs based on the mode of “request-scheduling-response” to
+solve the logistics dynamic scheduling problem in an intelligent manufacturing workshop
+(IMW), which aims to minimize the ﬁnish time with the minimum AGVs and limited time.
+In order to deal with the AGV scheduling problem in complex material handling in smart
+factories, Zhang et al. [20] develop a dynamic scheduling method for self-organized AGVs
+(SAGV), aiming to minimize the delay and reduce the cost of logistics systems.
+2.2. AGV Routing
+The earliest research on AGV routing starts with single-AGV path planning. For
+the single robot path planning problem, Wang et al. [21] improve the traditional rapidly-
+exploring random tree (RRT) algorithm and propose an autonomous routing algorithm of
+node control (NC-RRT) with higher exploration efﬁciency and faster convergence speed.
+Lee and Jeong [22] use the Q-Learning and Dyna-Q algorithms to solve the mobile robot
+path planning problem in a warehouse environment.
+In the actual environment, the situation of using one AGV to complete the task is
+extremely rare; multiple AGVs complete tasks in cooperation with each other. There have
+been many previous studies on multi-AGV path planning in a static environment. Oboth
+et al. [23] present a route-generation technique that can realize conﬂict-free path planning
+for multiple AGVs with varying speeds. Yuan et al. [24] propose a bi-level path planning al-
+gorithm; global and local paths are obtained using the A* and RRT algorithms, respectively.
+The above research studies focus on routing problems in a static environment. In order
+to respond to uncertainties, dynamic routing is developed. Xu et al. [ 25] present an im-
+proved dynamic window method to deal with the routing problem in a three-dimensional
+dynamic environment, outperforming traditional DWA algorithms in terms of efﬁciency,
+smoothness, and security. To deal with complex and variable situations during the multi-
+robot operation process, Bae et al. [26] combine deep Q-learning with the CNN (convolution
+neural network) algorithm, which is more ﬂexible and efﬁcient than conventional methods.
+--- PAGE 3 ---
+Mathematics 2023, 11, 2678 4 of 25
+In order to respond to dynamic obstacles and incomplete maps, Bai et al. [27] combine an
+improved Q-learning path optimization algorithm and an improved genetic algorithm; the
+proposed method has favorable performance in narrow working environments and highly
+congested situations. Onoufriou et al. [28] propose a new hybrid parallelism deep learning
+framework, which can provide a solution and uniﬁcation of deep learning techniques using
+a common interface.
+Some researchers have begun to study the AGV scheduling and routing problems
+simultaneously. Zhong et al. [29] tried to minimize ships’ loading and unloading time via
+integrated scheduling of AGVs and other facilities with the hybrid GA-PSO algorithm
+with adaptive autotuning approaches by a fuzzy control solution. Fazlollahtabar et al. [30]
+studied the simultaneous scheduling and routing problem for AGVs in ﬂexible manu-
+facturing systems, obtaining the optimal plan by a modiﬁed network simplex algorithm
+(NSA). Miyamoto and Inoue [31] propose local/random search methods to deal with the
+dispatching and routing problem for capacitated AGV systems (DCFRPC). Desaulniers
+et al. [32] present an exact method for AGV dispatching and conﬂict-free routing in the ﬂex-
+ible manufacturing system, implicitly considering congestion and blocking problems. Xing
+et al. [33] propose a novel tabu search algorithm to solve the conﬂicts that happen when
+multiple AGVs work at the same time. Liang et al. [ 34] present a three-stage integrated
+scheduling algorithm for AGV routing planning to deal with the locking problem of AGV .
+2.3. Digital Twin
+The above works have made an outstanding contribution to the AGV scheduling and
+routing problem but fail to address the challenges confronting AGV scheduling and routing
+mentioned in Section 1. Recently, DT has been widely applied in various ﬁelds, including
+predictive maintenance [35], factory design [ 36], assembly [37], prognostics [38], health
+care [39], trafﬁc management [40], and so on.
+Some researchers attempt to combine DT with other methods to address scheduling
+problems. For example, by introducing DT, Zhang et al. [41] address three critical problems
+in dynamic job-shop scheduling: machine availability prediction, disturbance detection,
+and performance evaluation. Wang and Wu [42] develop a planning and scheduling system
+by combining DT with planning and scheduling to effectively manage and control the
+disturbances in workshop scheduling. Negri et al. [ 43] present a DT-based scheduling
+framework, which includes equipment health predictions in the scheduling activity; their
+framework embeds a ﬁeld-synchronized Equipment Health Indicator module into the DT
+simulation to synchronize the simulation model to the physical system. In AGV scheduling,
+Han et al. [44] developed a DT-based dynamic AGV scheduling (DTDAS) method, which
+can reasonably arrange the charging process to effectively improve AGV transportation
+efﬁciency in a workshop.
+Several researchers have started to apply DT to routing problems. For example, Wang
+et al. [ 45] built a digital twin platform for gantry robots and present a multi-objective
+three-dimensional routing method for gantry robots based on the NavMesh algorithm
+based on the platform, improving production efﬁciency and safety. Zohdi [46] designed
+a digital twin framework for ﬁreﬁghting to help aerial ﬁrst responders rapidly perform
+ﬂight routing in risky ﬁre environments. Guo et al. [ 47] constructed a digital twin system
+for product assembly and present a modiﬁed Q-learning algorithm to solve the routing
+problem based on the system. To address the shortcoming of supervised learning of
+requiring large-scale training data, Vasanthan and Nguyen [48] introduced a digital twin of
+the vessel to generate enough training data to solve the vessel’s routing problem, effectively
+detecting potential collisions. Gao et al. [49] developed a digital-twin-enabled automated
+storage yard scheduling framework for uncertain port dispatching.
+DT brings a chance to deal with the AGV scheduling and routing problem. By intro-
+ducing DT technology, the real-time data generated by the ACT operation process can be
+fused with data from the virtual space to drive the dynamic evolution of the initial plan
+--- PAGE 4 ---
+Mathematics 2023, 11, 2678 5 of 25
+ﬁrst, and then the novel plan is simulated, veriﬁed, and, further, timely transmitted to the
+physical space to control the AGV operation.
+3. Problem Description and Formulation
+3.1. AGV Scheduling and Routing Problem
+The devices of the ACT in AGV scheduling and routing involve AGVs, quay cranes
+(QCs), and yard cranes (YCs) (see Figure 1). AGVs are used for moving containers between
+QC and storage yards. QCs are to deliver containers on AGVs from a ship or containers
+from AGVs to a ship. The storage yard is an area for the temporary storage of containers
+for transferring to destinations. YCs are used to deliver containers to their storage locations
+in storage yards or from their storage locations in storage yards.
+Mathematics 2023, 11, x FOR PEER REVIEW 5 of 25 
+ 
+ 
+requiring large-scale training data, Vasanthan and Nguyen [48] introduced a digital twin 
+of the vessel to generate enough training data to solve the vessel’s routing problem, 
+eﬀectively detecting potential collisions. Gao et al. [49] developed a digital-twin-enabled 
+automated storage yard scheduling framework for uncertain port dispatching.  
+DT brings a chance to deal with the AGV scheduling and routing problem. By 
+introducing DT technology, the real-time da ta generated by the ACT operation process 
+can be fused with data from the virtual space to drive the dynamic evolution of the initial 
+plan ﬁrst, and then the novel plan is simulated, veri ﬁed, and, further, timely transmitted 
+to the physical space to control the AGV operation. 
+3. Problem Description and Formulation 
+3.1. AGV Scheduling and Routing Problem 
+The devices of the ACT in AGV scheduling  and routing involve AGVs, quay cranes 
+(QCs), and yard cranes (YCs) (see Figure 1). AGVs are used for moving containers between 
+QC and storage yards. QCs are to deliver containers on AGVs from a ship or containers 
+from AGVs to a ship. The storage yard is an area for the temporary storage of containers 
+for transferring to destinations. YCs are us ed to deliver containers to their storage 
+locations in storage yards or from their storage locations in storage yards. 
+AGV Transportation 
+Area
+Storage 
+Yard
+Container
+Quay Crane
+Yard Crane
+AGV 
+Swap 
+Area
+Ship
+ 
+Figure 1. The layout of an automated container terminal. 
+The AGV transferring area has a regular route. In order to conveniently describe the 
+AGV scheduling and routing problem of an AC T, the transferring area is formally 
+described as a weighted directed graph, in wh ich there are 10 nodes (see Figure 2a). The 
+node n3 indicates the QC, the node n8 is the storage yard, the set {n1, n2, n4, n5, n6, n7, n9, 
+n10} is the path node set, and the set {l1, l2, …, l24} is the path set, whose lengths are d1, 
+d2, …, d24, respectively. The direction of each arrow expresses the direction of AGV that 
+they can travel on the path. Figure 2b shows the corresponding adjacency matrix, in which 
+the symbol ∞ means there are no ways between two nodes. 
+Figure 1. The layout of an automated container terminal.
+The AGV transferring area has a regular route. In order to conveniently describe the
+AGV scheduling and routing problem of an ACT, the transferring area is formally described
+as a weighted directed graph, in which there are 10 nodes (see Figure 2a). The node n3
+indicates the QC, the node n8 is the storage yard, the set { n1, n2, n4, n5, n6, n7, n9, n10}
+is the path node set, and the set { l1, l2, . . . , l24} is the path set, whose lengths are d1, d2,
+. . . , d24, respectively. The direction of each arrow expresses the direction of AGV that they
+can travel on the path. Figure 2b shows the corresponding adjacency matrix, in which the
+symbol ∞ means there are no ways between two nodes.
+Mathematics 2023, 11, x FOR PEER REVIEW 6 of 25 
+ 
+ 
+  
+(a) ( b) 
+Figure 2. The weighted directed graph and adjacent matrix. (a) A weighted directed graph; (b) an 
+adjacent matrix. 
+The AGV scheduling and routing problem is satis ﬁed under the following 
+assumptions: 
+• The location of all containers’ delivery points and pickup points are ﬁxed and known. 
+This work does not distinguish whether a task is a loading or an unloading task. 
+• All AGVs are in good condition without failure. 
+• Each AGV can only transport one container at a time, and each container can only be 
+assigned to one AGV for transporting. 
+• The operation time for both QCs and YCs is ﬁxed. 
+• All AGVs are homogeneous and travel at the same velocity, and AGV speed remains 
+unchanged during turning. 
+• All containers have the same priority. 
+• The initial position of each AGV is known. 
+Notations used in the model of the studied problem are listed in Appendix A. 
+3.2. The bi-Level Mixed Integer Programming Model 
+In order to describe the AGV scheduling and routing problem, the bi-level mixed 
+integer programming model is established. The upper-level scheduling model focuses on 
+AGV scheduling and the lower-level routing model deals with AGV routing. The upper-
+level scheduling model determines the overa ll horizontal transportation operation 
+optimization results; the lower-level route model determines the actual completion time 
+of each operation task for each AGV. 
+3.2.1. The Upper-Level Scheduling Model 
+The objective of AGV scheduling is to minimize the completion time of all tasks. The 
+AGV scheduling optimization model can be formulated as follows: 
+𝑚𝑖𝑛𝐶௠௔௫ =𝑚 𝑖 𝑛𝑚 𝑎 𝑥
+௞∈௏
+(𝐶௞) (1)
+Subject to: 
+𝐶௞ =𝑡 ௙
+௞,∀ 𝑘 ∈ 𝑉   (2)
+෍𝛼 ௣
+௞
+௞∈௏
+=1 , ∀ 𝑝∈𝐶 (3)
+෍𝛽଴௣
+௞
+௣∈஼
+=1 , ∀ 𝑘∈𝑉 (4)
+Figure 2. The weighted directed graph and adjacent matrix. (a) A weighted directed graph; (b) an
+adjacent matrix.
+--- PAGE 5 ---
+Mathematics 2023, 11, 2678 6 of 25
+The AGV scheduling and routing problem is satisfied under the following assumptions:
+• The location of all containers’ delivery points and pickup points are ﬁxed and known.
+This work does not distinguish whether a task is a loading or an unloading task.
+• All AGVs are in good condition without failure.
+• Each AGV can only transport one container at a time, and each container can only be
+assigned to one AGV for transporting.
+• The operation time for both QCs and YCs is ﬁxed.
+• All AGVs are homogeneous and travel at the same velocity, and AGV speed remains
+unchanged during turning.
+• All containers have the same priority.
+• The initial position of each AGV is known.
+Notations used in the model of the studied problem are listed in Appendix A.
+3.2. The bi-Level Mixed Integer Programming Model
+In order to describe the AGV scheduling and routing problem, the bi-level mixed
+integer programming model is established. The upper-level scheduling model focuses
+on AGV scheduling and the lower-level routing model deals with AGV routing. The
+upper-level scheduling model determines the overall horizontal transportation operation
+optimization results; the lower-level route model determines the actual completion time of
+each operation task for each AGV .
+3.2.1. The Upper-Level Scheduling Model
+The objective of AGV scheduling is to minimize the completion time of all tasks. The
+AGV scheduling optimization model can be formulated as follows:
+minCmax = minmax
+k∈V
+(Ck) (1)
+Subject to:
+Ck = tk
+f ,∀k∈ V (2)
+∑
+k∈V
+αk
+p = 1,∀p∈ C (3)
+∑
+p∈C
+βk
+0p = 1,∀k∈ V (4)
+∑
+p∈C
+βk
+p f = 1,∀k∈ V (5)
+∑
+p′∈C∪{0, f}
+βk
+pp′ = ∑
+p′∈C∪{0, f}
+βk
+p′ p,∀p∈ C,∀k∈ V (6)
+Tk
+OkLp≤ tk
+p + M
+(
+1− βk
+0p
+)
+,∀p∈ C,∀k∈ V (7)
+tk
+p + τp
+L + Tk
+LpUp + τp
+U + Tk
+UpLp′≤ tk
+p′ + M
+(
+1− βk
+pp′
+)
+,∀p∈ C, p′∈ C∪{ f},∀k∈ V (8)
+αk
+p, βk
+pp′∈ (0, 1),∀p, p′∈ C,∀k∈ V (9)
+tk
+p≥ 0, τp
+L > 0, τp
+U > 0, TLpUp > 0, TUpLp′≥ 0, TOkLp≥ 0,∀p, p′∈ C,∀k∈ V (10)
+Equation (1) is the optimization goal to minimize the completion time of all tasks.
+Equation (2) indicates that the task completion time for each AGV is the completion
+time of its last task, which is the start time of its virtual last task.

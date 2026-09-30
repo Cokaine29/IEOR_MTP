@@ -1,0 +1,20 @@
+name: Deploy to Kanjur Server
+
+on:
+  push:
+    branches:
+      - main # Change this if your default branch is 'master'
+
+jobs:
+  deploy:
+    # Important: Since Kanjur is on a private network (10.119.x.x), 
+    # we must use a self-hosted runner installed directly on Kanjur.
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build and Start Frontend Container
+        run: |
+          docker compose up -d --build
