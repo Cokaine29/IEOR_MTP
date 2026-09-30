@@ -28,7 +28,7 @@ export default function Phase2() {
           <div className="bg-white p-4 rounded-xl border border-indigo-100 flex flex-col items-center text-center shadow-sm relative">
              <Eye className="w-8 h-8 text-blue-500 mb-3"/>
              <span className="font-bold text-sm text-indigo-900">1. State (Eyes)</span>
-             <span className="text-xs text-zinc-500 mt-1">Snapshot of the port (203 numbers)</span>
+             <span className="text-xs text-zinc-500 mt-1">Snapshot of the port (1,084 features)</span>
              <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 text-indigo-300 font-bold">→</div>
           </div>
           <div className="bg-white p-4 rounded-xl border border-indigo-100 flex flex-col items-center text-center shadow-sm relative">
@@ -62,7 +62,7 @@ export default function Phase2() {
               State Space Definition (The AI's "Eyes")
             </h2>
             <p className="text-sm text-zinc-600 mb-6 text-justify leading-relaxed">
-              Mathematically, the <strong>State Space</strong> is the complete structural blueprint of every possible situation in the terminal. Within this space, a single <strong>State</strong> acts as a real-time snapshot. We compress the physical port into an array of exactly <strong>203 numbers</strong>. Every time an AGV finishes a task, the AI reads this State of 203 numbers to instantly understand current traffic, queue lengths, and workloads before deciding where to route the vehicle. If a variable isn't defined in the State Space, the AI is completely blind to it.
+              Mathematically, the <strong>State Space</strong> is the complete structural blueprint of every possible situation in the terminal. Within this space, a single <strong>State</strong> acts as a real-time snapshot. We compress the physical port into an array of exactly <strong>1,084 features</strong>. Every time an AGV finishes a task, the AI reads this State of 1,084 features to instantly understand current traffic, queue lengths, and workloads before deciding where to route the vehicle. If a variable isn't defined in the State Space, the AI is completely blind to it.
             </p>
 
             {/* NEW: Generic Explanation & Example Block */}
@@ -81,42 +81,38 @@ export default function Phase2() {
               {/* QC State */}
               <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                  5 QCs × 5 Features = 25
+                  26 QCs × 2 Features = 52
                 </div>
-                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">QC State (25 values)</h4>
+                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">QC State (52 values)</h4>
                 <ul className="text-sm text-zinc-700 space-y-2">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Import containers waiting</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Accumulated idle time</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> AGVs in-transit TO this QC <span className="text-xs text-zinc-400 italic">(Briskorn 2006)</span></li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> AGVs currently at QC</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Current cycle time estimate</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Queue density</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Elapsed cycle time (predictive dispatching)</li>
                 </ul>
               </div>
 
               {/* Yard State */}
               <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                  8 Yards × 3 Features = 24
+                  61 YBs × 2 Features = 122
                 </div>
-                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Yard State (24 values)</h4>
+                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">Yard State (122 values)</h4>
                 <ul className="text-sm text-zinc-700 space-y-2">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Export containers ready</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> AGVs in-transit TO this block</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> AGVs currently at block</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Rack fill level (0–4)</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Current ARMG service time elapsed</li>
                 </ul>
               </div>
 
               {/* AGV State */}
               <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 right-0 bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                  25 AGVs × 6 Features = 150
+                  130 AGVs × 7 Features = 910
                 </div>
-                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">AGV State (150 values)</h4>
+                <h4 className="font-bold text-zinc-900 mb-4 border-b border-zinc-200 pb-2">AGV State (910 values)</h4>
                 <ul className="text-sm text-zinc-700 space-y-2">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Position (x,y normalised) <span className="text-xs text-zinc-400 italic">... counts as 2</span></li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Position (x,y)</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Velocity (Vx, Vy)</li>
                   <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Status (idle/moving/charging)</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Remaining travel time</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Current payload</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Job_ID</li>
                   <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Battery SOC (%)</li>
                 </ul>
               </div>
@@ -139,10 +135,10 @@ export default function Phase2() {
             <div className="bg-zinc-900 text-white p-6 rounded-2xl flex items-center justify-between shadow-lg">
               <div>
                 <div className="text-sm text-zinc-400 mb-1">Total State Vector Math</div>
-                <div className="font-mono text-xs text-zinc-300">25 (QC) + 24 (Yard) + 150 (AGV) + 4 (Global)</div>
+                <div className="font-mono text-xs text-zinc-300">52 (QC) + 122 (Yard) + 910 (AGV) + 4 (Global)</div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-green-400">203</div>
+                <div className="text-3xl font-bold text-green-400">1,084</div>
                 <div className="text-sm text-zinc-400">Features</div>
               </div>
             </div>
@@ -173,12 +169,12 @@ export default function Phase2() {
                   <div className="bg-white p-4 rounded-xl border border-zinc-200">
                     <div className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2">Event 1: Empty AGV Needs Routing</div>
                     <div className="text-sm text-zinc-700 leading-relaxed text-justify mb-2">
-                      When an AGV finishes dropping off a container and becomes empty, the AI must pick from <strong>14 possible actions</strong>:
+                      When an AGV finishes dropping off a container and becomes empty, the AI must pick from <strong>27 possible actions: Dispatch to 1 of 26 QCs + 1 Wait</strong>:
                     </div>
                       <ul className="text-xs text-zinc-600 space-y-1 bg-zinc-50 p-3 rounded-lg border border-zinc-100">
-                        <li>👉 <strong>QC 1-5:</strong> Drive to one of the 5 Quay Cranes</li>
-                        <li>👉 <strong>YB 1-8:</strong> Drive to one of the 8 Yard Blocks</li>
-                        <li>👉 <strong>Wait / Buffer:</strong> Drive to the non-blocking Staging Area to park and conserve battery.</li>
+                        <li>👉 <strong>QC 1-26:</strong> Drive to one of the 26 Quay Cranes</li>
+                        <li>👉 <strong>Wait / Hold:</strong> Wait in place or staging area.</li>
+                        <li className="text-zinc-500 italic mt-2">Note: YB destinations are pre-assigned by TOS stowage plan, so the agent does not choose YB.</li>
                       </ul>
                   </div>
                   <div className="bg-white p-4 rounded-xl border border-zinc-200">
@@ -226,12 +222,12 @@ export default function Phase2() {
                 </div>
 
                 <ul className="space-y-3 text-sm text-zinc-700 bg-white p-5 rounded-xl border border-zinc-100">
-                  <li className="flex gap-3 items-start"><span className="font-bold text-amber-500 w-8 text-lg mt-0.5">α</span> <span className="text-justify leading-relaxed"><strong>(Alpha):</strong> A tuning weight applied to empty driving distance. This penalizes the AI for sending AGVs on long, useless trips that waste battery.</span></li>
-                  <li className="flex gap-3 items-start"><span className="font-bold text-emerald-500 w-8 text-lg mt-0.5">β</span> <span className="text-justify leading-relaxed"><strong>(Beta):</strong> A massive bonus weight rewarded only when the AI successfully pulls off a dual-cycle (dropping an export and catching an import instantly).</span></li>
+                  <li className="flex gap-3 items-start"><span className="font-bold text-amber-500 w-8 text-lg mt-0.5">α</span> <span className="text-justify leading-relaxed"><strong>(Alpha):</strong> Priority Violation Penalty. A weight applied to delay when a Gate/Reshuffle task delays a Ship task.</span></li>
+                  <li className="flex gap-3 items-start"><span className="font-bold text-emerald-500 w-8 text-lg mt-0.5">λ</span> <span className="text-justify leading-relaxed"><strong>(Lambda):</strong> Deadlock Penalty. A large constant penalty (≈ 300s) triggered when an AGV is sent to a full node.</span></li>
                   <li className="flex gap-3 items-start">
                     <span className="font-bold text-indigo-500 w-8 text-lg mt-0.5">γ</span> 
                     <span className="text-justify leading-relaxed">
-                      <strong>(Gamma) = 0.95:</strong> The Discount Factor. <em>(Note: Gamma does not appear in the immediate reward equation above. Instead, it is the multiplier the AI uses to calculate its long-term future score.)</em> A lower value of 0.95 forces the AI to prioritize immediate rewards over distant future rewards <em>(Angeloudis & Bell, 2010)</em>.
+                      <strong>(Gamma) = 0.95:</strong> The Discount Factor. <em>(Note: Gamma does not appear in the immediate reward equation above. Instead, it is the multiplier the AI uses to calculate its long-term future score.)</em> A lower value of 0.95 forces the AI to prioritize immediate near-term QC utilization over distant future rewards.
                     </span>
                   </li>
                 </ul>

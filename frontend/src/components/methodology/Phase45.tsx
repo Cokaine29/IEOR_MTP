@@ -29,7 +29,7 @@ export default function Phase45() {
             <div className="bg-zinc-100 rounded-2xl p-6 mb-6">
               <h4 className="font-bold text-zinc-900 mb-3 flex items-center gap-2">Validation Benchmark</h4>
               <p className="text-sm text-zinc-700 leading-relaxed text-justify mb-4">
-                Because this methodology integrates parameters from multiple ports, we will validate the Python environment against a <strong>Theoretical Lower Bound</strong> of <strong>~8.57 hours</strong> (the minimum time it takes 5 QCs to clear 1,800 lifts at 42 moves/hour in a perfect, traffic-free scenario).
+                Because this methodology integrates parameters from multiple ports, we will validate the Python environment against a <strong>Theoretical Lower Bound: 26 QCs × 28 moves/hr × 8hr = 5,824 lifts/shift minimum clear time</strong>.
               </p>
               
               <div className="bg-white p-4 rounded-xl border border-zinc-200">
@@ -41,7 +41,7 @@ export default function Phase45() {
                   </li>
                   <li className="flex gap-2 items-start">
                     <span className="text-indigo-500 font-bold">2.</span> 
-                    <span className="text-justify"><strong>Proving the Fleet Ratio:</strong> Hitting the 8.57h baseline mathematically proves that 25 AGVs (5 per crane) is enough. It proves that in a perfect scenario, AGV travel time to the yard is successfully "absorbed" by the buffer queue, meaning the Quay Crane never has to wait.</span>
+                    <span className="text-justify"><strong>Proving the Fleet Ratio:</strong> Hitting the validation baseline mathematically proves that the Fleet of 130 AGVs for 26 QCs is enough. It proves that in a perfect scenario, AGV travel time to the yard is successfully "absorbed" by the buffer queue, meaning the Quay Crane never has to wait.</span>
                   </li>
                 </ul>
               </div>
@@ -60,7 +60,7 @@ export default function Phase45() {
                   <tbody className="divide-y divide-zinc-200">
                       <tr>
                         <td className="px-4 py-3 font-medium text-zinc-800">Turnaround time</td>
-                        <td className="px-4 py-3 text-zinc-900 font-semibold">Converges to ~8.57 hrs</td>
+                        <td className="px-4 py-3 text-zinc-900 font-semibold">Converges to theoretical bound</td>
                       </tr>
                       <tr>
                         <td className="px-4 py-3 font-medium text-zinc-800">Quay Crane idle rate</td>
@@ -68,7 +68,7 @@ export default function Phase45() {
                       </tr>
                       <tr>
                         <td className="px-4 py-3 font-medium text-zinc-800">Throughput saturation</td>
-                        <td className="px-4 py-3 text-zinc-900 font-semibold">Flattens at 25 AGVs (5:1 ratio)</td>
+                        <td className="px-4 py-3 text-zinc-900 font-semibold">Fleet of 130 AGVs for 26 QCs. Pipeline-based sizing (not a fixed per-crane ratio).</td>
                       </tr>
                   </tbody>
                 </table>
@@ -152,7 +152,7 @@ export default function Phase45() {
               <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200 relative overflow-hidden flex flex-col">
                 <div className="absolute top-0 right-0 bg-zinc-200 px-2 py-1 rounded-bl-lg text-xs font-bold text-zinc-600">Zheng 2022</div>
                 <h4 className="font-bold text-zinc-900 mb-2">DQN (Single-Agent)</h4>
-                <p className="text-sm text-zinc-600 mb-4 flex-grow">Neural network baseline utilizing the full 203-feature state space.</p>
+                <p className="text-sm text-zinc-600 mb-4 flex-grow">Neural network baseline utilizing the full 1,084-feature state space.</p>
                 <div className="mt-auto flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-md w-fit border border-emerald-100">
                   <CheckCircle2 className="w-4 h-4"/> Category: Deep RL
                 </div>
