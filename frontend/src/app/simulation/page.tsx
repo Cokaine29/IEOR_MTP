@@ -278,9 +278,7 @@ export default function SimulationPage() {
                       </g>
                     ))}
 
-                    {/* True AutoCAD Turn Arc */}
-                    <path d={`M -20 -100 L ${7.5 - R} -100 A ${R} ${R} 0 0 1 7.5 ${-100 + R} L 7.5 0`} fill="none" stroke="#64748b" strokeWidth="0.75" strokeDasharray="4,2" vectorEffect="non-scaling-stroke" />
-                  </g>
+                    </g>
                 )}
               </>
             )}
@@ -303,8 +301,7 @@ export default function SimulationPage() {
 
         <Dimension x1={0} y1={-80} x2={CONFIG.berthLength.value} y2={-80} label="2350m TOTAL BERTH LENGTH" offset={0} />
 
-        {/* Radius Leader */}
-        <Dimension x1={blocks[4].x + blocks[4].width + 7.5 - (CONFIG.turnRadiusInner.value + 1.5) + (CONFIG.turnRadiusInner.value + 1.5)/2} y1={bounds.yYardStart - 100 + (CONFIG.turnRadiusInner.value + 1.5)/2} isRadius={true} radCenter={{x: blocks[4].x + blocks[4].width + 7.5 - (CONFIG.turnRadiusInner.value + 1.5), y: bounds.yYardStart - 100 + (CONFIG.turnRadiusInner.value + 1.5)}} label="R8 INNER / R9.5 CENTER" />
+        
 
       </g>
     );
