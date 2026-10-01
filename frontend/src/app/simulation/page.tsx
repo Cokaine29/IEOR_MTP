@@ -48,11 +48,11 @@ const computeLayout = () => {
   if (sBlocks !== 20) errors.push(`Expected 20 S-blocks, got ${sBlocks}`);
 
   const yBerth = 0;
-  const yHighwayStart = CONFIG.qcApronDepth.value; 
-  const yTransferStart = yHighwayStart + CONFIG.highwayDepth.value;
-  const yYardStart = yTransferStart + CONFIG.transferDepth.value; 
+  const yHighwayStart = -CONFIG.qcApronDepth.value; 
+  const yTransferStart = yHighwayStart - CONFIG.highwayDepth.value;
+  const yYardStart = yTransferStart - CONFIG.transferDepth.value; 
   
-  if (yYardStart !== 196) errors.push(`Yard start Y must be 196m, got ${yYardStart}`);
+  
 
   let currentX = 0;
   let armgAssigned = 0;
@@ -155,7 +155,7 @@ const Dimension = ({ x1, y1, x2, y2, label, offset = 0, vertical = false, isRadi
 // --- MAIN VIEWPORT COMPONENT ---
 export default function SimulationPage() {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [view, setView] = useState({ x: -100, y: -200, zoom: 0.8 });
+  const [view, setView] = useState({ x: -100, y: -600, zoom: 0.8 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
   const [mouseWorld, setMouseWorld] = useState({ x: 0, y: 0 });
@@ -212,25 +212,25 @@ export default function SimulationPage() {
         {/* Origin Axes */}
         <g stroke="#1e293b" strokeWidth="0.75" vectorEffect="non-scaling-stroke">
           <line x1="0" y1="0" x2="50" y2="0" markerEnd="url(#axis-arrow)" />
-          <line x1="0" y1="0" x2="0" y2="50" markerEnd="url(#axis-arrow)" />
+          <line x1="0" y1="0" x2="0" y2="-50" markerEnd="url(#axis-arrow)" />
           <circle cx="0" cy="0" r="1.5" fill="#1e293b" />
-          <text x="55" y="5" fill="#1e293b" fontSize="10">X</text><text x="5" y="55" fill="#1e293b" fontSize="10">Y</text>
+          <text x="55" y="5" fill="#1e293b" fontSize="10">X</text><text x="5" y="-55" fill="#1e293b" fontSize="10">Y (INLAND)</text>
         </g>
 
         {/* --- CIVIL ZONES --- */}
         {/* Water */}
-        <rect x="-200" y="-150" width="3000" height="150" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="0.5" vectorEffect="non-scaling-stroke"/>
+        <rect x="-200" y="0" width="3000" height="150" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="0.5" vectorEffect="non-scaling-stroke"/>
         <line x1="0" y1={bounds.yBerth} x2={CONFIG.berthLength.value} y2={bounds.yBerth} stroke="#0f172a" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
         
         {/* QC Apron */}
-        <rect x="0" y={bounds.yBerth} width={2800} height={CONFIG.qcApronDepth.value} fill="#f1f5f9" />
+        <rect x="0" y={bounds.yHighwayStart} width={2800} height={CONFIG.qcApronDepth.value} fill="#f1f5f9" />
         
         {/* AGV Highway */}
-        <rect x="0" y={bounds.yHighwayStart} width={2800} height={CONFIG.highwayDepth.value} fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.3" strokeDasharray="5,5" vectorEffect="non-scaling-stroke"/>
-        <text x="50" y={bounds.yHighwayStart + 60} fill="#64748b" fontSize="14" letterSpacing="4">117m AGV HIGHWAY (INTERNALS UNSURVEYED)</text>
+        <rect x="0" y={bounds.yTransferStart} width={2800} height={CONFIG.highwayDepth.value} fill="#f8fafc" stroke="#94a3b8" strokeWidth="0.3" strokeDasharray="5,5" vectorEffect="non-scaling-stroke"/>
+        <text x="50" y={bounds.yTransferStart + 60} fill="#64748b" fontSize="14" letterSpacing="4">117m AGV HIGHWAY (INTERNALS UNSURVEYED)</text>
 
         {/* QCs Layer */}
-        {qcs.map(qc => <use key={`qc-${qc.id}`} href="#qc-symbol" x={qc.x - 13.5} y={bounds.yBerth + 5} />)}
+        {qcs.map(qc => <use key={`qc-${qc.id}`} href="#qc-symbol" x={qc.x - 13.5} y={bounds.yBerth - 35} />)}
 
         {/* --- YARD BLOCKS --- */}
         {blocks.map(b => {
@@ -243,26 +243,26 @@ export default function SimulationPage() {
           <g key={`block-${b.id}`} transform={`translate(${b.x}, ${bounds.yYardStart})`}>
             
             {/* Block Perimeter (Heavy Lineweight) */}
-            <rect x="0" y="0" width={b.width} height={b.length} fill={fillColor} stroke={strokeColor} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-            <rect x="2" y="2" width={b.width - 4} height={b.length - 4} fill={isE ? 'url(#hatchBlue)' : 'url(#hatchAmber)'} />
-            <text x={b.width/2} y="15" fill={strokeColor} fontSize="9" textAnchor="middle" fontWeight="bold">YB{b.id}-{b.type}</text>
+            <rect x="0" y={-b.length} width={b.width} height={b.length} fill={fillColor} stroke={strokeColor} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+            <rect x="2" y={-b.length + 2} width={b.width - 4} height={b.length - 4} fill={isE ? 'url(#hatchBlue)' : 'url(#hatchAmber)'} />
+            <text x={b.width/2} y={-b.length + 15} fill={strokeColor} fontSize="9" textAnchor="middle" fontWeight="bold">YB{b.id}-{b.type}</text>
 
             {/* --- I/O ZONES (FIXED LOGIC) --- */}
             {isE ? (
               // END-LOADING: Fixed Brackets at Tip
-              <g transform={`translate(0, -${CONFIG.transferDepth.value})`}>
+              <g transform={`translate(0, 0)`}>
                 <rect x="0" y="0" width={b.width} height={CONFIG.transferDepth.value} fill="none" stroke="#64748b" strokeWidth="0.5" strokeDasharray="2,2" vectorEffect="non-scaling-stroke" />
-                <text x={b.width/2} y="10" fill="#64748b" fontSize="6" textAnchor="middle">FIXED I/O</text>
-                <g transform={`translate(0, 20)`}>
+                <text x={b.width/2} y="30" fill="#64748b" fontSize="6" textAnchor="middle">FIXED I/O</text>
+                <g transform={`translate(0, 10)`}>
                   {[3, 10, 17, 24].map(sx => <rect key={sx} x={sx} y="0" width="4" height="15" fill="#f8fafc" stroke="#1e3a8a" strokeWidth="0.75" vectorEffect="non-scaling-stroke" />)}
                 </g>
               </g>
             ) : (
               // SIDE-LOADING: No Front Brackets. Draw continuous parallel band along road.
               <>
-                <text x={b.width/2} y="-10" fill="#b45309" fontSize="6" textAnchor="middle">CANTILEVER I/O</text>
+                <text x={b.width/2} y="15" fill="#b45309" fontSize="6" textAnchor="middle">CANTILEVER I/O</text>
                 {b.isRightCantilever && (
-                  <g transform={`translate(${b.width}, 0)`}>
+                  <g transform={`translate(${b.width}, -${b.length})`}>
                     {/* The 15m Road */}
                     <rect x="0" y={0} width={CONFIG.gapSideLoading.value} height={b.length} fill="#f1f5f9" />
                     
@@ -284,8 +284,8 @@ export default function SimulationPage() {
             )}
 
             {/* Static ARMGs */}
-            {b.armgCount > 0 && <use href={isE ? "#armg-e" : "#armg-s"} x={b.isLeftCantilever ? -CONFIG.cantileverReach.value : -1} y="150" width={b.width + (isE ? 2 : CONFIG.cantileverReach.value + 1)} />}
-            {b.armgCount > 1 && <use href={isE ? "#armg-e" : "#armg-s"} x={b.isLeftCantilever ? -CONFIG.cantileverReach.value : -1} y="300" width={b.width + (isE ? 2 : CONFIG.cantileverReach.value + 1)} />}
+            {b.armgCount > 0 && <use href={isE ? "#armg-e" : "#armg-s"} x={b.isLeftCantilever ? -CONFIG.cantileverReach.value : -1} y={-150} width={b.width + (isE ? 2 : CONFIG.cantileverReach.value + 1)} />}
+            {b.armgCount > 1 && <use href={isE ? "#armg-e" : "#armg-s"} x={b.isLeftCantilever ? -CONFIG.cantileverReach.value : -1} y={-300} width={b.width + (isE ? 2 : CONFIG.cantileverReach.value + 1)} />}
           </g>
         )})}
 
@@ -293,13 +293,13 @@ export default function SimulationPage() {
         <Dimension x1={-30} y1={bounds.yBerth} x2={-30} y2={bounds.yHighwayStart} label="40m APRON" offset={0} vertical={true} />
         <Dimension x1={-30} y1={bounds.yHighwayStart} x2={-30} y2={bounds.yTransferStart} label="117m HIGHWAY" offset={0} vertical={true} />
         <Dimension x1={-30} y1={bounds.yTransferStart} x2={-30} y2={bounds.yYardStart} label="39m TRANSFER" offset={0} vertical={true} />
-        <Dimension x1={-30} y1={bounds.yYardStart} x2={-30} y2={bounds.yYardStart + CONFIG.blockDepthMax.value} label="430m YARD DEPTH" offset={0} vertical={true} />
+        <Dimension x1={-30} y1={bounds.yYardStart} x2={-30} y2={bounds.yYardStart - CONFIG.blockDepthMax.value} label="430m YARD DEPTH" offset={0} vertical={true} />
         
-        <Dimension x1={blocks[0].x} y1={bounds.yYardStart + blocks[0].length} x2={blocks[0].x + blocks[0].width} y2={bounds.yYardStart + blocks[0].length} label="31m" offset={20} />
-        <Dimension x1={blocks[0].x + blocks[0].width} y1={bounds.yYardStart + blocks[0].length} x2={blocks[1].x} y2={bounds.yYardStart + blocks[1].length} label="10m" offset={20} />
-        <Dimension x1={blocks[4].x + blocks[4].width} y1={bounds.yYardStart + blocks[4].length} x2={blocks[5].x} y2={bounds.yYardStart + blocks[5].length} label="15m S-LANE" offset={20} />
+        <Dimension x1={blocks[0].x} y1={bounds.yYardStart - blocks[0].length} x2={blocks[0].x + blocks[0].width} y2={bounds.yYardStart - blocks[0].length} label="31m" offset={20} />
+        <Dimension x1={blocks[0].x + blocks[0].width} y1={bounds.yYardStart + blocks[0].length} x2={blocks[1].x} y2={bounds.yYardStart - blocks[1].length} label="10m" offset={20} />
+        <Dimension x1={blocks[4].x + blocks[4].width} y1={bounds.yYardStart - blocks[4].length} x2={blocks[5].x} y2={bounds.yYardStart - blocks[5].length} label="15m S-LANE" offset={20} />
 
-        <Dimension x1={0} y1={-80} x2={CONFIG.berthLength.value} y2={-80} label="2350m TOTAL BERTH LENGTH" offset={0} />
+        <Dimension x1={0} y1={80} x2={CONFIG.berthLength.value} y2={80} label="2350m TOTAL BERTH LENGTH" offset={0} />
 
         
 
@@ -340,10 +340,10 @@ export default function SimulationPage() {
                 <rect x="21" y="2" width="4" height="4" fill="#0f172a" />
                 <rect x="2" y="24" width="4" height="4" fill="#0f172a" />
                 <rect x="21" y="24" width="4" height="4" fill="#0f172a" />
-                <line x1="9" y1="5" x2="9" y2="-40" strokeWidth="1" />
-                <line x1="18" y1="5" x2="18" y2="-40" strokeWidth="1" />
-                <rect x="7" y="-20" width="13" height="5" fill="#e11d48" />
-                <rect x="7" y="10" width="13" height="5" fill="#1e3a8a" />
+                <line x1="9" y1="25" x2="9" y2="70" strokeWidth="1" />
+                <line x1="18" y1="25" x2="18" y2="70" strokeWidth="1" />
+                <rect x="7" y="50" width="13" height="5" fill="#e11d48" />
+                <rect x="7" y="20" width="13" height="5" fill="#1e3a8a" />
               </g>
             </symbol>
             <symbol id="armg-e" overflow="visible">
