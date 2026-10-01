@@ -63,7 +63,7 @@ export default function ProblemPage() {
                   <span className="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Level 1</span>
                   <span className="font-bold text-lg">Dispatching (Assignment)</span>
                 </div>
-                <p className="text-indigo-100 text-sm mb-3">Which free AGV gets which Quay Crane?</p>
+                <p className="text-indigo-100 text-sm mb-3">Where should each free AGV go next: which quay crane, which yard block, or hold?</p>
                 <div className="bg-indigo-800/50 rounded-lg px-3 py-2 text-sm font-semibold flex justify-between items-center border border-indigo-500/30">
                   <span>Who solves it?</span>
                   <span className="text-amber-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Our DRL Agent</span>
@@ -150,7 +150,7 @@ export default function ProblemPage() {
 
             <div className="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-2xl">
               <p className="text-indigo-900 text-lg font-medium leading-relaxed text-justify">
-                At this exact moment, when an AGV completes its current task and becomes free, the dispatcher must decide: which Quay Crane should this vehicle serve next? The goal is to time the assignment so the AGV arrives at the crane's handoff point exactly when the crane needs it. Too early, and the AGV sits idle. Too late, and the crane waits. With stochastic travel times and unpredictable crane cycles, perfect synchronization is never guaranteed.
+                At this exact moment, when an AGV completes its current task and becomes free, the dispatcher must decide: where should this vehicle go next, to which quay crane or yard block? The goal is to time the assignment so the AGV arrives at the crane's handoff point exactly when the crane needs it. Too early, and the AGV sits idle. Too late, and the crane waits. With stochastic travel times and unpredictable crane cycles, perfect synchronization is never guaranteed.
               </p>
             </div>
           </motion.div>
@@ -200,11 +200,11 @@ export default function ProblemPage() {
             <div className="text-2xl md:text-3xl font-serif text-zinc-900 mb-6 bg-zinc-50 py-4 rounded-xl border border-zinc-100">
               <strong>Minimise:</strong> <span className="italic text-indigo-700">∑ T<sub>q</sub><sup>idle</sup></span>
             </div>
-            <p className="text-zinc-600 mb-6 font-medium text-justify">where <span className="italic text-zinc-900 font-bold">T<sub>q</sub><sup>idle</sup></span> is the cumulative time Quay Crane <span className="italic font-bold">q</span> waits for an AGV to arrive during the vessel service episode (unloading and loading).</p>
+            <p className="text-zinc-600 mb-6 font-medium text-justify">where <span className="italic text-zinc-900 font-bold">T<sub>q</sub><sup>idle</sup></span> is the cumulative time Quay Crane <span className="italic font-bold">q</span> is blocked or starved because no AGV is available during the vessel service episode (unloading and loading).</p>
             
             <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-100 text-left">
               <p className="text-zinc-800 font-medium leading-relaxed mb-3 text-justify">
-                Quay Cranes are the most capital-intensive equipment in a terminal. Every minute a crane sits idle (container in the air, waiting for an AGV) is revenue lost and vessel turnaround delayed.
+                Quay Cranes are the most capital-intensive equipment in a terminal. Every minute a crane is blocked or starved waiting for an AGV is revenue lost and vessel turnaround delayed.
               </p>
               <p className="text-sm text-zinc-500 italic text-justify">Source: Carlo, Vis & Roodbergen (2014), European Journal of Operational Research.</p>
             </div>
@@ -241,7 +241,7 @@ export default function ProblemPage() {
               A mathematically grounded breakdown of how a tiny dispatching error snowballs into massive financial penalties.
             </p>
             <p className="text-zinc-600 mt-2 max-w-2xl mx-auto font-medium text-sm">
-              Illustrative example using reference parameters (Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same.
+              Illustrative example using reference parameters (Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
             </p>
           </motion.div>
 
@@ -432,7 +432,7 @@ export default function ProblemPage() {
                   </tr>
                   <tr className="hover:bg-zinc-50 transition-colors">
                     <td className="px-6 py-4 text-zinc-900 font-bold">Single-Agent DQN <span className="font-normal text-zinc-500 text-sm block">(Zheng 2022)</span></td>
-                    <td className="px-6 py-4 text-amber-600 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> Task generation only</td>
+                    <td className="px-6 py-4 text-amber-600 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> AGV travel delays only {/* TODO check exact stochasticity in Zheng 2022 */}</td>
                     <td className="px-6 py-4 text-center text-emerald-600"><CheckCircle2 className="w-5 h-5 mx-auto"/></td>
                     <td className="px-6 py-4 text-center text-red-600"><XCircle className="w-5 h-5 mx-auto"/></td>
                   </tr>
