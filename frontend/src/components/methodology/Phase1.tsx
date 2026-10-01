@@ -23,142 +23,49 @@ export default function Phase1() {
           </div>
           <div className="w-full min-w-0">
             <h2 className="text-xl font-bold tracking-tight text-zinc-900 mb-4">
-              Terminal Layout Finalization
+              Terminal Layout: Perpendicular Architecture with Hybrid Interfaces
             </h2>
             <div className="text-zinc-800 leading-relaxed space-y-4">
-              <p><strong className="text-zinc-900 font-semibold">Decision: Layout A: Perpendicular (Rotterdam/Hamburg style)</strong></p>
+              <p>
+                Based on satellite analysis and operational data (Yue et al., 2023; He Ji-hong, 2016), Yangshan Phase IV employs a strictly <strong>perpendicular yard layout</strong>. All 61 yard blocks run perpendicular to the shoreline, maximizing storage density and securely separating waterside AGV traffic from landside human-driven trucks (Kemme, 2013).
+              </p>
+              <p>
+                However, to handle a massive <strong>50% water-to-water transshipment rate</strong>, the terminal abandons the traditional homogeneous block design in favor of a <strong>Hybrid ARMG Interface</strong> system. The blocks are structurally identical in orientation but feature two distinct AGV interaction mechanics:
+              </p>
+              
               <div className="grid md:grid-cols-2 gap-6 mt-4">
                 <div className="bg-zinc-50 border border-zinc-200 p-6 rounded-2xl relative">
-                  <div className="absolute top-0 right-0 bg-zinc-200 text-zinc-700 text-xs font-bold px-3 py-1 rounded-bl-lg">SELECTED</div>
-                  <h4 className="font-bold text-lg mb-2 text-zinc-900">Layout A (Perpendicular)</h4>
-                  <p className="text-zinc-600 text-sm mb-4">Yard blocks run perpendicular to the shoreline. AGVs travel to the short end (I/O point) of each block.</p>
+                  <h4 className="font-bold text-lg mb-2 text-zinc-900">End-Loading (Non-Cantilever)</h4>
+                  <div className="text-sm font-semibold text-indigo-600 mb-4">41 Blocks • Primary Import/Export</div>
+                  <p className="text-zinc-600 text-sm mb-4">AGVs drive to the short waterside tip of the block. Containers are deposited into one of 4 buffer brackets directly under the main ARMG gantry.</p>
                   <ul className="text-sm text-zinc-600 space-y-1 list-disc pl-4">
-                    <li>Standard for Import/Export</li>
-                    <li>Used by all 6 Tier 1 papers</li>
-                    <li>Simpler directed road network</li>
+                    <li>Maximizes stack density</li>
+                    <li>Standard for land-to-water flow</li>
+                    <li>Bottleneck risk during high transshipment</li>
                   </ul>
                 </div>
                 
-                <div className="bg-white border border-zinc-200 p-6 rounded-2xl opacity-70">
-                  <h4 className="font-bold text-lg mb-2 text-zinc-500">Layout B (Parallel)</h4>
-                  <p className="text-zinc-500 text-sm mb-4">Yard blocks run parallel to the shoreline. AGVs approach from the long side.</p>
-                  <ul className="text-sm text-zinc-500 space-y-1 list-disc pl-4">
-                    <li>Suited for transshipment hubs</li>
-                    <li>Used in modern Chinese mega-ports</li>
+                <div className="bg-white border border-zinc-200 p-6 rounded-2xl">
+                  <h4 className="font-bold text-lg mb-2 text-zinc-900">Side-Loading (Single-Cantilever)</h4>
+                  <div className="text-sm font-semibold text-amber-600 mb-4">20 Blocks • Rapid Transshipment</div>
+                  <p className="text-zinc-600 text-sm mb-4">The ARMG features a cantilever extending laterally. AGVs drive into a lane alongside the block, allowing side-access transfer without entering the end-loading buffers.</p>
+                  <ul className="text-sm text-zinc-600 space-y-1 list-disc pl-4">
+                    <li>Distributed in pairs every 2-6 blocks</li>
+                    <li>Absorbs the 50% transshipment volume</li>
+                    <li>Prevents gridlock at block ends</li>
                   </ul>
                 </div>
               </div>
-              <div className="bg-zinc-100 p-4 rounded-xl border-l-4 border-zinc-400 mt-4 mb-8">
-                <p className="text-zinc-800 font-medium italic text-sm">"This study models a standard perpendicular-layout ACT calibrated to Liu et al. (2001), which remains the most widely used layout in dispatching literature. Modern parallel-layout terminals represent a promising avenue for future work."</p>
+
+              <div className="bg-zinc-100 p-4 rounded-xl border-l-4 border-indigo-400 mt-4 mb-8">
+                <p className="text-zinc-800 font-medium italic text-sm">"By interleaving cantilevered side-loading blocks within a standard perpendicular grid, Yangshan Phase IV achieves the density of a European terminal with the transshipment speed of an Asian parallel hub."</p>
               </div>
 
-              {/* NEW: Sleek Light-Mode Schematic Map */}
-              <div className="border border-zinc-200 rounded-3xl overflow-hidden bg-white mt-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] font-mono">
-                <div className="bg-zinc-50 p-4 flex items-center justify-between border-b border-zinc-200">
-                  <h4 className="font-bold text-zinc-900 flex items-center gap-2 text-sm"><Map className="w-4 h-4 text-indigo-600"/> Terminal Layout Schematic</h4>
-                  <div className="text-xs text-indigo-700 font-semibold bg-indigo-100 px-3 py-1 rounded-full border border-indigo-200">Calibrated to 1 to 4 Ships (random), 26 QCs, 61 YBs, 130 AGVs</div>
-                </div>
-                
-                <div className="w-full relative py-8 px-4 flex flex-col gap-1 bg-white">
-                  
-                  {/* 1. VESSEL (Single Ship) */}
-                  <div className="w-full flex justify-center relative z-10 mb-2">
-                    <div className="w-4/5 h-14 bg-blue-50 rounded-full border-4 border-blue-200 flex items-center justify-center shadow-sm relative overflow-hidden">
-                      <div className="absolute inset-0 opacity-40 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#bfdbfe_10px,#bfdbfe_20px)]"></div>
-                      <span className="text-blue-800 font-black tracking-[0.4em] z-10 bg-blue-50 px-4 py-1 rounded-full">VESSEL (1 SHIP)</span>
-                    </div>
-                  </div>
-
-                  {/* 2. QUAY CRANES & OPERATION AREA */}
-                  <div className="relative pt-4 pb-2 border-b-2 border-dashed border-zinc-300">
-                    <span className="absolute left-2 top-0 text-[9px] uppercase tracking-widest text-indigo-700 font-bold bg-indigo-100 border border-indigo-300 px-2 py-1 rounded shadow-sm z-30">QC Operation Area</span>
-                    <div className="flex justify-around px-8 relative z-20">
-                      {[1, 2, 3, 4, 5].map(qc => (
-                        <div key={qc} className="w-14 flex flex-col items-center">
-                          <div className="w-2 h-8 bg-indigo-500 absolute -top-8 rounded-t-sm"></div>
-                          <div className="w-full h-8 bg-indigo-600 rounded flex items-center justify-center text-white text-[11px] font-bold shadow-md border border-indigo-800 z-10">QC {qc}</div>
-                          {/* QC Operation Area (4 horizontal slots) */}
-                          <div className="flex flex-col gap-1 mt-2 w-12 z-0">
-                            <div className="w-full h-1.5 bg-indigo-200 border border-indigo-400 rounded-[1px]"></div>
-                            <div className="w-full h-1.5 bg-indigo-200 border border-indigo-400 rounded-[1px]"></div>
-                            <div className="w-full h-1.5 bg-indigo-200 border border-indigo-400 rounded-[1px]"></div>
-                            <div className="w-full h-1.5 bg-indigo-200 border border-indigo-400 rounded-[1px]"></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 3. BUFFER AREA */}
-                  <div className="w-full h-16 bg-zinc-50 border-b-2 border-zinc-300 flex items-center justify-center relative">
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] uppercase tracking-widest text-zinc-800 font-bold bg-white border border-zinc-300 px-2 py-1 rounded shadow-sm z-10">Buffer Area</span>
-                    <div className="flex-1 flex justify-around ml-24 mr-8">
-                      {Array.from({length: 15}).map((_, i) => (
-                        <div key={i} className="w-5 h-7 border-2 border-dashed border-zinc-400 rounded-[2px] bg-white shadow-sm"></div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 4. DRIVING LANE (HIGHWAY) */}
-                  <div className="w-full h-20 bg-zinc-100 border-b-2 border-zinc-300 flex items-center justify-center relative shadow-inner overflow-hidden">
-                    {/* Left BSS Depot */}
-                    <div className="absolute left-0 top-0 bottom-0 w-16 bg-amber-100 border-r-2 border-amber-300 flex flex-col items-center justify-center z-20 shadow-sm">
-                      <Zap className="w-4 h-4 text-amber-600 mb-1" />
-                      <span className="text-[8px] font-bold text-amber-800 text-center uppercase leading-tight">BSS<br/>Depot</span>
-                    </div>
-
-                    {/* Right BSS Depot */}
-                    <div className="absolute right-0 top-0 bottom-0 w-16 bg-amber-100 border-l-2 border-amber-300 flex flex-col items-center justify-center z-20 shadow-sm">
-                      <Zap className="w-4 h-4 text-amber-600 mb-1" />
-                      <span className="text-[8px] font-bold text-amber-800 text-center uppercase leading-tight">BSS<br/>Depot</span>
-                    </div>
-
-                    <span className="absolute top-1/2 -translate-y-1/2 text-[9px] uppercase tracking-widest text-zinc-800 font-bold bg-white border border-zinc-300 px-3 py-1 rounded-full shadow-sm z-10">Central Driving Lane (Highway)</span>
-                    <div className="w-full h-0 border-t-[3px] border-dashed border-zinc-400"></div>
-                  </div>
-
-                  {/* 5. SEASIDE TRANSFER & YARD BLOCKS */}
-                  <div className="relative pt-6 pb-2 bg-zinc-50/50">
-                    <div className="absolute top-2 left-0 w-full flex justify-center z-10">
-                       <span className="text-[9px] uppercase tracking-widest text-green-800 font-bold bg-green-100 border border-green-300 px-3 py-1 rounded-full shadow-sm">Seaside Transfer Area</span>
-                    </div>
-                    
-                    <div className="flex justify-around px-4 mt-4">
-                      {[1, 2, 3, 4, 5, 6, 7, 8].map(yb => (
-                        <div key={yb} className="w-16 flex flex-col items-center relative">
-                          {/* 4 Seaside Transfer Slots */}
-                          <div className="w-full flex justify-evenly mb-2 h-6">
-                            <div className="w-1 h-full bg-green-400 border border-green-600 rounded-sm"></div>
-                            <div className="w-1 h-full bg-green-400 border border-green-600 rounded-sm"></div>
-                            <div className="w-1 h-full bg-green-400 border border-green-600 rounded-sm"></div>
-                            <div className="w-1 h-full bg-green-400 border border-green-600 rounded-sm"></div>
-                          </div>
-                          {/* Yard Block Body */}
-                          <div className="w-full h-40 border-2 border-zinc-400 rounded-t-lg bg-white flex flex-col items-center pt-2 relative overflow-hidden shadow-sm">
-                            <span className="text-[11px] font-bold text-zinc-800">YB {yb}</span>
-                            <div className="w-full flex-1 flex justify-evenly mt-2">
-                              <div className="w-0.5 h-full bg-zinc-300"></div>
-                              <div className="w-0.5 h-full bg-zinc-300"></div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="w-full flex justify-center mt-4">
-                       <span className="text-[10px] uppercase tracking-[0.4em] text-zinc-600 font-black">Automated Yard</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="bg-zinc-50 p-6 border-t border-zinc-200">
-                  <h4 className="font-bold text-zinc-900 mb-2 flex items-center gap-2"><Zap className="w-4 h-4 text-amber-500"/> Capacity Limits & The "Blocking Problem"</h4>
-                  <p className="text-sm text-zinc-700 leading-relaxed text-justify">
-                    AGVs move horizontally along the <strong>Driving Lane</strong>. To access a Quay Crane, they turn into the Buffer area. 
-                    Because the Buffer Area and QC Operation Area only span the physical width of the crane, they have a <strong className="text-indigo-600">4 operation lanes</strong> (7 total physical lanes; 3 are bypass/crossing lanes for transit AGVs). Similarly, the Seaside Transfer Area for each Yard Block has exactly <strong className="text-green-600">4 slots</strong>. If the RL dispatcher assigns an AGV to a node already at maximum capacity, the AGV overflows into the Driving Lane, triggering a massive deadlock penalty.
-                  </p>
-                </div>
+              <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200 mt-8">
+                <h4 className="font-bold text-zinc-900 mb-2 flex items-center gap-2"><Map className="w-4 h-4 text-indigo-600"/> Note on 2D Visualization</h4>
+                <p className="text-sm text-zinc-700 leading-relaxed text-justify">
+                  To view the exact scaled map of this 2350m layout, including all 26 QCs and the interleaved end-loading/side-loading yard blocks, please refer to the new full interactive 2D Terminal Map located in the Simulation tab.
+                </p>
               </div>
             </div>
           </div>
