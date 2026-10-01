@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -54,52 +54,33 @@ export default function ProblemPage() {
       </section>
 
       {/* Main Content Container */}
-      <div className="max-w-4xl mx-auto px-6 space-y-32 pt-20">
+      <div className="max-w-4xl mx-auto px-6 space-y-24 md:space-y-32 pt-20">
         
-        {/* SECTION 2: The Scale of the Problem */}
+        {/* SECTION 2: The Illusion of Perfect Plans */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold tracking-tight text-zinc-900 mb-8">
-            The Scale of the Problem
+            The Illusion of Perfect Plans
           </motion.h2>
           
           <div className="prose prose-lg prose-zinc max-w-none text-zinc-700 font-medium text-justify">
             <motion.p variants={fadeUp}>
-              Yangshan Phase IV (Shanghai) combines a 2,350 m continuous quay and seven berths with a design throughput of 6.3 million TEU, but on a deliberately narrow landside depth, which its designers identify as the binding constraint on capacity (Liu et al., 2016).
+              Modern Automated Container Terminals (ACTs) rely on a complex choreography between Quay Cranes (QCs), AGVs, and Automated Stacking Cranes (ASCs). In a perfect simulation, classical Operations Research (OR) models, like Mixed-Integer Linear Programming (MILP), can calculate the mathematically optimal route for every vehicle.
             </motion.p>
             <motion.p variants={fadeUp}>
-              Horizontal transport is therefore compressed into a 167.5 m seaside cross-section running from the waterline to the yard-block ends: a 28 m loading zone, a 27 m buffer zone in which AGVs are sequenced, and a 26.5 m bidirectional driving zone, followed by a yard-front transfer area (Liu et al., 2016). A fleet on the order of 130 lift-AGVs serves 26 double-trolley quay cranes and 61 yard blocks within this space. Dispatching here is not routing on an abstract graph: decisions are coupled through shared lanes, strictly ordered functional zones and finite sequencing capacity, so a single poorly timed assignment propagates as congestion across the apron.
+              However, ports are profoundly stochastic environments. Classical heuristics (like Greedy dispatching or Look-Ahead rules) are highly brittle. They optimise for a specific snapshot in time. The moment a disruption occurs, their pre-calculated plans disintegrate, leading to cascading delays, gridlock, and plummeting QC productivity.
+            </motion.p>
+            <motion.p variants={fadeUp}>
+              The problem is sharpest in mega-terminals such as Yangshan Phase IV (Shanghai), which has a design throughput of 6.3 million TEU on a deliberately narrow landside depth that its designers identify as the binding constraint on capacity (Liu et al., 2016). Horizontal transport is therefore compressed into a tightly structured seaside area, so decisions are coupled through shared lanes and finite sequencing capacity, and one poorly timed assignment can propagate as congestion across the apron.
             </motion.p>
           </div>
         </motion.section>
 
-        {/* SECTION 3: The New Stochastic Complexities */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.h2 variants={fadeUp} className="text-3xl font-bold tracking-tight text-zinc-900 mb-8">
-            The New Stochastic Complexities
-          </motion.h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Heterogeneous Yard Interfaces</h3>
-              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
-                Liu et al. (2016) describe an interleaved arrangement of non-cantilever and single-cantilever ARMG blocks, in which horizontal transport equipment does not enter the block and, in single-cantilever blocks, both ARMGs can serve the seaside. In our model, an end-loading block exchanges containers at a fixed seaside I/O point, so the AGV leg depends only on the block. In a side-loading block, the transfer point lies along the side lane, adjacent to the target bay. The same dispatch decision therefore has completely different distance, waiting, and handoff distributions by block type, and ARMG positions become a hidden, stochastic part of the state.
-              </p>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Buffer Sequencing</h3>
-              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
-                After handoff in the loading zone, AGVs cross into the buffer zone to be sequenced before release into driving lanes. This adds a queueing stage between QC handoff and yard travel whose release order determines downstream arrivals at blocks. Under QC cycle-time variability and AGV breakdowns, the best release order changes online. Common dispatching rules assess each assignment myopically and do not anticipate this effect; whether a learned policy exploits it better is an empirical question this thesis tests.
-              </p>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* SECTION 4: Four Pillars of Stochasticity */}
+        {/* SECTION 3: The Four Disruptors */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.div variants={fadeUp} className="mb-12">
             <h2 className="text-3xl font-bold tracking-tight text-zinc-900 mb-4">The Four Disruptors</h2>
             <p className="text-lg text-zinc-600 font-medium">Real-world variables that destroy classical optimisation plans.</p>
+            <p className="text-lg text-zinc-600 font-medium mt-2">These four sources of disruption are the only randomness modelled in this thesis.</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -145,7 +126,33 @@ export default function ProblemPage() {
           </div>
         </motion.section>
 
-        {/* SECTION 5: The Gap in the Literature */}
+        {/* SECTION 4: How the Layout Shapes Each Disruption */}
+        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
+          <motion.div variants={fadeUp} className="mb-12">
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-4">How the Layout Shapes Each Disruption</h2>
+            <p className="text-lg text-zinc-600 font-medium text-justify">
+              The layout adds no fifth source of randomness. What it determines is how severely each disruption propagates.
+            </p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div variants={fadeUp} className="bg-zinc-50 p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+              <h3 className="text-lg font-bold text-zinc-900 mb-4">Heterogeneous Yard Interfaces</h3>
+              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
+                Liu et al. (2016) describe an interleaved arrangement of non-cantilever and single-cantilever ARMG blocks, in which horizontal transport equipment does not enter the block and, in single-cantilever blocks, both ARMGs can serve the seaside. In our model, an end-loading block exchanges containers at a fixed seaside I/O point, whereas in a side-loading block the transfer point lies along the side lane, so the AGV leg depends on the target bay. These are fixed properties of the layout, not sources of randomness. Their effect is that the same disruption has different consequences by block type: a delayed or failed AGV changes waiting and handoff behaviour differently at a fixed bracket than along a side lane.
+              </p>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="bg-zinc-50 p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+              <h3 className="text-lg font-bold text-zinc-900 mb-4">Buffer Sequencing</h3>
+              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
+                After handoff in the loading zone, AGVs cross into the buffer zone to be sequenced before release into the driving lanes (Liu et al., 2016). This adds a queueing stage whose release order determines downstream arrivals at blocks. The structure is deterministic, but under QC cycle-time variability and AGV breakdowns, the best release order changes online. Myopic dispatching rules are expected to struggle at this decision point; whether a learned policy handles it better is an empirical question this thesis tests.
+              </p>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* SECTION 5: The Literature Gap */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.h2 variants={fadeUp} className="text-3xl font-bold tracking-tight text-zinc-900 mb-8">
             The Literature Gap
@@ -190,8 +197,14 @@ export default function ProblemPage() {
                   <tr className="bg-indigo-50/50 border-t-2 border-indigo-200">
                     <td className="px-6 py-4 text-indigo-900 font-bold">PPO + MAPPO <span className="font-normal text-indigo-600 text-sm block">(This Thesis)</span></td>
                     <td className="px-6 py-4 text-indigo-700 font-bold flex items-center gap-2"><AlertCircle className="w-4 h-4 text-indigo-600"/> Hypothesised robustness</td>
-                    <td className="px-6 py-4 text-center text-indigo-600"><CheckCircle2 className="w-5 h-5 mx-auto"/></td>
-                    <td className="px-6 py-4 text-center text-indigo-600"><CheckCircle2 className="w-5 h-5 mx-auto"/></td>
+                    <td className="px-6 py-4 text-center text-indigo-600">
+                      <AlertCircle className="w-5 h-5 mx-auto"/>
+                      <span className="block text-[10px] text-indigo-600 uppercase tracking-wider mt-1">to be tested</span>
+                    </td>
+                    <td className="px-6 py-4 text-center text-indigo-600">
+                      <AlertCircle className="w-5 h-5 mx-auto"/>
+                      <span className="block text-[10px] text-indigo-600 uppercase tracking-wider mt-1">to be tested</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -217,7 +230,7 @@ export default function ProblemPage() {
                 Under simultaneous stochastic disruptions (QC processing-time variability, AGV breakdowns, dynamic vessel arrivals and traffic congestion), in a Yangshan Phase IV-calibrated terminal with mixed end- and side-loading yard blocks and strict functional-zone sequencing, do deep reinforcement learning agents (DQN, PPO, MAPPO) outperform classical baselines (Greedy, Look-Ahead, Inventory-Based, GA), and <span className="text-amber-400 font-bold border-b-2 border-amber-400/50 pb-1">at what disruption intensity does the performance gap become statistically significant?</span>
               </p>
               <p className="text-lg md:text-xl font-medium leading-relaxed text-indigo-200 mt-6 pt-6 border-t border-indigo-700/50">
-                <span className="text-white font-bold">Secondary Question:</span> Does the performance gap differ between end-loading and side-loading blocks?
+                <span className="text-white font-bold">Secondary Question:</span> Does the performance gap differ between end-loading and side-loading blocks (motivated by the layout analysis above)?
               </p>
             </div>
           </motion.div>
@@ -241,15 +254,13 @@ export default function ProblemPage() {
                   </tr>
                   <tr>
                     <td className="px-4 py-4 font-bold text-zinc-900">Layer 2</td>
-                    <td className="px-4 py-4 font-medium text-zinc-800">PPO <span className="text-zinc-400 mx-1">vs</span> DQN <span className="text-zinc-300 mx-2">?</span> MAPPO <span className="text-zinc-400 mx-1">vs</span> PPO</td>
+                    <td className="px-4 py-4 font-medium text-zinc-800">PPO <span className="text-zinc-400 mx-1">vs</span> DQN <span className="text-zinc-300 mx-2">|</span> MAPPO <span className="text-zinc-400 mx-1">vs</span> PPO</td>
                     <td className="px-4 py-4 text-zinc-600">Does each generation of DRL genuinely improve on the last?</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </motion.div>
-          
-
         </motion.section>
 
         {/* SECTION 7: Bridge to Methodology */}
