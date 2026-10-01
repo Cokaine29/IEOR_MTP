@@ -109,7 +109,7 @@ export default function ProblemPage() {
 
                   <div className="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-2xl mb-6">
                     <blockquote className="text-lg font-serif text-indigo-900 leading-relaxed italic text-justify">
-                      "The AGV control problem can be broken down into three distinct sub-problems: 1. Assigning AGVs to transportation orders (Dispatching). 2. Routing the AGVs. 3. Traffic Control. Algorithms for routing and traffic control are generally already included in the control software provided by the AGV manufacturer. Thus, <strong>only the assignment problem is investigated in this paper.</strong>"
+                      The AGV control problem consists of assignment, routing, and traffic control. Because routing and traffic control are generally handled by the manufacturer's proprietary software, "<strong>only the assignment problem is investigated in this paper.</strong>"
                     </blockquote>
                     <div className="text-indigo-800 font-bold text-sm mt-4 text-right">
                       — Grunow, Günther & Lehmann (2006)
@@ -220,9 +220,9 @@ export default function ProblemPage() {
               <h3 className="text-amber-400 font-bold mb-6 tracking-widest text-sm uppercase flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5" /> Recent Evidence (2025)
               </h3>
-              <blockquote className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-6 text-justify">
-                "Delays in either the availability of AGVs or the operations of yard cranes will directly increase Quay Crane idle time... If an AGV takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration."
-              </blockquote>
+              <p className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-6 text-justify">
+                Delays in either the availability of AGVs or the operations of yard cranes directly increase Quay Crane idle time. For example, if an AGV is delayed by congestion in the transport area, the quay crane remains idle for the entirety of that delay.
+              </p>
               <div className="text-indigo-200 font-medium text-lg">
                 - Garmouch et al. (2025), <cite className="text-white font-bold">Scientific Reports (Nature Portfolio)</cite>
                 {/* TODO verify quote verbatim */}
@@ -258,8 +258,8 @@ export default function ProblemPage() {
                 <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">1</div>
                 <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-8">
                   <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">1. The Micro-Delay</h3>
-                  <p className="text-zinc-700 font-medium">Poor dispatching causes the Quay Crane to wait an average of just <strong className="text-red-600">15 extra seconds</strong> per container for the AGV.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Zeng & Yang (2010): QC waiting time is the core bottleneck dictating terminal efficiency.</p>
+                  <p className="text-zinc-700 font-medium">Suppose poor dispatching causes the Quay Crane to wait an average of just <strong className="text-red-600">15 extra seconds</strong> per container for the AGV.</p>
+                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Literature widely recognises QC waiting time as the core bottleneck dictating terminal efficiency.</p>
                 </div>
               </motion.div>
 
@@ -268,7 +268,7 @@ export default function ProblemPage() {
                 <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-0 md:mr-8 order-2 md:order-1">
                   <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">2. The Throughput Drop</h3>
                   <p className="text-zinc-700 font-medium">Cycle time increases from 86s to 101s. Crane productivity drops from <strong className="text-red-600">42 down to 35.6 moves/hour</strong>.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">C.I. Liu et al. (2001): 42 moves/hour established as baseline QC capacity.</p>
+                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">C.I. Liu et al. (2002): 42 moves/hour established as baseline QC capacity.</p>
                 </div>
                 <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10 order-1 md:order-2">2</div>
                 <div className="hidden md:flex flex-1 justify-start text-left pl-8 order-3">
@@ -284,7 +284,7 @@ export default function ProblemPage() {
                 <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">3</div>
                 <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-8">
                   <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">3. The Vessel Delay</h3>
-                  <p className="text-zinc-700 font-medium">Processing a standard 1,800-container exchange takes 10.1 hours instead of the theoretical 8.57 hours. The vessel is delayed by <strong className="text-red-600">~1.5 hours</strong>.</p>
+                  <p className="text-zinc-700 font-medium">Processing an assumed standard 1,800-container exchange takes 10.1 hours instead of the theoretical 8.57 hours. The vessel is delayed by <strong className="text-red-600">~1.5 hours</strong>.</p>
                   <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Illustrative arithmetic (5-crane reference case).</p>
                 </div>
               </motion.div>
@@ -293,7 +293,7 @@ export default function ProblemPage() {
               <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="flex-1 bg-rose-50 p-6 rounded-2xl shadow-lg border border-red-200 ml-6 md:ml-0 md:mr-8 order-2 md:order-1">
                   <h3 className="text-xl font-bold text-red-700 mb-2 md:hidden">4. The Financial Blow</h3>
-                  <p className="text-rose-900 font-medium text-lg leading-relaxed">At a charter rate of $100,000/day, a 1.5-hour delay burns <strong className="text-red-700 font-bold bg-red-100 px-1 rounded">~$6,400 in capital costs</strong> for a single ship call.</p>
+                  <p className="text-rose-900 font-medium text-lg leading-relaxed">At an assumed charter rate of $100,000/day, a 1.5-hour delay burns <strong className="text-red-700 font-bold bg-red-100 px-1 rounded">up to ~$6,400 in charter costs</strong> for a single ship call.</p>
                   <p className="text-xs text-rose-700/80 italic mt-4 border-t border-rose-200 pt-2">Haralambides (2019): Mega-ship capital intensity costs up to $100k/day.</p>
                 </div>
                 <div className="absolute left-[-26px] md:relative md:left-0 w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center font-bold border-4 border-white shadow-md z-10 order-1 md:order-2 text-xl">$</div>
@@ -359,7 +359,7 @@ export default function ProblemPage() {
               </p>
               <div className="border-t border-zinc-100 pt-4 mt-auto">
                 <p className="text-xs text-zinc-500 italic leading-relaxed text-justify">
-                  Carlo, Vis & Roodbergen (2014): "The assumption of deterministic operational times could jeopardize the practicality of the solutions."
+                  Carlo, Vis & Roodbergen (2014) note that relying on deterministic operational times can severely jeopardise the practical viability of dispatching solutions.
                 </p>
               </div>
             </motion.div>
@@ -368,8 +368,8 @@ export default function ProblemPage() {
           <motion.div variants={fadeUp} className="w-full bg-zinc-100 rounded-2xl p-6 text-zinc-700 text-justify border border-zinc-200 shadow-sm">
             <h3 className="font-bold text-zinc-900 text-lg mb-3">The Setting: Yangshan Phase IV</h3>
             <p className="leading-relaxed">
-              We calibrate the environment to Yangshan Phase IV (Shanghai): a 2,350 m quay served by 26 double-trolley quay cranes and a fleet of about 130 AGVs, with 61 yard blocks of two kinds: end-loading blocks with a fixed seaside I/O point, and side-loading (single-cantilever) blocks whose transfer points lie along a side lane (Liu et al., 2016). These are fixed features of the layout, not sources of randomness. They matter because the same disruption, a late AGV or a slow crane cycle, has different consequences by block type, and because AGVs queue in the seaside zones before reaching a block. Routing and sequencing inside these zones stay at Levels 2–3 and appear in our environment as delays.
-              {/* TODO verify counts against Gu Qin 2016 / Wang Yan 2021 */}
+              We calibrate the environment to Yangshan Phase IV (Shanghai): a 2,350 m continuous quay (G. Liu et al., 2016) served by 26 double-trolley quay cranes and a fleet of about 130 lift-AGVs (Gu, 2016), with 61 yard blocks (Wang, 2021). The layout features interleaved end-loading and side-loading (single-cantilever) blocks (Yue et al., 2023), where AGVs queue in seaside buffer zones before reaching a block (G. Liu et al., 2016). These are fixed features of the layout, not sources of randomness. They matter because the same disruption, a late AGV or a slow crane cycle, has different consequences by block type. Routing and sequencing inside the buffer zones stay at Levels 2–3 and appear in our environment as delays.
+              {/* TODO verify exact numbers and side-lane transfer points against the cited papers */}
             </p>
           </motion.div>
         </motion.section>
@@ -406,9 +406,9 @@ export default function ProblemPage() {
                     <td className="px-6 py-4 text-center text-red-600"><XCircle className="w-5 h-5 mx-auto"/></td>
                   </tr>
                   <tr className="hover:bg-zinc-50 transition-colors">
-                    <td className="px-6 py-4 text-zinc-900 font-bold">MILP Optimisation <span className="font-normal text-zinc-500 text-sm block">(Kim & Bae 2004)</span></td>
+                    <td className="px-6 py-4 text-zinc-900 font-bold">Look-Ahead Heuristic <span className="font-normal text-zinc-500 text-sm block">(Kim & Bae 2004)</span></td>
                     <td className="px-6 py-4 text-red-600 flex items-center gap-2"><XCircle className="w-4 h-4"/> None</td>
-                    <td className="px-6 py-4 text-center text-red-600 font-bold">Too slow</td>
+                    <td className="px-6 py-4 text-center text-emerald-600"><CheckCircle2 className="w-5 h-5 mx-auto"/></td>
                     <td className="px-6 py-4 text-center text-red-600"><XCircle className="w-5 h-5 mx-auto"/></td>
                   </tr>
                   <tr className="hover:bg-zinc-50 transition-colors">
@@ -452,7 +452,7 @@ export default function ProblemPage() {
             </div>
             <div className="p-6 bg-zinc-50 border-t border-zinc-200 text-sm text-zinc-700 font-medium leading-relaxed text-justify">
               Carlo et al. (2014) review the AGV dispatching literature, and the methods in the table treat uncertainty one source at a time. To our knowledge, none handles all four sources simultaneously; this thesis hypothesises that a learned, real-time adaptive policy can.
-              {/* TODO verify the "56 papers" count and table-row characterisations */}
+              {/* TODO verify table-row characterisations and whether any existing paper handles all four sources */}
             </div>
           </motion.div>
         </motion.section>
@@ -519,8 +519,8 @@ export default function ProblemPage() {
             <ol className="list-decimal pl-6 space-y-3 text-justify">
               <li><strong className="text-zinc-900">Formulate</strong> the dispatching problem as a Markov Decision Process (MDP) with a formally defined state space, action space, and a reward function aligned with minimising QC idle time.</li>
               <li><strong className="text-zinc-900">Build</strong> a Python/Gymnasium simulation calibrated to Yangshan Phase IV (2,350 m quay, 26 QCs, about 130 AGVs, 61 yard blocks, and the seaside zone structure of Liu et al. (2016)); where published values are unavailable (lane geometry, bay pitch, cantilever reach, block sequence, QC transfer-platform capacity, battery parameters), assumptions are tagged and varied in sensitivity analysis.</li>
-              <li><strong className="text-zinc-900">Implement</strong> five baselines, Greedy (Egbelu 1984), Look-Ahead (Kim & Bae 2004), Inventory-Based (Briskorn et al. 2006), Genetic Algorithm (Grunow et al. 2006), and Single-Agent DQN (Zheng et al. 2022).</li>
-              <li><strong className="text-zinc-900">Train</strong> a PPO agent (Phase 1) and extend to MAPPO (Phase 2).</li>
+              <li><strong className="text-zinc-900">Implement</strong> four classical baselines: Greedy (Egbelu 1984), Look-Ahead (Kim & Bae 2004), Inventory-Based (Briskorn et al. 2006), and Genetic Algorithm (Grunow et al. 2006).</li>
+              <li><strong className="text-zinc-900">Train</strong> Deep RL agents starting with a Single-Agent DQN (Zheng et al. 2022) baseline, advancing to PPO (Phase 1), and extending to MAPPO (Phase 2).</li>
               <li><strong className="text-zinc-900">Evaluate</strong> using rigorous multi-seed statistical protocols based on Agarwal et al. (2021), Interquartile Mean and 95% stratified bootstrap confidence intervals. Primary metric: total QC idle time; secondary metrics (reported, not optimised): makespan, maximum per-QC idle time, AGV empty travel and deadlock events.</li>
             </ol>
           </motion.div>
