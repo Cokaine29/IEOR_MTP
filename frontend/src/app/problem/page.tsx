@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -197,7 +197,7 @@ export default function ProblemPage() {
               </table>
             </div>
             <div className="p-6 bg-zinc-50 border-t border-zinc-200 text-sm text-zinc-700 font-medium leading-relaxed">
-              To our knowledge, of the 56 papers reviewed by Carlo et al. (2014), almost none combine AGV dispatching with stochastic optimisation. Existing methods generally handle stochasticity in isolation. This thesis hypothesises that simultaneous multi-source disruptions can be addressed using a learned, real-time adaptive policy in a port-calibrated simulation.
+              To our knowledge, of the extensive literature reviewed by Carlo et al. (2014), almost none combine AGV dispatching with stochastic optimisation. Existing methods generally handle stochasticity in isolation. This thesis hypothesises that simultaneous multi-source disruptions can be addressed using a learned, real-time adaptive policy in a port-calibrated simulation.
             </div>
           </motion.div>
         </motion.section>
