@@ -1,0 +1,1011 @@
+{
+  "CONFIG": {
+    "berthLength": {
+      "value": 2350,
+      "source": "Gu Qin 2016"
+    },
+    "blockDepthMax": {
+      "value": 430,
+      "source": "Blueprint Analysis"
+    },
+    "blockWidth": {
+      "value": 31,
+      "source": "He Ji-hong 2016"
+    },
+    "gapStandard": {
+      "value": 10,
+      "source": "Blueprint Analysis"
+    },
+    "gapSideLoading": {
+      "value": 15,
+      "source": "Blueprint Analysis"
+    },
+    "qcCount": {
+      "value": 26,
+      "source": "Gu Qin 2016"
+    },
+    "armgCount": {
+      "value": 120,
+      "source": "Gu Qin 2016, SIPG"
+    },
+    "qcSafetyDist": {
+      "value": 14,
+      "source": "Yue 2023"
+    },
+    "bayPitch": {
+      "value": 7.8,
+      "source": "ASSUMED, back-solved (53 bays within 430m)"
+    },
+    "railRunout": {
+      "value": 16,
+      "source": "ASSUMED"
+    },
+    "cantileverReach": {
+      "value": 7.5,
+      "source": "ASSUMED (Half of 15m road)"
+    },
+    "zones": [
+      {
+        "id": "waterside",
+        "name": "WATERSIDE STRIP",
+        "depth": 3.5,
+        "fill": "#f8fafc"
+      },
+      {
+        "id": "qc-gauge",
+        "name": "MANUAL ZONE (3 TRUCK LANES + HATCH)",
+        "depth": 30,
+        "fill": "#f1f5f9"
+      },
+      {
+        "id": "landside",
+        "name": "QC LANDSIDE STRIP",
+        "depth": 5,
+        "fill": "#f8fafc"
+      },
+      {
+        "id": "loading",
+        "name": "LOADING ZONE (AGV HANDOFF)",
+        "depth": 28,
+        "fill": "#f1f5f9",
+        "lanes": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      {
+        "id": "buffer",
+        "name": "BUFFER ZONE (SEQUENCING)",
+        "depth": 27,
+        "fill": "#e2e8f0"
+      },
+      {
+        "id": "driving",
+        "name": "DRIVING ZONE (BI-DIR)",
+        "depth": 26.5,
+        "fill": "#f1f5f9",
+        "lanes": [
+          4.416,
+          4.416,
+          4.416,
+          4.416,
+          4.416,
+          4.416
+        ]
+      },
+      {
+        "id": "unlabeled",
+        "name": "UNLABELED 8.5m STRIP (role unconfirmed)",
+        "depth": 8.5,
+        "fill": "#f8fafc"
+      },
+      {
+        "id": "yard-buffer",
+        "name": "YARD FRONT BUFFER",
+        "depth": 39,
+        "fill": "#f1f5f9"
+      }
+    ],
+    "blocksSequence": {
+      "source": "ASSUMED",
+      "pattern": [
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "S",
+        "S",
+        "E",
+        "E",
+        "E",
+        "E"
+      ],
+      "baysPattern": {
+        "default": 53,
+        "edge": 36,
+        "subEdge": 43
+      }
+    },
+    "ships": {
+      "source": "ASSUMED",
+      "groupings": [
+        {
+          "startX": 100,
+          "count": 7
+        },
+        {
+          "startX": 700,
+          "count": 8
+        },
+        {
+          "startX": 1300,
+          "count": 6
+        },
+        {
+          "startX": 1900,
+          "count": 5
+        }
+      ]
+    }
+  },
+  "blocks": [
+    {
+      "id": 1,
+      "type": "E",
+      "x": 0,
+      "width": 31,
+      "length": 296.8,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 1
+    },
+    {
+      "id": 2,
+      "type": "E",
+      "x": 41,
+      "width": 31,
+      "length": 351.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 3,
+      "type": "E",
+      "x": 82,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 4,
+      "type": "E",
+      "x": 123,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 5,
+      "type": "S",
+      "x": 164,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 6,
+      "type": "S",
+      "x": 210,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 7,
+      "type": "E",
+      "x": 251,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 8,
+      "type": "E",
+      "x": 292,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 9,
+      "type": "E",
+      "x": 333,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 10,
+      "type": "E",
+      "x": 374,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 11,
+      "type": "S",
+      "x": 415,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 12,
+      "type": "S",
+      "x": 461,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 13,
+      "type": "E",
+      "x": 502,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 14,
+      "type": "E",
+      "x": 543,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 15,
+      "type": "E",
+      "x": 584,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 16,
+      "type": "E",
+      "x": 625,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 17,
+      "type": "S",
+      "x": 666,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 18,
+      "type": "S",
+      "x": 712,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 19,
+      "type": "E",
+      "x": 753,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 20,
+      "type": "E",
+      "x": 794,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 21,
+      "type": "E",
+      "x": 835,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 22,
+      "type": "E",
+      "x": 876,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 23,
+      "type": "S",
+      "x": 917,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 24,
+      "type": "S",
+      "x": 963,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 25,
+      "type": "E",
+      "x": 1004,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 26,
+      "type": "E",
+      "x": 1045,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 27,
+      "type": "E",
+      "x": 1086,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 28,
+      "type": "E",
+      "x": 1127,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 29,
+      "type": "S",
+      "x": 1168,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 30,
+      "type": "S",
+      "x": 1214,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 31,
+      "type": "E",
+      "x": 1255,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 32,
+      "type": "E",
+      "x": 1296,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 33,
+      "type": "E",
+      "x": 1337,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 34,
+      "type": "E",
+      "x": 1378,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 35,
+      "type": "S",
+      "x": 1419,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 36,
+      "type": "S",
+      "x": 1465,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 37,
+      "type": "E",
+      "x": 1506,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 38,
+      "type": "E",
+      "x": 1547,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 39,
+      "type": "E",
+      "x": 1588,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 40,
+      "type": "E",
+      "x": 1629,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 41,
+      "type": "S",
+      "x": 1670,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 42,
+      "type": "S",
+      "x": 1716,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 43,
+      "type": "E",
+      "x": 1757,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 44,
+      "type": "E",
+      "x": 1798,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 45,
+      "type": "E",
+      "x": 1839,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 46,
+      "type": "S",
+      "x": 1880,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 47,
+      "type": "S",
+      "x": 1926,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 48,
+      "type": "E",
+      "x": 1967,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 49,
+      "type": "E",
+      "x": 2008,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 50,
+      "type": "E",
+      "x": 2049,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 51,
+      "type": "S",
+      "x": 2090,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 52,
+      "type": "S",
+      "x": 2136,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 53,
+      "type": "E",
+      "x": 2177,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 54,
+      "type": "E",
+      "x": 2218,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 55,
+      "type": "E",
+      "x": 2259,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 56,
+      "type": "S",
+      "x": 2300,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": true,
+      "armgCount": 2
+    },
+    {
+      "id": 57,
+      "type": "S",
+      "x": 2346,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": true,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 58,
+      "type": "E",
+      "x": 2387,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 59,
+      "type": "E",
+      "x": 2428,
+      "width": 31,
+      "length": 429.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 60,
+      "type": "E",
+      "x": 2469,
+      "width": 31,
+      "length": 351.4,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 2
+    },
+    {
+      "id": 61,
+      "type": "E",
+      "x": 2510,
+      "width": 31,
+      "length": 296.8,
+      "isLeftCantilever": false,
+      "isRightCantilever": false,
+      "armgCount": 1
+    }
+  ],
+  "qcs": [
+    {
+      "id": 1,
+      "x": 100
+    },
+    {
+      "id": 2,
+      "x": 141
+    },
+    {
+      "id": 3,
+      "x": 182
+    },
+    {
+      "id": 4,
+      "x": 223
+    },
+    {
+      "id": 5,
+      "x": 264
+    },
+    {
+      "id": 6,
+      "x": 305
+    },
+    {
+      "id": 7,
+      "x": 346
+    },
+    {
+      "id": 8,
+      "x": 700
+    },
+    {
+      "id": 9,
+      "x": 741
+    },
+    {
+      "id": 10,
+      "x": 782
+    },
+    {
+      "id": 11,
+      "x": 823
+    },
+    {
+      "id": 12,
+      "x": 864
+    },
+    {
+      "id": 13,
+      "x": 905
+    },
+    {
+      "id": 14,
+      "x": 946
+    },
+    {
+      "id": 15,
+      "x": 987
+    },
+    {
+      "id": 16,
+      "x": 1300
+    },
+    {
+      "id": 17,
+      "x": 1341
+    },
+    {
+      "id": 18,
+      "x": 1382
+    },
+    {
+      "id": 19,
+      "x": 1423
+    },
+    {
+      "id": 20,
+      "x": 1464
+    },
+    {
+      "id": 21,
+      "x": 1505
+    },
+    {
+      "id": 22,
+      "x": 1900
+    },
+    {
+      "id": 23,
+      "x": 1941
+    },
+    {
+      "id": 24,
+      "x": 1982
+    },
+    {
+      "id": 25,
+      "x": 2023
+    },
+    {
+      "id": 26,
+      "x": 2064
+    }
+  ],
+  "computedZones": [
+    {
+      "id": "waterside",
+      "name": "WATERSIDE STRIP",
+      "depth": 3.5,
+      "fill": "#f8fafc",
+      "mathStartY": 0,
+      "mathEndY": 3.5
+    },
+    {
+      "id": "qc-gauge",
+      "name": "MANUAL ZONE (3 TRUCK LANES + HATCH)",
+      "depth": 30,
+      "fill": "#f1f5f9",
+      "mathStartY": 3.5,
+      "mathEndY": 33.5
+    },
+    {
+      "id": "landside",
+      "name": "QC LANDSIDE STRIP",
+      "depth": 5,
+      "fill": "#f8fafc",
+      "mathStartY": 33.5,
+      "mathEndY": 38.5
+    },
+    {
+      "id": "loading",
+      "name": "LOADING ZONE (AGV HANDOFF)",
+      "depth": 28,
+      "fill": "#f1f5f9",
+      "lanes": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "mathStartY": 38.5,
+      "mathEndY": 66.5
+    },
+    {
+      "id": "buffer",
+      "name": "BUFFER ZONE (SEQUENCING)",
+      "depth": 27,
+      "fill": "#e2e8f0",
+      "mathStartY": 66.5,
+      "mathEndY": 93.5
+    },
+    {
+      "id": "driving",
+      "name": "DRIVING ZONE (BI-DIR)",
+      "depth": 26.5,
+      "fill": "#f1f5f9",
+      "lanes": [
+        4.416,
+        4.416,
+        4.416,
+        4.416,
+        4.416,
+        4.416
+      ],
+      "mathStartY": 93.5,
+      "mathEndY": 120
+    },
+    {
+      "id": "unlabeled",
+      "name": "UNLABELED 8.5m STRIP (role unconfirmed)",
+      "depth": 8.5,
+      "fill": "#f8fafc",
+      "mathStartY": 120,
+      "mathEndY": 128.5
+    },
+    {
+      "id": "yard-buffer",
+      "name": "YARD FRONT BUFFER",
+      "depth": 39,
+      "fill": "#f1f5f9",
+      "mathStartY": 128.5,
+      "mathEndY": 167.5
+    }
+  ],
+  "totalYardWidth": 2541,
+  "yYardStart": 167.5,
+  "errors": []
+}
