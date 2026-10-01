@@ -191,7 +191,6 @@ export default function ProblemPage() {
               </p>
               <p className="font-medium text-sm leading-relaxed text-indigo-200 text-justify">
                 QC idle time is the time a quay crane is blocked or starved at its handoff because no AGV is available.
-                {/* TODO: confirm definition; with double-trolley QCs the transfer-platform capacity K is an assumed parameter (K=0 reduces to single-trolley behaviour) */}
               </p>
             </motion.div>
           </div>
@@ -219,7 +218,7 @@ export default function ProblemPage() {
             </div>
             <div className="relative z-10">
               <h3 className="text-amber-400 font-bold mb-6 tracking-widest text-sm uppercase flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" /> 2025 Academic Consensus
+                <CheckCircle2 className="w-5 h-5" /> Recent Evidence (2025)
               </h3>
               <blockquote className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-6 text-justify">
                 "Delays in either the availability of AGVs or the operations of yard cranes will directly increase Quay Crane idle time... If an AGV takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration."
@@ -241,7 +240,7 @@ export default function ProblemPage() {
               A mathematically grounded breakdown of how a tiny dispatching error snowballs into massive financial penalties.
             </p>
             <p className="text-zinc-600 mt-2 max-w-2xl mx-auto font-medium text-sm">
-              Illustrative example using reference parameters (Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
+              Illustrative example using reference parameters (C.I. Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
             </p>
           </motion.div>
 
@@ -269,7 +268,7 @@ export default function ProblemPage() {
                 <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-0 md:mr-8 order-2 md:order-1">
                   <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">2. The Throughput Drop</h3>
                   <p className="text-zinc-700 font-medium">Cycle time increases from 86s to 101s. Crane productivity drops from <strong className="text-red-600">42 down to 35.6 moves/hour</strong>.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Liu et al. (2001): 42 moves/hour established as baseline QC capacity.</p>
+                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">C.I. Liu et al. (2001): 42 moves/hour established as baseline QC capacity.</p>
                 </div>
                 <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10 order-1 md:order-2">2</div>
                 <div className="hidden md:flex flex-1 justify-start text-left pl-8 order-3">
@@ -340,7 +339,7 @@ export default function ProblemPage() {
               </p>
               <div className="border-t border-zinc-100 pt-4 mt-auto">
                 <p className="text-xs text-zinc-500 italic leading-relaxed text-justify">
-                  Liu et al. (2001) established the 86s operational rhythm. Kim & Bae (2004) proved exact MILP solutions scale poorly, making them computationally intractable for live operations.
+                  C.I. Liu et al. (2001) established the 86s operational rhythm. Kim & Bae (2004) showed exact MILP solutions scale poorly, making them computationally intractable for live operations.
                 </p>
               </div>
             </motion.div>
@@ -432,7 +431,7 @@ export default function ProblemPage() {
                   </tr>
                   <tr className="hover:bg-zinc-50 transition-colors">
                     <td className="px-6 py-4 text-zinc-900 font-bold">Single-Agent DQN <span className="font-normal text-zinc-500 text-sm block">(Zheng 2022)</span></td>
-                    <td className="px-6 py-4 text-amber-600 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> AGV travel delays only {/* TODO check exact stochasticity in Zheng 2022 */}</td>
+                    <td className="px-6 py-4 text-amber-600 flex items-center gap-2"><AlertCircle className="w-4 h-4"/> Partial (to verify) {/* TODO check exact stochasticity in Zheng 2022 */}</td>
                     <td className="px-6 py-4 text-center text-emerald-600"><CheckCircle2 className="w-5 h-5 mx-auto"/></td>
                     <td className="px-6 py-4 text-center text-red-600"><XCircle className="w-5 h-5 mx-auto"/></td>
                   </tr>
