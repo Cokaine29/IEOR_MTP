@@ -274,6 +274,11 @@ export default function Phase1() {
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">World's largest single fully-automated container terminal</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">QC Safety Distance</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">1 ship bay</span> <span className="text-sm font-normal text-zinc-500">(~14m)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. Collision avoidance constraint between adjacent QCs.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800 align-top">Berth Length (X-axis)</td>
                       <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">2,350 m</span></td>
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">CHEC Spec Sheet 2025</td>
@@ -290,8 +295,8 @@ export default function Phase1() {
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Count</td>
-                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">61 blocks</span> <span className="text-sm font-normal text-zinc-500">(41 non-cantilever + 20 single-cantilever)</span></td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Wang Yan 2021 (ZPMC), He Ji-hong 2016</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">61 blocks</span> <span className="text-sm font-normal text-zinc-500">(41 end-loading perpendicular + 20 side-loading parallel)</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. Side-loading blocks appear in pairs after every 2-6 end-loading blocks. Each end-loading block has 4 AGV buffer brackets + 1 parking space.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800 align-top">Yard Block Lateral Spacing</td>
@@ -513,6 +518,11 @@ export default function Phase1() {
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">Multiple papers; confirmed by C3S field visit</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Safety Distance</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">3 bays</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. Required distance between two YCs sharing the same block.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800 align-top">ARMG Types</td>
                       <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">(1) Standard, (2) Single-cantilever, (3) Double-cantilever. All 3 types work collaboratively.</span></td>
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">He Ji-hong 2016</td>
@@ -591,19 +601,24 @@ export default function Phase1() {
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">Speeds up training ~100×</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Primary</td>
-                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−∑</span> <span className="text-sm font-normal text-zinc-500">(QC idle time in seconds)</span></td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Every second a QC waits for an AGV = negative reward</td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: QC Waiting</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−100 × (QC idle time)</span> <span className="text-sm font-normal text-zinc-500">yuan/h</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. The primary operational bottleneck penalty.</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Deadlock Penalty</td>
-                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−λ</span> <span className="text-sm font-normal text-zinc-500">(large constant ≈ 300s equivalent)</span></td>
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: AGV Waiting</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−10 × (AGV idle time)</span> <span className="text-sm font-normal text-zinc-500">yuan/h</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. Agent natively learns QC time is 10x more valuable than AGV time.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: AGV Travel</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−45 × (AGV travel time)</span> <span className="text-sm font-normal text-zinc-500">yuan/h</span></td>
+                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Yue 2023. Penalizes inefficient routing and empty travel.</td>
+                    </tr>
+                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
+                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Deadlock</td>
+                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−λ</span> <span className="text-sm font-normal text-zinc-500">(large constant)</span></td>
                       <td className="px-4 py-3 text-xs text-zinc-500 align-top">Triggered when AGV sent to a full node</td>
-                    </tr>
-                    <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
-                      <td className="px-4 py-3 font-medium text-zinc-800 align-top">Reward: Priority Violation</td>
-                      <td className="px-4 py-3 align-top"><span className="font-semibold text-indigo-600">−α × delay when Gate/Reshuffle task delays a Ship task</span></td>
-                      <td className="px-4 py-3 text-xs text-zinc-500 align-top">Xie Xi-cong 2016</td>
                     </tr>
                     <tr className="hover:bg-zinc-100/50 transition-colors border-b border-zinc-100">
                       <td className="px-4 py-3 font-medium text-zinc-800 align-top">Discount Factor γ</td>
