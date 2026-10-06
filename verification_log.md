@@ -1,0 +1,45 @@
+# Verification Log
+
+| ID | what the page claims | source found (title, authors, year, venue, DOI/URL) | status | exact quote or exact numbers from the source | page number | notes |
+|---|---|---|---|---|---|---|
+| A1 | "Delays in either the availability of AGVs or the operations of yard cranes will directly increase Quay Crane idle time... If an AGV takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration." | Minimizing quay crane downtime in container terminals using genetic algorithms with a case study of Tangier MED Port, H. Garmouch et al., 2025, Scientific Reports, 10.1038/s41598-025-29190-0 | CONTRADICTED | "Delays in either the availability of AGVs or the operations of ASCs will directly increase crane idle time... If an AGV/ASC takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration, increasing total idle time." | N/A (Online) | The page replaced ASCs with yard cranes, crane with Quay Crane, and omitted /ASC and increasing total idle time. |
+| A2 | "The AGV control problem can be broken down into three distinct sub-problems: 1. Assigning AGVs to transportation orders (Dispatching). 2. Routing the AGVs. 3. Traffic Control..." | Dispatching multi-load AGVs in highly automated seaport container terminals, M. Grunow et al., 2004, OR Spectrum, 10.1007/s00291-003-0147-1 (or Strategies for dispatching AGVs..., 2006, 10.1007/s00291-006-0054-3) | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to verify the exact verbatim quote. |
+| A3 | "The assumption of deterministic operational times could jeopardize the practicality of the solutions." | Transport operations in container terminals / Storage yard operations in container terminals, Carlo et al., 2014, EJOR | UNVERIFIED-NO-ACCESS |  |  | Could not access full text of either paper to verify the quote. |
+| B1 | "C.I. Liu et al." source for: 5 QCs, 25 AGVs, 498x572 m single-berth zone, 86 s QC cycle, 42 moves/hour. | Design, Simulation, and Evaluation of Automated Container Terminals, C.-I. Liu et al., 2002, IEEE T-ITS, 10.1109/6979.994792 | UNVERIFIED-NO-ACCESS |  |  | Could not access full PDF to confirm exact numbers. |
+| B2 | "standard 1,800-container exchange" | Same as B1 | UNVERIFIED-NO-ACCESS |  |  | Could not access full PDF to check for this figure. |
+| B3 | "QC waits on average 15 extra seconds per container" | Unknown | UNVERIFIED-NO-ACCESS |  |  | No source identified or accessible. |
+| B5 | Haralambides (2019): "mega-ship capital intensity costs up to $100k/day" | Gigantism in container shipping, ports and global logistics: a time-lapse into the future, H. Haralambides, 2019, Maritime Economics & Logistics, 10.1057/s41278-018-00116-0 | CONTRADICTED | "In the first quarter of 2008, Capers and VLCCs would be time-chartered for $100,000/day" | N/A (Online) | The figure refers to time-charter rates for Capesize bulkers and VLCCs in 2008, not capital intensity costs for mega container ships. |
+| B6 | Zeng & Yang (2010): QC waiting time is the core bottleneck for terminal efficiency | Various papers by Q. Zeng & Z. Yang (2009/2010) | UNVERIFIED-NO-ACCESS |  |  | Could not verify if any specific paper makes this exact bottleneck claim. |
+| B7 | Kim & Bae (2004): look-ahead dispatching (MIP > 1 min, heuristic/MIP, stochastic?) | A look-ahead dispatching method for automated guided vehicles in automated port container terminals, K. H. Kim & J. W. Bae, 2004, Transportation Science, 10.1287/trsc.1030.0040 | PARTIAL | Both MIP and heuristic proposed. |  | Abstract indicates both MIP and heuristic are proposed. Cannot verify the 1-minute claim or whether it models stochastic times without full text. |
+| C1 | Garmouch et al. (2025): objective, method, whether AGV delays are assumed fixed | Minimizing quay crane downtime in container terminals using genetic algorithms with a case study of Tangier MED Port, H. Garmouch et al., 2025, Scientific Reports, 10.1038/s41598-025-29190-0 | VERIFIED | Objective: Minimizing quay crane downtime (idle time + unplanned downtime). Method: Genetic Algorithm (GA). Delays fixed: "did not allow for the use of real terminal data and real-time adaptive re-optimization, instead employing fixed input parameters" | N/A (Online) |  |
+| C2 | Egbelu (1984) | Characterization of automatic guided vehicle dispatching rules, P. J. Egbelu & J. M. A. Tanchoco, 1984, IJPR, 10.1080/00207548408942459 | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to read abstract and method. |
+| C4 | Angeloudis (2010) | An uncertainty-aware AGV assignment algorithm for automated container terminals, P. Angeloudis & M. G. H. Bell, 2010, TRE, 10.1016/j.tre.2009.09.001 | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to read abstract and method. |
+| C5 | Choe et al. (2016) | Online preference learning for automated guided vehicle dispatching in automated container terminals, R. Choe et al., 2016, Applied Soft Computing, 10.1016/j.asoc.2015.10.027 | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to read abstract and method. |
+| C6 | Zheng (2022) | Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach, X. Zheng et al., 2022, Mathematics, 10.3390/math10234575 | PARTIAL | First author: Zheng, X. Single-agent DQN: Yes (Deep Q-Network). |  | Could not verify the exact objective and specific uncertainty factors modeled due to 403 access error on full text. |
+| C7 | Absence claim: "no existing AGV-dispatching method handles all four sources... simultaneously" | Multiple search queries run on 2026-10-02 | VERIFIED | N/A | N/A | Ran 6 explicit searches. No paper was found that explicitly models all 4 (or 3) specific sources of uncertainty simultaneously. |
+| D3 | Gu Qin (2016): 26 QCs at Yangshan Phase IV | ????????????????? (New Technology for Optical Positioning System of Automated Double-Trolley Quay Crane), Gu Qin et al., 2016, Port Engineering | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to verify 26 QCs. |
+| D4 | Gu Qin (2016): about 130 lift-AGVs | Same as D3 | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to verify 130 lift-AGVs. |
+| D5 | Wang Yan (2021): 61 yard blocks | Could not identify specific paper | UNVERIFIED-NO-ACCESS |  |  | Could not find the source. |
+| D6 | Yue et al. (2023) / He Ji-hong (2016): 41 end-loading / 20 side-loading | Comparing the Efficiency of Two Types of Yard Layout in Container Terminals, X. Zhang, Y. Gu (Yue), et al., 2023, Sustainability | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to verify 41/20 split. |
+| D7 | Source for side-loading/end-loading layouts | Same as D6 | UNVERIFIED-NO-ACCESS |  |  | Could not access full text to verify transfer point descriptions. |
+| E | Bibliographic details & confirmations | Multiple sources | PARTIAL | N/A | N/A | Provided details below. Could not confirm GA for Grunow 2006 or Inventory for Briskorn 2006 without full text. |
+
+## Bibliographic details
+
+*   Egbelu & Tanchoco 1984: P. J. Egbelu, J. M. A. Tanchoco, 1984, International Journal of Production Research, DOI: 10.1080/00207548408942459
+*   Kim & Bae 2004: K. H. Kim, J. W. Bae, 2004, Transportation Science, DOI: 10.1287/trsc.1030.0040
+*   Briskorn et al. 2006: D. Briskorn, A. Drexl, S. Hartmann, 2006, OR Spectrum, DOI: 10.1007/s00291-006-0033-8 (Confirmation of inventory-based dispatching: UNVERIFIED-NO-ACCESS)
+*   Grunow et al. 2006: M. Grunow, H. O. Günther, M. Lehmann, 2006, OR Spectrum, DOI: 10.1007/s00291-006-0054-3 (Confirmation of genetic algorithm: UNVERIFIED-NO-ACCESS)
+*   Choe et al. 2016: R. Choe, T. Kim, K. R. Ryu, 2016, Applied Soft Computing, DOI: 10.1016/j.asoc.2015.10.027
+*   Angeloudis 2010: P. Angeloudis, M. G. H. Bell, 2010, Transportation Research Part E, DOI: 10.1016/j.tre.2009.09.001
+*   Zheng 2022: X. Zheng, C. Liang, Y. Wang, J. Shi, G. J. Lim, 2022, Mathematics, DOI: 10.3390/math10234575
+*   Agarwal et al. 2021: UNVERIFIED-NO-ACCESS
+*   Haralambides 2019: H. E. Haralambides, 2019, Maritime Economics & Logistics, DOI: 10.1057/s41278-018-00116-0
+*   Garmouch 2025: H. Garmouch, O. Abdoun, O. Garmouch, 2025, Scientific Reports, DOI: 10.1038/s41598-025-29190-0
+*   Carlo 2014: H. J. Carlo, I. F. A. Vis, K. J. Roodbergen, 2014, European Journal of Operational Research (multiple papers)
+*   G. Liu et al. 2016: G. Liu et al., 2016, Port & Waterway Engineering, UNVERIFIED-NO-ACCESS
+
+## Proposed page edits (NOT applied)
+*   A1: Replace quote with: "Delays in either the availability of AGVs or the operations of ASCs will directly increase crane idle time... If an AGV/ASC takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration, increasing total idle time."
+*   B5: Remove the Haralambides claim about mega-ship capital intensity costing $100k/day, as the source figure referred to time-charter rates for Capesize/VLCCs in 2008.
+*   B7/C2/C4/C5/D3/D4/D5/D6/D7/etc: Mark or remove claims until access to original PDFs confirms exact values.

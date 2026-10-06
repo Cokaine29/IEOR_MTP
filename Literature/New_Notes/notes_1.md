@@ -58,7 +58,7 @@ baselines: "None external; rule combinations are compared with each other and wi
 
 A *unit load* is one or more parts bound together and moved as a unit. Each job is split into equal-size unit loads that follow the job's route through several **work centres**. Each work centre has machines, an incoming queue and an outgoing queue (Figure 1). When a unit load enters the outgoing queue, the work centre requests a vehicle to take it away.
 
-![Figure 1. Schematic representation of a work centre: delivery point, incoming queue, machines, outgoing queue, pickup point.](/literature/egbelu_1984/figure1.png)
+![Figure 1. Schematic representation of a work centre: delivery point, incoming queue, machines, outgoing queue, pickup point.](figure1.png)
 
 When a vehicle finishes a delivery it is reassigned at once if any task is unattended; otherwise it idles until a task appears (p. 360). The authors argue that the way these assignment decisions are made affects material flow, buffer requirements, machine utilisation and vehicle effectiveness.
 
@@ -110,7 +110,7 @@ Rules **not** included in the experiments: RV, LUV, RW, ULSAT.
 - Performance measure: shop throughput in unit loads.
 - **Locking** is declared when (1) input and output queues are full at some or all departments and machines are blocked, (2) loaded vehicles cannot deliver because input queues are full and no free vehicle can empty the output queues, and (3) empty vehicles sent for pickups cannot reach their destinations because of interference from other vehicles (p. 366).
 
-![Figure 2. Network layout of the demonstrative facility: 13 departments, one-way guide path, D = delivery station, P = pickup station.](/literature/egbelu_1984/figure2.png)
+![Figure 2. Network layout of the demonstrative facility: 13 departments, one-way guide path, D = delivery station, P = pickup station.](figure2.png)
 
 ### 2.5 Results
 
@@ -174,7 +174,7 @@ The paper's own nomenclature under Table 3 reads "maximum remaining outgoing que
 
 **Sequential (loop) dispatching (pp. 370-371).** Vehicles visit pickup points in a fixed loop, which makes locking impossible by construction. The tested sequence was 1→4→13→11→10→8→6→2→12→5→9→7→3→1 (Figure 3), not chosen by any optimisation. Throughput was 406 and 499, well below LIV-MROQS (740, 754) and LIV-MFCFS (770, 783). The authors attribute this partly to the non-optimal sequence and partly to many unproductive visits, and suggest such a policy be justified by simplicity of traffic control or lock elimination rather than by speed.
 
-![Figure 3. A single-loop vehicle assignment system based on the demonstrative facility.](/literature/egbelu_1984/figure3.png)
+![Figure 3. A single-loop vehicle assignment system based on the demonstrative facility.](figure3.png)
 
 ### 2.8 Authors' conclusions and stated limitations (p. 371)
 
@@ -205,11 +205,11 @@ $$
 
 where $e$ is the distance between a check point and the node it serves, $f$ is the length of the smoothed ramp needed to negotiate a turn, and $\phi=1$ if a turn is required at the check point of node $\alpha$ to reach node $\beta$ (otherwise $0$). The plus sign inside the second term of the Euclidean case is as printed. Because the rectilinear case uses a difference there, and a Euclidean distance requires one, it is most likely a typographical error in the paper. The approximation for $f$ in terms of the turning radius and maximum speed is not reproduced here.
 
-![Figure A1. A guide path system: segments, merges, diverges, crossings, pickup and delivery points.](/literature/egbelu_1984/figureA1.png)
+![Figure A1. A guide path system: segments, merges, diverges, crossings, pickup and delivery points.](figureA1.png)
 
-![Figure A2. A section of a guide path network: nodes, check zones, check points b1-b7 and ramps.](/literature/egbelu_1984/figureA2.png)
+![Figure A2. A section of a guide path network: nodes, check zones, check points b1-b7 and ramps.](figureA2.png)
 
-![Figure A3. Characterization of arcs according to orientation (Family One: straight, Family Two: L-shaped).](/literature/egbelu_1984/figureA3.png)
+![Figure A3. Characterization of arcs according to orientation (Family One: straight, Family Two: L-shaped).](figureA3.png)
 
 ---
 

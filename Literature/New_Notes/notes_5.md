@@ -58,13 +58,13 @@ last_updated: "2026-10-05"
 
 AGVs carry containers between quay cranes (QCs) and automated stacking cranes (ASCs) at the yard blocks. A pair of ASCs serves each block; a few **handover points** (HPs) in front of each block are where AGVs and ASCs exchange containers, and an HP lies under the back-reach of each QC. AGVs may not stay idle at an HP under a QC; they wait at an HP in front of a block or in a waiting area in the middle of the apron.
 
-![Figure 1. Layout of an automated container terminal.](/literature/choe_2016/figure1.png)
+![Figure 1. Layout of an automated container terminal.](figure1.png)
 
 The figure shows quay cranes (QC) along the quay with AGVs in the apron; twelve yard blocks drawn perpendicular to the quay, each served by a pair of ASCs; handover points (HP) at the apron end of each block (for AGVs) and at the hinterland end (for external trucks); and the gate with external trucks. The experiments use 14 blocks.
 
 Loading and discharging follow **predetermined sequences** planned from weights, destination ports, stowage and yard stacking status. Containers in a ship bay are stored in groups by destination, and QCs work bay after bay (Figure 2).
 
-![Figure 2. Ship bays (a) and stowage plan of a bay (b).](/literature/choe_2016/figure2.png)
+![Figure 2. Ship bays (a) and stowage plan of a bay (b).](figure2.png)
 
 A **delivery job** has four steps: an empty trip to an HP, the pick-up, a loaded trip to the destination HP, and the release. For loading, the AGV waits at a block HP until the ASC retrieves and sets down the container, then drives to the HP under the QC. For discharging, the AGV drives to the HP under the QC, receives the container, and carries it to a block HP. A **dual cycle** occurs when an AGV, right after releasing a container to a crane, receives another container from the same crane, which avoids the empty trip. Operators try to build plans that maximise dual cycles, but reducing empty travel can lengthen crane delays: a nearer AGV that is still busy may arrive later than a farther free one.
 
@@ -131,7 +131,7 @@ A training example is a pair of candidate jobs plus a binary label (1 if the fir
 
 **Pool management.** Once the pool exceeds a bound $R$, it is reduced to $R$ examples by **sampling without replacement** before new examples are added, so older examples have a lower and lower chance of surviving. If $q$ examples are added per round, an example is kept in a round with probability $R/(R+q)$ and survives $m$ rounds with probability $\bigl(R/(R+q)\bigr)^m$ (Figure 3, with $R=30{,}000$ and $q=10$). The alternative is **truncation**, which deletes the oldest $q$ examples each round.
 
-![Figure 3. Survival probability of a training example in the pool: sampling without replacement against truncation (R = 30,000, q = 10).](/literature/choe_2016/figure3.png)
+![Figure 3. Survival probability of a training example in the pool: sampling without replacement against truncation (R = 30,000, q = 10).](figure3.png)
 
 **Evaluating candidates.** After a decision, each candidate job seen at that moment is evaluated by simulating the next few assignments (the number of future jobs simulated, including the candidate, is kept below 20). All decisions inside this simulation use the current preference function, and AGV routing and traffic control are simulated in realistic detail with the simulator of Bae et al. (2011). The short-term evaluation differs slightly from Eqs. 9-11:
 
@@ -176,7 +176,7 @@ Experiments ran on an Intel Core i7-2600 PC (3.40 GHz, 8 GB), with the implement
 
 The 14 blocks are in consecutive locations. Each QC serves four ship bays in turn, completing the discharging jobs at a bay before its loading jobs; the jobs of a bay are split into 3-6 groups whose jobs are done in sequence (Figure 2). ASCs serve AGVs first-come-first-served. Containers to be discharged go to blocks pre-planned from delivery distance and ASC workload, and containers to be loaded onto one vessel are stored near the berth. In the scenarios, the containers of a group handled by QC $i$ are placed in blocks following $N(\mu_i,\sigma_i^2)$, where $\mu_i$ itself follows $N(m_i,s_i^2)$ with $m_i$ the block nearest to QC $i$ (Figure 5); large $\sigma_i$ and $s_i$ lead to long loaded travel and unequal job loads.
 
-![Figure 5. Distribution of containers at different blocks.](/literature/choe_2016/figure5.png)
+![Figure 5. Distribution of containers at different blocks.](figure5.png)
 
 In the figure, QC 2 has $\mu_2=5$ (the containers of its group are centred on block B5) and QC 4 has $\mu_4=9$, each with a normal spread around that block.
 
@@ -204,9 +204,9 @@ All tuning used T2. Both a single-layer perceptron (OnPL-SLP) and a multi-layer 
 - **Pool size $R$:** for OnPL-SLP, $R=30{,}000$ dominated the other values and larger pools degraded performance because of inertia; OnPL-MLP needed more examples, with good results between 60,000 and 120,000. A pool of 30,000 holds one scenario's worth (3,000 decisions × 10 examples, since six candidates give ten examples per decision). Truncation forgets everything older than one scenario; sampling keeps some old examples and so learns from long-term experience.
 - **Learning time** (examples generation, weights and RPROP) grows with pool size but is under 1 s in most cases.
 
-![Figure 6. Replacement strategies compared in the objective space (Sec. 5.2).](/literature/choe_2016/figure6.png)
+![Figure 6. Replacement strategies compared in the objective space (Sec. 5.2).](figure6.png)
 
-![Figure 7. Replacement strategies compared in the objective space (Sec. 5.2).](/literature/choe_2016/figure7.png)
+![Figure 7. Replacement strategies compared in the objective space (Sec. 5.2).](figure7.png)
 
 ### 2.8 Compared methods (Sec. 5.3, Table 5)
 
@@ -285,17 +285,17 @@ RH is unsuitable for real time because it searches at decision time. PS needs up
 
 **Adaptation (Figures 8-11).** For each method the weight ratio $w_T:w_D$ was varied from 1:1 up to 1000:1 and the resulting (makespan, empty-travel) pairs were plotted. On T2 with 12 AGVs (Figure 8), PS-T2 is the best (as expected) while PS-T1 is much worse than OnPL; on T1 (Figure 9) the picture reverses: PS-T1 is the clear winner and PS-T2 performs worse than OnPL-MLP. The authors conclude that offline policy search works well when the scenarios resemble the one it was derived from and degrades when they differ, while OnPL's results dominate those of PS in that situation. With 18 AGVs on T2 (Figure 10) OnPL dominates PS-T1 and all makespans are shorter. With 24 AGVs (Figure 11) neither dominates: OnPL is better on empty travel, while three PS-T1 cases have a shorter makespan, by less than 0.5 s.
 
-![Figure 8. OnPL and PS in the objective space on test case T2 with 12 AGVs.](/literature/choe_2016/figure8.png)
+![Figure 8. OnPL and PS in the objective space on test case T2 with 12 AGVs.](figure8.png)
 
-![Figure 9. OnPL and PS in the objective space on test case T1 with 12 AGVs.](/literature/choe_2016/figure9.png)
+![Figure 9. OnPL and PS in the objective space on test case T1 with 12 AGVs.](figure9.png)
 
-![Figure 10. OnPL and PS-T1 in the objective space on test case T2 with 18 AGVs.](/literature/choe_2016/figure10.png)
+![Figure 10. OnPL and PS-T1 in the objective space on test case T2 with 18 AGVs.](figure10.png)
 
-![Figure 11. OnPL and PS-T1 in the objective space on test case T2 with 24 AGVs.](/literature/choe_2016/figure11.png)
+![Figure 11. OnPL and PS-T1 in the objective space on test case T2 with 24 AGVs.](figure11.png)
 
 **Repeated experiments (Figure 12, Tables 9 and 10).** With 12 AGVs, PS-T1 and OnPL-MLP were tested on T2 at five weight ratios. For PS-T1, a scenario was picked at random from T1 and a policy derived for each ratio, repeated 10 times with different training scenarios. For OnPL-MLP, which has no pre-training, the order of the scenarios in T2 was reshuffled 10 times. The **hypervolume ratio (HVR)** of the five resulting points averaged 0.746 for PS-T1 and 0.713 for OnPL-MLP, and a non-paired t-test showed these averages differ significantly at 95% confidence. The text does not define HVR beyond computing it from the five (makespan, empty-travel) points.
 
-![Figure 12. Performances of OnPL-MLP and PS-T1 on T2 for five different weight ratios.](/literature/choe_2016/figure12.png)
+![Figure 12. Performances of OnPL-MLP and PS-T1 on T2 for five different weight ratios.](figure12.png)
 
 In the figure (makespan on the horizontal axis, empty travel on the vertical axis) the five OnPL-MLP points lie below and to the left of the five PS-T1 points, and the legend gives HVR = 0.713 for OnPL-MLP and 0.746 for PS-T1.
 

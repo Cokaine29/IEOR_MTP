@@ -58,7 +58,7 @@ last_updated: "2026-10-05"
 
 The study was carried out with the HHLA Container Terminal Altenwerder in Hamburg and considers a similar configuration: quay cranes, AGVs (which cannot load or unload themselves) and automated stacking cranes serving yard blocks. Only the **waterside** is considered (discharging from and loading onto vessels); the landside is excluded.
 
-![Figure 1. Layout of the container terminal: vessels along the quay, quay cranes with AGV waiting buffers, AGV lanes, handover lanes and stacking cranes serving the stacking area.](/literature/briskorn_2006/figure1.png)
+![Figure 1. Layout of the container terminal: vessels along the quay, quay cranes with AGV waiting buffers, AGV lanes, handover lanes and stacking cranes serving the stacking area.](figure1.png)
 
 A **job** is the transport of one container from a pick-up to a delivery location: an empty drive to the pick-up, a handover there, a loaded drive, and a handover at the delivery. For discharging, pick-up is at a quay crane and delivery at a stack; for loading, the reverse. Both locations are fixed for each job, so assignment decisions influence only the empty drive. An AGV carries one container at a time. Estimates of driving and handover times are assumed to be available where a method needs them.
 

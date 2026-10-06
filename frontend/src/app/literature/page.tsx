@@ -309,6 +309,7 @@ const getStochasticityBadge = (level: string) => {
 
 function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
   const [markdown, setMarkdown] = useState<string | null>(null);
+  const [frontmatter, setFrontmatter] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -323,7 +324,26 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
         return res.text();
       })
       .then(text => {
-        setMarkdown(text);
+        const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?(?:\n|$)/);
+        if (match) {
+          const fmText = match[1];
+          const parsedFm: Record<string, string> = {};
+          fmText.split(/\r?\n/).forEach(line => {
+            const colonIndex = line.indexOf(':');
+            if (colonIndex > 0) {
+              const key = line.slice(0, colonIndex).trim();
+              let val = line.slice(colonIndex + 1).trim();
+              if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+              else if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
+              parsedFm[key] = val;
+            }
+          });
+          setFrontmatter(parsedFm);
+          setMarkdown(text.slice(match[0].length));
+        } else {
+          setFrontmatter(null);
+          setMarkdown(text);
+        }
         setLoading(false);
       })
       .catch(err => {
@@ -384,7 +404,7 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
           {loading && (
             <div className="flex items-center justify-center py-20 text-zinc-700 font-medium">
               <svg className="w-6 h-6 animate-spin mr-3 text-zinc-600" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-              Loading notes-
+              Loading notes...
             </div>
           )}
 
@@ -395,8 +415,26 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
           {!paper.notesFile && !loading && (
             <div className="text-center py-16">
               <div className="text-zinc-300 text-3xl mb-4"></div>
-              <p className="text-zinc-700 font-medium">Detailed notes for this paper haven't been written yet.</p>
+              <p className="text-zinc-700 font-medium">Detailed notes for this paper haven\'t been written yet.</p>
               <p className="text-zinc-600 text-sm mt-1">Check back later, or contribute by analyzing this paper!</p>
+            </div>
+          )}
+
+          {frontmatter && Object.keys(frontmatter).length > 0 && (
+            <div className="mb-10 p-6 bg-zinc-50 border border-zinc-200 rounded-2xl">
+              <h3 className="text-xs font-bold text-zinc-900 uppercase tracking-widest mb-4">Paper Profile</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                {Object.entries(frontmatter).map(([key, value]) => {
+                  if (!value || value === 'n/a') return null;
+                  if (['id', 'title', 'authors', 'venue', 'year', 'doi'].includes(key)) return null;
+                  return (
+                    <div key={key}>
+                      <div className="text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-wider">{key.replace(/_/g, ' ')}</div>
+                      <div className="text-sm text-zinc-900 font-medium">{value}</div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -437,7 +475,6 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
     </motion.div>
   );
 }
-
 // - COMPONENT -
 
 export default function LiteraturePage() {
