@@ -17,8 +17,7 @@ jobs:
         env:
           RUNNER_TRACKING_ID: "" # Prevents GitHub from killing background processes
         run: |
-          # Load NVM
-          export HOME=/scratch/25m1528
+          # Load NVM (using default home directory on Kopri)
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           
