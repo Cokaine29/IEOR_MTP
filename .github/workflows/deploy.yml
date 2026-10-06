@@ -16,6 +16,8 @@ jobs:
       - name: Build and Restart PM2
         env:
           RUNNER_TRACKING_ID: "" # Prevents GitHub from killing background processes
+          http_proxy: "http://tp6.iitb.ac.in:80"
+          https_proxy: "http://tp6.iitb.ac.in:80"
         run: |
           # Load NVM (using default home directory on Kopri)
           export NVM_DIR="$HOME/.nvm"
