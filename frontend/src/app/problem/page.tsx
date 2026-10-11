@@ -35,15 +35,27 @@ export default function ProblemPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" as const }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight text-center"
+            transition={{ duration: 0.7 }}
+            className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]"
           >
-            "How do you dispatch a dense fleet of Automated Guided Vehicles (AGVs) across a multi-billion dollar terminal sector, in real time, when crane speeds vary, traffic congestion is unpredictable, and <span className="text-amber-400">every second of Quay Crane idle time costs money?</span>"
+            A complex game of <br className="hidden md:block"/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
+              time and space.
+            </span>
           </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-xl md:text-2xl text-zinc-400 font-medium max-w-2xl leading-relaxed"
+          >
+            How do you dispatch 130 autonomous vehicles to keep 26 giant cranes fed, when every second costs money and nothing goes to plan?
+          </motion.p>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 mt-20 space-y-32">
+      <div className="max-w-5xl mx-auto px-4 mt-16 space-y-32">
+        
         {/* SECTION 1.5: The Architecture / Scope */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.div variants={fadeUp} className="mb-10 text-center">
@@ -67,8 +79,9 @@ export default function ProblemPage() {
                 <p className="text-indigo-100 text-sm mb-3">Where should each free AGV go next: which quay crane, which yard block, or hold?</p>
                 <div className="bg-indigo-800/50 rounded-lg px-3 py-2 text-sm font-semibold flex justify-between items-center border border-indigo-500/30">
                   <span>Who solves it?</span>
-                  <span className="text-amber-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Dispatchers under study (standard methods in Phase 1, PPO and MAPPO in Phase 2)</span>
+                  <span className="text-amber-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Methods under study</span>
                 </div>
+                <p className="text-xs text-indigo-200 mt-2">Standard methods in Phase 1; PPO and MAPPO in Phase 2.</p>
               </div>
 
               <div className="bg-zinc-100 p-5 rounded-2xl border border-zinc-200 shadow-sm">
@@ -101,19 +114,19 @@ export default function ProblemPage() {
               <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 h-full flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Mathematical Scope
+                    <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Scope, in Precise Terms
                   </h3>
                   
                   <p className="text-zinc-700 font-medium mb-6 text-justify leading-relaxed">
-                    In the literature, dispatching (assigning vehicles to jobs) and routing (choosing driving paths) are sometimes used interchangeably. Carlo, Vis & Roodbergen (2014) treat transport operations as vehicle type, number of vehicles, and routing and dispatching. This thesis studies the dispatching (assignment) decision. {/* TODO verify wording against the paper */}
+                    In the literature, dispatching (assigning vehicles to jobs) and routing (choosing driving paths) are sometimes used interchangeably. Carlo, Vis & Roodbergen (2014) treat transport operations as vehicle type, number of vehicles, and routing and dispatching. This thesis studies the dispatching (assignment) decision.
                   </p>
 
-                  <div className="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-2xl mb-6">
-                    <blockquote className="text-lg font-serif text-indigo-900 leading-relaxed italic text-justify">
-                      "The AGV control problem can be broken down into three distinct sub-problems: 1. Assigning AGVs to transportation orders (Dispatching). 2. Routing the AGVs. 3. Traffic Control. Algorithms for routing and traffic control are generally already included in the control software provided by the AGV manufacturer. Thus, <strong>only the assignment problem is investigated in this paper.</strong>"
+                  <div className="bg-zinc-50 border-l-4 border-zinc-300 p-5 rounded-r-xl">
+                    <blockquote className="text-zinc-600 italic font-serif leading-relaxed text-justify">
+                      "AGV dispatching usually consists of three sub-problems, namely, assigning AGVs to transportation orders, routing the AGVs, and traffic control. Algorithms for routing and traffic control are generally already included in the control software provided by the AGV manufacturer. Thus, <strong>only the assignment problem is investigated in this paper.</strong>"
                     </blockquote>
                     <div className="text-indigo-800 font-bold text-sm mt-4 text-right">
-                      — Grunow, Günther & Lehmann (2006) {/* TODO verify quote verbatim from PDF */}
+                      — Grunow, Günther & Lehmann (2006), OR Spectrum 28:587–610, Sec. 2
                     </div>
                   </div>
                 </div>
@@ -177,7 +190,7 @@ export default function ProblemPage() {
               <ul className="list-disc pl-5 space-y-2 text-zinc-600 font-medium text-justify">
                 <li><strong className="text-zinc-800">Capacity:</strong> one container per AGV at a time.</li>
                 <li><strong className="text-zinc-800">Synchronization:</strong> AGV and QC must synchronize at handoff (wait times accrue if either is late).</li>
-                <li><strong className="text-zinc-800">Battery:</strong> not modelled in Phase 1 (Song et al. 2024 model charging; Gao et al. 2023 and Zhao et al. 2025 assume enough charge).</li>
+                <li><strong className="text-zinc-800">Battery:</strong> no random treatment is described in the studies we read (Song et al. 2024 model charging; Gao et al. 2023 and Zhao et al. 2025 assume enough charge). Whether it is used in Phase 1 is fixed in the formulation.</li>
                 <li><strong className="text-zinc-800">Congestion:</strong> the dispatcher does not plan lanes, but suffers queueing delays if too many vehicles are sent to the same place.</li>
               </ul>
             </motion.div>
@@ -201,16 +214,12 @@ export default function ProblemPage() {
             
             <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-100 text-left">
               <p className="text-zinc-800 font-medium leading-relaxed mb-3 text-justify">
-                Quay Cranes are the most capital-intensive equipment in a terminal. Every minute a crane is blocked or starved waiting for an AGV is revenue lost and vessel turnaround delayed.
+                Quay cranes are widely regarded as the most critical asset in a container terminal (Garmouch et al., 2025). Every minute a crane waits for a vehicle delays the ship's turnaround.
               </p>
-              {/* TODO: add a verified source for QC being the most capital-intensive equipment */}
-            </div>
+                          </div>
           </motion.div>
         </motion.section>
 
-        {/* TODO: show again once the quote is verified verbatim from the PDF */}
-{/* 
-{/ * 2025 ACADEMIC CONSENSUS BLOCKQUOTE * /}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.div variants={fadeUp} className="my-6 bg-gradient-to-r from-indigo-900 to-indigo-800 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden border border-indigo-700/50">
             <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
@@ -218,30 +227,32 @@ export default function ProblemPage() {
             </div>
             <div className="relative z-10">
               <h3 className="text-amber-400 font-bold mb-6 tracking-widest text-sm uppercase flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" /> Recent Evidence (2025)
+                <CheckCircle2 className="w-5 h-5" /> A Recent Statement of the Link (2025)
               </h3>
-              <blockquote className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-6 text-justify">
-                "Delays in either the availability of AGVs or the operations of yard cranes will directly increase Quay Crane idle time... If an AGV takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration."
+              <blockquote className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-4 text-justify">
+                "Delays in either the availability of AGVs or the operations of ASCs will directly increase crane idle time, as the cranes must wait for the completion of container handoffs."
+              </blockquote>
+              <blockquote className="text-lg font-serif text-indigo-100 leading-relaxed italic mb-6 text-justify">
+                "If an AGV/ASC takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration, increasing total idle time."
               </blockquote>
               <div className="text-indigo-200 font-medium text-lg">
-                - Garmouch et al. (2025), <cite className="text-white font-bold">Scientific Reports (Nature Portfolio)</cite>
-                {/ * TODO verify quote verbatim * /}
+                — Garmouch, Abdoun &amp; Garmouch (2025), <cite className="text-white font-bold">Scientific Reports</cite>
               </div>
+              <p className="text-xs text-indigo-300 mt-4 italic text-justify">
+                ASC = automated stacking crane. The second sentence is the authors' illustrative example, not a measured result. Their study schedules crane maintenance on synthetic data.
+              </p>
             </div>
           </motion.div>
         </motion.section>
 
-        
-*/}
-
-{/* SECTION 3.5: The Cascade of Losses */}
+        {/* SECTION 3.5: The Cascade of Losses */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
           <motion.div variants={fadeUp} className="mb-14 text-center">
             <p className="text-sm text-zinc-500 italic mb-2">In plain words: How a small delay costs a lot of money.</p>
             <h2 className="text-3xl font-bold tracking-tight text-zinc-900">The Cascade of Losses: Why Seconds Matter</h2>
             <div className="w-24 h-1 bg-red-500 mx-auto mt-4 rounded-full mb-4"></div>
             <p className="text-zinc-600 max-w-2xl mx-auto font-medium text-lg">
-              Illustrative example using reference parameters (C.I. Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
+              Illustrative example using reference parameters (Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
             </p>
           </motion.div>
 
@@ -249,60 +260,61 @@ export default function ProblemPage() {
             <div className="relative border-l-4 border-red-100 ml-4 md:ml-0 md:border-none space-y-12 pb-10">
               
               {/* Center line for desktop */}
-              <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-1 bg-gradient-to-b from-red-100 via-orange-200 to-red-600 -translate-x-1/2 z-0"></div>
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-red-100 -translate-x-1/2 rounded-full"></div>
 
               {/* Step 1 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="hidden md:flex flex-1 justify-end text-right pr-8">
-                  <h3 className="text-xl font-bold text-zinc-900">1. The Micro-Delay</h3>
+              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
+                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">1</div>
+                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:text-right md:pr-12">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
+                    <h3 className="font-bold text-zinc-900 text-lg mb-2">The Dispatching Error</h3>
+                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify md:text-right">A bad assignment sends an AGV into a congested block. It is delayed by <strong>15 seconds</strong>.</p>
+                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">Illustrative assumption: every container adds 15 s of crane waiting.</p>
+                  </div>
                 </div>
-                <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">1</div>
-                <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-8">
-                  <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">1. The Micro-Delay</h3>
-                  <p className="text-zinc-700 font-medium">Poor dispatching causes the Quay Crane to wait an average of just <strong className="text-red-600">15 extra seconds</strong> per container for the AGV.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Illustrative assumption: every container adds 15 s of crane waiting. dictating terminal efficiency.</p>
-                </div>
+                <div className="hidden md:block w-5/12"></div>
               </motion.div>
 
               {/* Step 2 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-0 md:mr-8 order-2 md:order-1">
-                  <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">2. The Throughput Drop</h3>
-                  <p className="text-zinc-700 font-medium">Cycle time increases from 86s to 101s. Crane productivity drops from <strong className="text-red-600">42 down to 35.6 moves/hour</strong>.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">C.I. Liu et al. (2001): 42 moves/hour established as baseline QC capacity.</p>
-                </div>
-                <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10 order-1 md:order-2">2</div>
-                <div className="hidden md:flex flex-1 justify-start text-left pl-8 order-3">
-                  <h3 className="text-xl font-bold text-zinc-900">2. The Throughput Drop</h3>
+              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
+                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">2</div>
+                <div className="hidden md:block w-5/12"></div>
+                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:pl-12">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
+                    <h3 className="font-bold text-zinc-900 text-lg mb-2">The Handoff Starvation</h3>
+                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify">The QC finishes its 86s cycle and expects the next empty AGV. It is not there. The QC sits idle for 15s.</p>
+                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">42 moves per hour is the average double-mode crane rate in Liu et al. (2001). The 86 s cycle is 3600/42 (our arithmetic).</p>
+                  </div>
                 </div>
               </motion.div>
 
               {/* Step 3 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="hidden md:flex flex-1 justify-end text-right pr-8">
-                  <h3 className="text-xl font-bold text-zinc-900">3. The Vessel Delay</h3>
+              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
+                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">3</div>
+                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:text-right md:pr-12">
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
+                    <h3 className="font-bold text-zinc-900 text-lg mb-2">Idle Time Adds Up</h3>
+                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify md:text-right">This error repeats across the 3,400 containers handled for one 8,000 TEU ship: 15 s × 3,400 ≈ <strong>14.2 hours</strong> of aggregate QC idle time.</p>
+                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">3,400 40-ft containers per ship: Liu et al. (2001), Sec. 2.3. The multiplication is our arithmetic, using the illustrative 15 s.</p>
+                  </div>
                 </div>
-                <div className="absolute left-[-22px] md:relative md:left-0 w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-bold border-4 border-white shadow-sm z-10">3</div>
-                <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 ml-6 md:ml-8">
-                  <h3 className="text-xl font-bold text-zinc-900 mb-2 md:hidden">3. The Vessel Delay</h3>
-                  <p className="text-zinc-700 font-medium">Processing a standard 1,800-container exchange takes 10.1 hours instead of the theoretical 8.57 hours. The vessel is delayed by <strong className="text-red-600">~1.5 hours</strong>.</p>
-                  <p className="text-xs text-zinc-500 italic mt-3 border-t border-zinc-100 pt-2">Illustrative arithmetic (5-crane reference case).</p>
-                </div>
+                <div className="hidden md:block w-5/12"></div>
               </motion.div>
 
               {/* Step 4 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
-                <div className="flex-1 bg-rose-50 p-6 rounded-2xl shadow-lg border border-red-200 ml-6 md:ml-0 md:mr-8 order-2 md:order-1">
-                  <h3 className="text-xl font-bold text-red-700 mb-2 md:hidden">4. The Financial Blow</h3>
-                  <p className="text-rose-900 font-medium text-lg leading-relaxed">At a charter rate of $100,000/day, a 1.5-hour delay burns <strong className="text-red-700 font-bold bg-red-100 px-1 rounded">~$6,400 in capital costs</strong> for a single ship call.</p>
-                  <p className="text-xs text-rose-700/80 italic mt-4 border-t border-rose-200 pt-2">Haralambides (2019): Mega-ship capital intensity costs up to $100k/day.</p>
+              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
+                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-zinc-900 border-4 border-red-600 text-white font-bold rounded-full flex items-center justify-center z-10 shadow-lg group-hover:scale-110 transition-transform">
+                  <AlertCircle className="w-5 h-5" />
                 </div>
-                <div className="absolute left-[-26px] md:relative md:left-0 w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center font-bold border-4 border-white shadow-md z-10 order-1 md:order-2 text-xl">$</div>
-                <div className="hidden md:flex flex-1 justify-start text-left pl-8 order-3">
-                  <h3 className="text-2xl font-black text-red-600 tracking-tight">4. The Financial Blow</h3>
+                <div className="hidden md:block w-5/12"></div>
+                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:pl-12">
+                  <div className="bg-red-50 p-6 rounded-2xl shadow-md border-2 border-red-200 group-hover:border-red-400 transition-colors">
+                    <h3 className="font-bold text-red-900 text-lg mb-2">The Cost to the Ship</h3>
+                    <p className="text-red-800 font-medium text-sm leading-relaxed text-justify">If that idle time is spread evenly over the 5 cranes, each crane loses about 2.8 hours (14.2 h ÷ 5), so the ship stays at berth about that much longer. The largest container ships cost more than 100 million US dollars, and their economies of scale are lost if they have to wait in port. Ships queued behind it wait too.</p>
+                    <p className="text-[10px] text-red-700/60 mt-2 italic text-center">Ship cost and waiting-in-port point: Haralambides (2019), Maritime Economics &amp; Logistics, DOI 10.1057/s41278-018-00116-0. The 2.8 h is our arithmetic.</p>
+                  </div>
                 </div>
               </motion.div>
-
             </div>
           </div>
         </motion.section>
@@ -315,68 +327,61 @@ export default function ProblemPage() {
             <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 flex flex-col h-full">
-              <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-6">
-                <Cpu className="w-6 h-6" />
+          <div className="grid md:grid-cols-3 gap-8 mb-10">
+            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
+              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Cpu className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Combinatorial Complexity</h3>
-              <p className="text-zinc-700 font-medium mb-6 flex-1 text-justify">
-                With <span className="italic font-bold">n</span> AGVs and <span className="italic font-bold">m</span> pending tasks, the number of possible assignment combinations grows factorially. A Yangshan-scale fleet of about 130 AGVs serving up to 26 cranes makes exact optimisation computationally intractable in real time.
+              <h3 className="text-xl font-bold text-zinc-900 mb-4">Too Many Possible Assignments</h3>
+              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
+                With n vehicles and m waiting jobs, the number of possible assignments grows very quickly (combinatorially).
               </p>
-              <div className="border-t border-zinc-100 pt-4 mt-auto">
-                <p className="text-xs text-zinc-500 italic leading-relaxed text-justify">
-                  Kim & Bae (2004) showed that exact Mixed-Integer Programming solutions exceed 1 minute per dispatching decision, which is far too slow for live terminal operations.
+              <div className="mt-6 pt-6 border-t border-zinc-100">
+                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
+                  Choe et al. (2016) state that optimal plans need computation that grows exponentially with the number of jobs and go stale when conditions change. Their rolling-horizon search takes about 10 to 40 s per decision, against a dispatch interval of about 10 s.
                 </p>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 flex flex-col h-full">
-              <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-6">
-                <Clock className="w-6 h-6" />
+            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
+              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <Clock className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">The Real-Time Constraint</h3>
-              <p className="text-zinc-700 font-medium mb-6 flex-1 text-justify">
-                In the reference benchmark, a Quay Crane requires a new AGV approximately every <strong className="text-zinc-900">86 seconds</strong>. With up to 26 cranes active, requests arrive system-wide roughly every 3 seconds (86 s ÷ 26), an upper-bound illustration. If a traditional solver (like MILP) takes minutes to compute an exact schedule, the terminal's physical state will have already changed multiple times before the answer is ready, rendering the solution obsolete.
+              <h3 className="text-xl font-bold text-zinc-900 mb-4">Decisions Come Fast</h3>
+              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
+                In the reference terminal, a crane needs a new vehicle about every 86 seconds. With 26 cranes, requests arrive roughly every 3 seconds (86 s ÷ 26, an upper-bound illustration). But speed alone is not the whole story: simple rules and assignment methods already run in well under a second (Briskorn et al. 2006: under 0.001 s on average; Grunow et al. 2006: under 1 s). The harder question is how good the decisions stay when conditions vary.
               </p>
-              <div className="border-t border-zinc-100 pt-4 mt-auto">
-                <p className="text-xs text-zinc-500 italic leading-relaxed text-justify">
-                  C.I. Liu et al. (2001) established the 86s operational rhythm. Kim & Bae (2004) showed exact MILP solutions scale poorly, making them computationally intractable for live operations.
+              <div className="mt-6 pt-6 border-t border-zinc-100">
+                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
+                  Liu et al. (2001) give 42 moves per hour per crane; 86 s is 3600/42 (our arithmetic).
                 </p>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 flex flex-col h-full">
-              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-6">
-                <CloudLightning className="w-6 h-6" />
+            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
+              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <CloudLightning className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Simultaneous Disruptions</h3>
-              <p className="text-zinc-700 font-medium mb-6 flex-1 text-sm space-y-3 text-justify">
-                <span className="block">Real terminals face at least four concurrent sources of uncertainty:</span>
-                <span className="block pl-2 border-l-2 border-zinc-200">1. <strong className="text-zinc-900">Crane cycle time variability</strong></span>
-                <span className="block pl-2 border-l-2 border-zinc-200">2. <strong className="text-zinc-900">Traffic congestion and travel time noise</strong></span>
-                <span className="block pl-2 border-l-2 border-zinc-200">3. <strong className="text-zinc-900">Stowage imbalance</strong> (uneven crane workloads; import/export mix differs by vessel)</span>
-                <span className="block pl-2 border-l-2 border-zinc-200">4. <strong className="text-zinc-900">AGV breakdowns</strong></span>
-                <span className="block">These do not occur one at a time. Any dispatching policy optimised for one will degrade when the others co-occur. Each source is parameterised by an intensity level in our simulator.</span>
+              <h3 className="text-xl font-bold text-zinc-900 mb-4">Uncertainty From Many Sources</h3>
+              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
+                The literature mentions at least seven sources of uncertainty: crane cycle time, travel and congestion, task arrival, stowage workload (how work is spread over cranes), vehicle breakdown, yard-crane delay and battery. Among the 11 dispatching and scheduling studies we reviewed, crane cycle time is modelled as random in five and yard-crane delay in three; vehicle breakdown and battery are not modelled as random in any (see Table 1 below).
               </p>
-              <div className="border-t border-zinc-100 pt-4 mt-auto">
-                <p className="text-xs text-zinc-500 italic leading-relaxed text-justify">
-                  Carlo, Vis & Roodbergen (2014): "The assumption of deterministic operational times could jeopardize the practicality of the solutions."
+              <div className="mt-6 pt-6 border-t border-zinc-100">
+                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
+                  Carlo, Vis & Roodbergen (2014) observe that most models assume deterministic (non-varying) operational times.
                 </p>
               </div>
             </motion.div>
           </div>
-          
-          <motion.div variants={fadeUp} className="w-full bg-zinc-100 rounded-2xl p-6 text-zinc-700 text-justify border border-zinc-200 shadow-sm">
-            <h3 className="font-bold text-zinc-900 text-lg mb-3">The Setting: Yangshan Phase IV</h3>
-            <p className="leading-relaxed">
-              We calibrate the environment to Yangshan Phase IV (Shanghai): a 2,350 m quay served by 26 double-trolley quay cranes and a fleet of about 130 AGVs, with 61 yard blocks of two kinds: end-loading blocks with a fixed seaside I/O point, and side-loading (single-cantilever) blocks whose transfer points lie along a side lane (Liu et al., 2016). These are fixed features of the layout, not sources of randomness. They matter because the same disruption, a late AGV or a slow crane cycle, has different consequences by block type, and because AGVs queue in the seaside zones before reaching a block. Routing and sequencing inside these zones stay at Levels 2–3 and appear in our environment as delays.
-              {/* TODO verify counts against Gu Qin 2016 / Wang Yan 2021 */}
+
+          <motion.div variants={fadeUp} className="bg-zinc-900 text-white p-8 rounded-3xl border border-zinc-800 shadow-xl text-center max-w-4xl mx-auto">
+            <h3 className="text-xl font-bold text-amber-400 mb-4">The Setting</h3>
+            <p className="text-lg font-medium leading-relaxed mb-0 text-justify">
+              Phase 1 uses a small terminal (proposed: 3 quay cranes, 5 vehicles, 5 yard blocks; to be confirmed). The long-term reference is Yangshan Phase IV in Shanghai (26 double-trolley quay cranes, about 130 vehicles, 61 yard blocks, 2,350 m quay; Liu et al. (2016), Port &amp; Waterway Engineering), which is planned for Phase 2.
             </p>
-          </motion.div>
+            </motion.div>
         </motion.section>
 
-        
         {/* SECTION 4.5: What Phase 1 Models */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-16">
           <motion.div variants={fadeUp} className="grid md:grid-cols-3 gap-6">
@@ -385,9 +390,21 @@ export default function ProblemPage() {
               <ul className="list-disc pl-5 space-y-3 text-zinc-700 font-medium text-justify">
                 <li>A small terminal with a few quay cranes, vehicles and yard blocks (size to be confirmed).</li>
                 <li>Dispatch decisions and the quay-crane idle-time objective (exact definition fixed in the formulation).</li>
-                <li>A run without disruption, then runs with increasing levels of uncertainty. Which uncertainty sources are used is fixed in the formulation.</li>
+                <li>A run without disruption, then runs with increasing levels of uncertainty.</li>
                 <li>Rules, a genetic algorithm, tabular Q-learning and DQN on identical scenarios.</li>
               </ul>
+              <div className="mt-4 pt-4 border-t border-indigo-100">
+                <h4 className="text-xs font-bold text-zinc-900 mb-2">Candidate uncertainty sources, each seen in earlier studies. The exact set and levels used in Phase 1 are fixed in the formulation.</h4>
+                <ul className="list-disc pl-5 space-y-1 text-xs text-zinc-500 mb-3">
+                  <li>Crane cycle time varies — Briskorn et al. 2006; Grunow et al. 2006; Kim &amp; Bae 2004; Liu et al. 2001; Zhao et al. 2025</li>
+                  <li>Travel time and congestion — Briskorn et al. 2006; Zheng et al. 2022 (random vehicle speed)</li>
+                  <li>Task arrival timing — Zheng et al. 2022 (random ship arrival)</li>
+                  <li>Stowage / workload variation — Choe et al. 2016; Grunow et al. 2006; Liu et al. 2001</li>
+                  <li>Yard-crane delay — Briskorn et al. 2006; Grunow et al. 2006; Zhao et al. 2025</li>
+                  <li>Vehicle breakdown, battery — no random treatment is described in the 11 dispatching and scheduling studies we read; Angeloudis &amp; Bell (2010) list maintenance and safety stops among sources of plan-versus-actual difference.</li>
+                </ul>
+                <p className="text-[10px] text-zinc-400 italic">Most models assume deterministic (non-varying) operational times (Carlo, Vis &amp; Roodbergen, 2014).</p>
+              </div>
             </div>
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 flex flex-col h-full">
               <h3 className="text-xl font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Simplified (appears only as delays)</h3>
@@ -403,12 +420,13 @@ export default function ProblemPage() {
               <ul className="list-disc pl-5 space-y-3 text-indigo-800 text-justify">
                 <li>Yangshan Phase IV scale.</li>
                 <li>Different behaviour of end-loading and side-loading yard blocks (real-port layout).</li>
-                <li>Uncertainty sources not used in Phase 1 (for example vehicle breakdown, battery).</li>
+                <li>Any uncertainty sources not selected for Phase 1.</li>
                 <li>PPO and MAPPO with curriculum learning; fleet-size optimisation.</li>
               </ul>
             </div>
           </motion.div>
         </motion.section>
+
 {/* SECTION 5: The Literature Gap */}
         <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-24">
           <motion.div variants={fadeUp} className="mb-10 text-center">
@@ -565,7 +583,7 @@ export default function ProblemPage() {
               </p>
 
               <p className="text-sm font-medium leading-relaxed text-indigo-200 mt-6 pt-6 border-t border-indigo-700/50">
-                Planned for Phase 2: whether results differ between end-loading and side-loading yard blocks. {/* TODO keep only if Methodology gives the two block types distinct behaviour */}
+                Planned for Phase 2: whether results differ between end-loading and side-loading yard blocks.
               </p>
             </div>
           </motion.div>
@@ -609,7 +627,7 @@ export default function ProblemPage() {
             <p>To answer this question, we:</p>
             <ol className="list-decimal pl-6 space-y-3 text-justify">
               <li><strong className="text-zinc-900">Formulate</strong> the dispatching decision as a Markov Decision Process (MDP), a step-by-step description of the situation, the choice and the outcome, with quay-crane idle time as the objective.</li>
-              <li><strong className="text-zinc-900">Build</strong> a Python/Gymnasium simulator, first without disruption and then with adjustable uncertainty levels. Phase 1 uses a small terminal; scaling and calibration to Yangshan Phase IV (26 cranes, about 130 vehicles, 61 yard blocks; Liu et al. 2016) is planned for Phase 2.</li>
+              <li><strong className="text-zinc-900">Build</strong> a Python/Gymnasium simulator, first without disruption and then with adjustable uncertainty levels. Phase 1 uses a small terminal; scaling and calibration to Yangshan Phase IV (26 cranes, about 130 vehicles, 61 yard blocks; Liu et al. (2016), Port &amp; Waterway Engineering) is planned for Phase 2.</li>
               <li><strong className="text-zinc-900">Implement</strong> standard methods for comparison: rules (FCFS, STD, LWT and an Egbelu-style rule), a genetic algorithm, tabular Q-learning and DQN (Zheng et al. 2022), all on identical scenarios.</li>
               <li><strong className="text-zinc-900">Evaluate</strong> with several random seeds, interquartile mean and 95% bootstrap confidence intervals (Agarwal et al. 2021). Primary metric: total quay-crane idle time. Secondary metrics (reported, not optimised): makespan, maximum idle time of any single crane, empty travel distance, deadlock events.</li>
               <li><strong className="text-zinc-900">In Phase 2, train</strong> PPO and then extend to MAPPO with curriculum learning, and compare with the Phase 1 methods.</li>
