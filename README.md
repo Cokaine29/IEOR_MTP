@@ -1,5 +1,7 @@
 # MTP — Dynamic AGV Scheduling in Automated Container Terminals
 
+> **Note (Oct 2026):** `simulation/` and `frontend/public/replays/` are an **old, unverified prototype** and are not used for any thesis result (see `simulation/OLD_README.md`). The current simulator and experiments are in the ACT_MTP repository; the WebApp's **Experiments** tab (`/experiments`) shows those results, exported by ACT_MTP's `webapp/export_experiments.py` into `frontend/src/data/experiments.json`.
+
 ## Project Structure
 
 ```

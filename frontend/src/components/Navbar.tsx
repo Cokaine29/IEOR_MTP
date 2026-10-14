@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/literature', label: 'Literature' },
   { href: '/methodology', label: 'Methodology' },
   { href: '/simulation', label: 'Simulation' },
+  { href: '/experiments', label: 'Experiments' },
   { href: '/progress', label: 'Progress' },
   { href: '/results', label: 'Results' },
 ];
