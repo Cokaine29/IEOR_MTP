@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, FlaskConical, Terminal } from 'lucide-react';
 import LineChart, { ChartSpec } from './LineChart';
+import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
 import DATA from '@/data/experiments.json';
 
 type Card = {
@@ -17,6 +18,7 @@ type Card = {
   setup?: string[][];
   reproduce: string;
   chart?: ChartSpec;
+  replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
 };
 type MapItem = { id: string; label: string; status: string; card: boolean };
@@ -69,6 +71,8 @@ function ExperimentCard({ c, technical }: { c: Card; technical: boolean }) {
       </div>
 
       {c.chart && <LineChart spec={c.chart} />}
+
+      {c.replay && <ReplayPlayer pairs={c.replay} />}
 
       <p className="max-w-3xl border-l-4 border-teal-700 pl-4 text-zinc-800 leading-relaxed">{technical ? c.technical : c.simple}</p>
 

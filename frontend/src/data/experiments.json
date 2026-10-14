@@ -1,6 +1,6 @@
 {
  "generated": "2026-10-14",
- "source": "ACT_MTP c771205 / results_reference",
+ "source": "ACT_MTP 7fbb7e5 / results_reference",
  "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
  "headlines": [
   {
@@ -188,6 +188,14 @@
     ]
    ],
    "reproduce": "python experiments/e1_agv_sweep.py",
+   "replay": [
+    {
+     "label": "3 AGVs",
+     "left": "e1_n3_briskorn",
+     "right": "e1_n3_fixed",
+     "caption": "Same 200 containers, 3 AGVs, no randomness. On the right, fixed groups give QC1 two AGVs and QC2 only one: QC2 keeps turning red (waiting), 68 s per container against 3 s for QC1. QC1 finishes at 2 h 10 min and its AGVs then stand idle, while QC2 needs until 3 h 59 min. On the left, Briskorn shares all 3 AGVs between both cranes."
+    }
+   ],
    "chart": {
     "xLabel": "Number of AGVs (2 cranes)",
     "xFmt": "int",
@@ -1313,6 +1321,14 @@
     ]
    ],
    "reproduce": "python experiments/e3_rules_degradation.py",
+   "replay": [
+    {
+     "label": "Briskorn: ±0% vs ±40%",
+     "left": "n4_d0_briskorn",
+     "right": "n4_d04_briskorn",
+     "caption": "The same rule (Briskorn inventory) and the same 4 AGVs; on the right every crane cycle is drawn between 45 and 105 s instead of exactly 75 s. Watch the cranes turn red more often on the right: idle per container 3.9 s → 7.0 s."
+    }
+   ],
    "chart": {
     "xLabel": "Variation in crane cycle time (δ)",
     "xFmt": "pct",
@@ -1790,6 +1806,20 @@
     ]
    ],
    "reproduce": "python experiments/e3b_30.py (uses saved plans); full: python experiments/e3b_plans.py",
+   "replay": [
+    {
+     "label": "No randomness (±0%)",
+     "left": "n4_d0_briskorn",
+     "right": "n4_d0_plan",
+     "caption": "Crane times exactly as planned. The optimised plan (right) sends each AGV to the right place in advance: 3.09 s idle per container against 3.85 s for the Briskorn rule (left). The plan wins."
+    },
+    {
+     "label": "Random crane times (±40%)",
+     "left": "n4_d04_briskorn",
+     "right": "n4_d04_plan",
+     "caption": "The same plan, but crane cycles now vary between 45 and 105 s. The plan still follows its fixed task lists, so AGVs arrive at the wrong moment; the rule (left) reacts to what actually happens. Plan 8.08 s against rule 7.05 s per container: the plan now loses."
+    }
+   ],
    "chart": {
     "xLabel": "Variation in crane cycle time (δ)",
     "xFmt": "pct",
