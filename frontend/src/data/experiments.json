@@ -1,6 +1,159 @@
 {
- "generated": "2026-10-14",
- "source": "ACT_MTP 7fbb7e5 / results_reference",
+ "header": {
+  "title": "Traditional AGV Dispatching in an Automated Container Terminal under Stochastic Conditions",
+  "conditions": [
+   "No randomness",
+   "Crane cycle time",
+   "AGV speed",
+   "Congestion",
+   "Combined"
+  ],
+  "plan": [
+   {
+    "group": "Traditional baselines",
+    "rows": [
+     [
+      "Dispatching rules",
+      "Briskorn inventory rule, NV/FCFS, fixed groups",
+      [
+       "done",
+       "done",
+       "next",
+       "planned",
+       "planned"
+      ]
+     ],
+     [
+      "Genetic algorithm, planned once",
+      "Memetic search on the nominal data, plan then executed",
+      [
+       "done",
+       "done",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ],
+     [
+      "Genetic algorithm with re-planning",
+      "Rolling horizon, re-plans as the terminal evolves",
+      [
+       "planned",
+       "next",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ],
+     [
+      "Machine learning (non-RL)",
+      "Preference learning or imitation of the benchmark",
+      [
+       "planned",
+       "planned",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ]
+    ]
+   },
+   {
+    "group": "Learning baseline (after the MDP design)",
+    "rows": [
+     [
+      "DQN",
+      "Value-based deep reinforcement learning",
+      [
+       "planned",
+       "planned",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ]
+    ]
+   },
+   {
+    "group": "Proposed method",
+    "rows": [
+     [
+      "PPO, then MAPPO",
+      "Policy-based deep reinforcement learning",
+      [
+       "planned",
+       "planned",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ]
+    ]
+   },
+   {
+    "group": "Reference points",
+    "rows": [
+     [
+      "Random dispatching",
+      "Lower reference",
+      [
+       "done",
+       "done",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ],
+     [
+      "Perfect-information benchmark",
+      "Knows all future times; upper reference",
+      [
+       "done",
+       "done",
+       "planned",
+       "planned",
+       "planned"
+      ]
+     ]
+    ]
+   }
+  ],
+  "findingsGroup": "Crane cycle time",
+  "findings": [
+   {
+    "value": "4 AGVs",
+    "text": "Four AGVs is the smallest fleet that keeps both cranes nearly always busy. The uncertainty experiments use this fleet, because with more AGVs the spare vehicles hide most dispatching mistakes.",
+    "conditions": "No randomness · 2 to 12 AGVs · 30 instances",
+    "ref": "E1"
+   },
+   {
+    "value": "3.6 → 7.1 s",
+    "text": "Random crane times roughly double the crane idle time per container, for every rule.",
+    "conditions": "4 AGVs · crane cycle 75 s ± 40% · 30 seeds",
+    "ref": "E3"
+   },
+   {
+    "value": "−21% → +18%",
+    "text": "A schedule optimised in advance beats the best rule when nothing is random, but loses to it once crane times vary.",
+    "conditions": "Strict plan vs Briskorn rule · 4 AGVs · ±0% and ±40% · 30 seeds",
+    "ref": "E3b"
+   },
+   {
+    "value": "≥ 26%",
+    "text": "A dispatcher that knew all future crane times would cut the idle time of every rule by at least a quarter, so a better real-time dispatcher is possible.",
+    "conditions": "Perfect-information benchmark · 4 AGVs · ±0, ±20, ±40% · 10 seeds",
+    "ref": "E3-bench"
+   }
+  ],
+  "references": [
+   "Kim, K.H., & Bae, J.W. (2004). A look-ahead dispatching method for automated guided vehicles in automated port container terminals. Transportation Science, 38(2), 224–234. https://doi.org/10.1287/trsc.1030.0082",
+   "Liu, G., Cheng, Z., Luo, X., Zhuang, H., & He, J. (2016). General layout of fully automated container terminal in phase IV of Yangshan project [洋山四期工程全自动化集装箱码头总体布置]. Port & Waterway Engineering, 2016(9), 46–51.",
+   "Wu, S., He, J., & Luo, X. (2016). Handling technology design for automated container terminal of Yangshan deepwater port phase IV project [洋山四期自动化集装箱码头装卸工艺设计]. Port & Waterway Engineering, 2016(9), 159–162.",
+   "Zheng, X., Liang, C., Wang, Y., Shi, J., & Lim, G. (2022). Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach. Mathematics, 10, 4575. https://doi.org/10.3390/math10234575"
+  ]
+ },
+ "generated": "2026-10-15",
+ "source": "ACT_MTP 0f4e5b0 / results_reference",
  "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
  "headlines": [
   {

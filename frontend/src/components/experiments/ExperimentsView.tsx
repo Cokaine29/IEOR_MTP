@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronDown, FlaskConical, Terminal } from 'lucide-react';
+import { ChevronDown, Terminal } from 'lucide-react';
 import LineChart, { ChartSpec } from './LineChart';
 import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
+import ExperimentsHeader from './ExperimentsHeader';
 import DATA from '@/data/experiments.json';
 
 type Card = {
@@ -129,36 +130,9 @@ export default function ExperimentsView() {
 
   return (
     <div className="bg-zinc-50 min-h-screen pb-32">
-      <section className="bg-zinc-900 px-4 pt-28 pb-16 text-white">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-700 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-300">
-            <FlaskConical className="h-3.5 w-3.5" /> Experiments · traditional baselines
-          </div>
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight md:text-5xl text-balance">
-            How do traditional dispatchers cope when the terminal turns random?
-          </h1>
-          <p className="max-w-3xl text-lg leading-relaxed text-zinc-300">
-            We simulate 2 quay cranes and a fleet of AGVs in a Yangshan-IV-style terminal and measure one thing throughout:{' '}
-            <span className="font-semibold text-white">QC idle time per container</span>, the seconds each crane waits because no AGV is there.
-            Every number below comes from a script that anyone can re-run.
-          </p>
-        </div>
-      </section>
+      <ExperimentsHeader />
 
-      <div className="mx-auto -mt-8 flex max-w-5xl flex-col gap-8 px-4">
-        <div className="grid gap-4 md:grid-cols-3">
-          {DATA.headlines.map((h) => (
-            <button key={h.label} onClick={() => go(h.ref)} className="flex flex-col gap-2 rounded-3xl border border-zinc-200 bg-white p-6 text-left soft-shadow">
-              <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">{h.label}</div>
-              <div className="text-3xl font-bold tracking-tight text-zinc-900 tabular-nums">
-                {h.value} <span className="text-base font-medium text-zinc-500">{h.unit}</span>
-              </div>
-              <p className="text-sm leading-relaxed text-zinc-700">{h.text}</p>
-              <div className="mt-auto text-xs font-semibold text-teal-700">See {h.ref} →</div>
-            </button>
-          ))}
-        </div>
-
+      <div className="mx-auto mt-12 flex max-w-5xl flex-col gap-8 px-4">
         <div className="sticky top-16 z-30 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-zinc-50/90 px-4 py-3 backdrop-blur">
           <div className="hidden text-sm text-zinc-600 md:block">
             Key terms: <Term word="QC" />, <Term word="QC idle time">idle time</Term>, <Term word="Dispatching rule">dispatching rule</Term>,{' '}
