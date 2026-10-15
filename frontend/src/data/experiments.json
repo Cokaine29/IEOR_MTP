@@ -147,13 +147,16 @@
   ],
   "references": [
    "Kim, K.H., & Bae, J.W. (2004). A look-ahead dispatching method for automated guided vehicles in automated port container terminals. Transportation Science, 38(2), 224–234. https://doi.org/10.1287/trsc.1030.0082",
+   "Liu, C.I., Jula, H., & Ioannou, P.A. (2001). Design and simulation of automated container terminal using AGVs. Proceedings of the European Control Conference (ECC) 2001, Porto, Portugal.",
    "Liu, G., Cheng, Z., Luo, X., Zhuang, H., & He, J. (2016). General layout of fully automated container terminal in phase IV of Yangshan project [洋山四期工程全自动化集装箱码头总体布置]. Port & Waterway Engineering, 2016(9), 46–51.",
+   "Luo, X. (2016). Comparison of horizon transportation system of full automatic container terminal [全自动化集装箱码头水平运输方式对比]. Port & Waterway Engineering, 2016(9), 76–82.",
    "Wu, S., He, J., & Luo, X. (2016). Handling technology design for automated container terminal of Yangshan deepwater port phase IV project [洋山四期自动化集装箱码头装卸工艺设计]. Port & Waterway Engineering, 2016(9), 159–162.",
+   "Zhao, N., Li, R., & Yang, X. (2025). AGV scheduling and energy consumption optimization in automated container terminals based on variable neighborhood search algorithm. Journal of Marine Science and Engineering, 13, 647. https://doi.org/10.3390/jmse13040647",
    "Zheng, X., Liang, C., Wang, Y., Shi, J., & Lim, G. (2022). Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach. Mathematics, 10, 4575. https://doi.org/10.3390/math10234575"
   ]
  },
  "generated": "2026-10-15",
- "source": "ACT_MTP 0f4e5b0 / results_reference",
+ "source": "ACT_MTP 0d1cba2 / results_reference",
  "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
  "headlines": [
   {

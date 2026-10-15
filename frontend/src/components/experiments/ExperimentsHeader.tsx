@@ -7,6 +7,7 @@ import 'katex/dist/katex.min.css';
 import { Fragment } from 'react';
 import { ChevronDown, FileText } from 'lucide-react';
 import DATA from '@/data/experiments.json';
+import SetupFigure from './SetupFigure';
 
 type Status = 'done' | 'next' | 'planned';
 type PlanRow = [string, string, Status[]];
@@ -80,6 +81,8 @@ export default function ExperimentsHeader() {
       </section>
 
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 pt-12">
+        <SetupFigure />
+
         {/* how performance is measured */}
         <section className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>

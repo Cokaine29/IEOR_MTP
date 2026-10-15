@@ -16,6 +16,7 @@ type Layout = {
   rackY: number; rzY0: number;
   qcs: { id: number; x: number; flow: number }[];
   qcY: number; agvLen: number; agvW: number;
+  railSea: number; railLand: number; loadY0: number; loadY1: number;
 };
 export type Replay = {
   name: string; label: string; nAgv: number; delta: number; seed: number; accel: number;
@@ -81,7 +82,7 @@ function lastIdx<T>(arr: T[], t: number, key: (x: T) => number) {
 }
 
 /* where is AGV k at time t: [x, y, heading, moving] */
-function agvPose(r: Replay, legs: Leg[], t: number): [number, number, number, boolean] {
+export function agvPose(r: Replay, legs: Leg[], t: number): [number, number, number, boolean] {
   const i = lastIdx(legs, t, (l) => l.t);
   if (i < 0) {
     const seg = r.paths[legs[0].path][0];
@@ -106,7 +107,7 @@ function agvPose(r: Replay, legs: Leg[], t: number): [number, number, number, bo
   return [b[0], b[1], heading, false];
 }
 
-function prepare(r: Replay) {
+export function prepare(r: Replay) {
   // loaded/empty switches per AGV, exact from the event times
   const sw: Record<number, [number, boolean][]> = {};
   const add = (agv: number, t: number, v: boolean) => (sw[agv] ??= []).push([t, v]);
@@ -116,7 +117,7 @@ function prepare(r: Replay) {
   return sw;
 }
 
-function stats(r: Replay, t: number) {
+export function stats(r: Replay, t: number) {
   let done = 0, idle = 0;
   const qcState = r.qcs.map((q) => {
     let waiting = false, qIdle = 0, qDone = 0;
@@ -131,18 +132,13 @@ function stats(r: Replay, t: number) {
   return { done, idle, qcState };
 }
 
-function fmtTime(s: number) {
+export function fmtTime(s: number) {
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = Math.floor(s % 60);
   return `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}`;
 }
 
 function TerminalView({ r, t, prep, end }: { r: Replay; t: number; prep: Record<number, [number, boolean][]>; end: number }) {
-  const L = r.layout;
   const st = stats(r, t);
-  const activeRacks = new Set(r.racks.filter(([, s, e]) => s <= t && t < e).map(([, , , b, k]) => `${b}-${k}`));
-  const pad = 4;
-  const zoneFill = ['#e0f2fe', '#f4f4f5', '#ececee', '#fafafa', '#f4f4f5'];
-
   return (
     <div className="flex flex-col gap-2 min-w-0">
       <div className="flex items-baseline justify-between gap-2">
@@ -163,80 +159,7 @@ function TerminalView({ r, t, prep, end }: { r: Replay; t: number; prep: Record<
           <div className="font-semibold tabular-nums text-zinc-900">{st.done ? (st.idle / Math.max(st.done, 1)).toFixed(1) : '0.0'} s</div>
         </div>
       </div>
-      <svg viewBox={`${-pad} ${-pad} ${L.width + 2 * pad} ${L.height + 2 * pad}`} className="w-full rounded-xl border border-zinc-200 bg-white">
-        {/* zones */}
-        {L.zones.map((z, i) => (
-          <g key={z.name}>
-            <rect x={0} y={z.y0} width={L.width} height={z.y1 - z.y0} fill={zoneFill[i]} />
-            <text x={2} y={z.y0 + 4.6} fontSize={4} fill="#71717a">{z.name}</text>
-          </g>
-        ))}
-        {/* QC lanes */}
-        {L.loadLanes.map((y, i) => (
-          <line key={`ll${i}`} x1={0} x2={L.width} y1={y} y2={y} stroke={L.ioLanes.includes(i) ? '#d4d4d8' : '#ececee'} strokeWidth={0.3} strokeDasharray="2 2" />
-        ))}
-        {/* driving lanes with direction ticks */}
-        {L.driveLanes.map((d, i) => (
-          <g key={`dl${i}`}>
-            <line x1={0} x2={L.width} y1={d.y} y2={d.y} stroke="#e4e4e7" strokeWidth={0.3} />
-            {[0.15, 0.5, 0.85].map((f) => (
-              <path key={f} d={`M ${L.width * f - 1.2 * d.dir} ${d.y - 1} L ${L.width * f + 1.2 * d.dir} ${d.y} L ${L.width * f - 1.2 * d.dir} ${d.y + 1}`} fill="none" stroke="#d4d4d8" strokeWidth={0.3} />
-            ))}
-          </g>
-        ))}
-        {/* buffer slots */}
-        {L.slots.map((x, k) => (
-          <rect key={`s${k}`} x={x - L.slotW / 2} y={L.bufY0 + 1} width={L.slotW} height={L.bufY1 - L.bufY0 - 2} fill="none" stroke="#d4d4d8" strokeWidth={0.25} />
-        ))}
-        {/* yard blocks and racks */}
-        {L.blocks.map((b) => (
-          <g key={`b${b.id}`}>
-            <rect x={b.x0} y={L.rackY + L.agvLen / 2 - 2} width={b.w} height={9} fill="#d4d4d8" rx={0.8} />
-            <text x={b.x0 + b.w / 2} y={L.rackY + L.agvLen / 2 + 4} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
-            {b.racks.map((x, k) => (
-              <rect key={k} x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1}
-                fill={activeRacks.has(`${b.id}-${k + 1}`) ? '#fcd34d' : 'none'} stroke={activeRacks.has(`${b.id}-${k + 1}`) ? '#d97706' : '#d4d4d8'} strokeWidth={activeRacks.has(`${b.id}-${k + 1}`) ? 0.8 : 0.25} />
-            ))}
-          </g>
-        ))}
-        {/* quay cranes */}
-        {L.qcs.map((q, i) => {
-          const s = st.qcState[i];
-          const col = s.finished ? '#a1a1aa' : s.waiting ? '#dc2626' : '#16a34a';
-          return (
-            <g key={`q${q.id}`}>
-              <rect x={q.x - 15} y={L.zones[0].y0 + 2} width={30} height={L.zones[0].y1 - 4} fill={s.waiting && !s.finished ? '#fee2e2' : '#ffffff'} fillOpacity={0.85} stroke={col} strokeWidth={s.waiting ? 1.4 : 0.9} rx={1.5} />
-              <line x1={q.x} x2={q.x} y1={L.zones[0].y0 + 2} y2={L.loadLanes[L.loadLanes.length - 1] + 2} stroke={col} strokeWidth={0.5} strokeDasharray="1.5 1.5" />
-              <text x={q.x} y={L.qcY - 5} fontSize={6} textAnchor="middle" fontWeight={700} fill={col}>QC{q.id}</text>
-              <text x={q.x} y={L.qcY + 2} fontSize={4} textAnchor="middle" fontWeight={600} fill={col}>
-                {s.finished ? 'finished' : s.waiting ? 'waiting for AGV' : 'working'}
-              </text>
-              <text x={q.x} y={L.qcY + 8} fontSize={3.6} textAnchor="middle" fill="#52525b">
-                {s.done}/{s.total} · idle {Math.round(s.idle)} s
-              </text>
-            </g>
-          );
-        })}
-        {/* AGVs */}
-        {r.agvs.map((a, k) => {
-          const [x, y, h] = agvPose(r, a.legs, t);
-          const sws = prep[a.id] ?? [];
-          const j = lastIdx(sws, t, (s) => s[0]);
-          const loaded = j >= 0 ? sws[j][1] : false;
-          const col = AGV_COLORS[k % AGV_COLORS.length];
-          const deg = (h * 180) / Math.PI;
-          return (
-            <g key={`a${a.id}`} transform={`translate(${x} ${y}) rotate(${deg})`}>
-              <rect x={-L.agvLen / 2} y={-L.agvW / 2} width={L.agvLen} height={L.agvW} rx={0.6}
-                fill={loaded ? col : '#ffffff'} stroke={col} strokeWidth={0.7} />
-              {loaded && <rect x={-L.agvLen / 2 + 1.2} y={-L.agvW / 2 + 0.5} width={L.agvLen - 2.4} height={L.agvW - 1} fill="none" stroke="#ffffff" strokeWidth={0.3} strokeDasharray="1 0.6" />}
-              <g transform={`rotate(${-deg})`}>
-                <text y={1.3} fontSize={3.6} textAnchor="middle" fontWeight={700} fill={loaded ? '#ffffff' : col}>{a.id}</text>
-              </g>
-            </g>
-          );
-        })}
-      </svg>
+      <TerminalMap r={r} t={t} prep={prep} />
       <IdleStrip r={r} t={t} end={end} />
     </div>
   );
@@ -385,5 +308,217 @@ export default function ReplayPlayer({ pairs }: { pairs: ReplayPair[] }) {
         </>
       )}
     </div>
+  );
+}
+
+/* ===================== the terminal drawing (plan view, metres) ===================== */
+const SEA = 66;                       // drawn sea band north of the quay edge (schematic)
+const BAY_W = 12.2;                   // one 40 ft bay (schematic)
+const VESSEL = { y0: -56, y1: -5 };   // hull, schematic beam about 51 m
+const ZONE_INFO = [
+  'Quay apron: 30 m between the crane rails, with the manual truck lanes and hatch covers; no AGVs here (Liu et al., 2016; Wu et al., 2016).',
+  'AGV handover lanes: 7 lanes of 4 m under the crane backreach; AGVs stop here for the crane (Liu et al., 2016; Wu et al., 2016).',
+  'Buffer: 27 m deep, one AGV per slot; slots 3.3 m wide (Wu et al., 2016; slot width from satellite imagery).',
+  'Driving lanes: 6 lanes, 26.5 m in total, alternating directions (Liu et al., 2016; Wu et al., 2016).',
+  'Yard blocks: 31 m wide, 5 transfer racks at the sea-side end of each block (Wu et al., 2016).',
+];
+const STACK_COLORS = ['#9a3412', '#115e59', '#52525b', '#854d0e', '#1e3a8a', '#7f1d1d', '#a8a29e'];
+
+type CraneJob = [number, number, string, number];
+
+/* split a crane's job list into bays: a new bay starts when a discharge follows a load */
+function bays(jobs: CraneJob[]) {
+  const out: number[][] = [];
+  jobs.forEach((j, i) => {
+    if (i === 0 || (j[2] === 'D' && jobs[i - 1][2] === 'L')) out.push([]);
+    out[out.length - 1].push(i);
+  });
+  return out;
+}
+
+/* trolley position along the boom (0 = above the AGV lanes, 1 = over the vessel) and whether it carries a box */
+function trolley(jobs: CraneJob[], t: number): { pos: number; carrying: boolean; waiting: boolean; finished: boolean } {
+  const k = lastIdx(jobs, t, (j) => j[1]) + 1;          // next job not yet handed over
+  if (k >= jobs.length) return { pos: 0, carrying: false, waiting: false, finished: true };
+  const [ready, , kind] = jobs[k];
+  if (t >= ready) return { pos: 0, carrying: kind === 'D', waiting: true, finished: false };
+  const start = k > 0 ? jobs[k - 1][1] : 0;
+  const f = Math.max(0, Math.min(1, (t - start) / Math.max(ready - start, 1e-6)));
+  const carrying = f < 0.5 ? k > 0 && jobs[k - 1][2] === 'L' : kind === 'D';
+  return { pos: Math.sin(Math.PI * f), carrying, waiting: false, finished: false };
+}
+
+export function TerminalMap({ r, t, prep, labels = true }: {
+  r: Replay; t: number; prep: Record<number, [number, boolean][]>; labels?: boolean;
+}) {
+  const L = r.layout;
+  const st = stats(r, t);
+  const activeRacks = new Set(r.racks.filter(([, s, e]) => s <= t && t < e).map(([, , , b, k]) => `${b}-${k}`));
+  const pad = 4;
+  const zoneFill = ['#eef2f6', '#f4f4f5', '#ececee', '#fafafa', '#f4f4f5'];
+  const pitch = L.qcs.length > 1 ? (L.qcs[1].x - L.qcs[0].x) / Math.max(1, Math.round((L.qcs[1].x - L.qcs[0].x) / 13.5)) : 13.7;
+  const bayX0 = L.qcs[0].x - pitch / 2;
+  const allBays: number[] = [];
+  for (let x = bayX0 - pitch * Math.ceil(bayX0 / pitch); x < L.width + pitch; x += pitch) allBays.push(x);
+  const yLand = (L.loadY0 + L.loadY1) / 2;
+  const ySea = (VESSEL.y0 + VESSEL.y1) / 2;
+  const clipId = `clip-${r.name}`;
+
+  // containers currently in each worked bay (5 x 5 stacks drawn)
+  const worked = new Map<number, { present: number; cap: number; active: boolean }>();
+  r.qcs.forEach((q, qi) => {
+    const groups = bays(q.jobs);
+    const next = lastIdx(q.jobs, t, (j) => j[1]) + 1;
+    groups.forEach((idx, b) => {
+      const nD = idx.filter((i) => q.jobs[i][2] === 'D').length;
+      const nL = idx.length - nD;
+      let present = nD;
+      idx.forEach((i) => { if (q.jobs[i][1] <= t) present += q.jobs[i][2] === 'D' ? -1 : 1; });
+      const x = L.qcs[qi].x + (b - (groups.length - 1) / 2) * pitch;
+      worked.set(Math.round(x * 10), { present, cap: Math.max(nD, nL, 1), active: next < q.jobs.length && idx.includes(next) });
+    });
+  });
+
+  return (
+    <svg viewBox={`${-pad} ${-SEA - pad} ${L.width + 2 * pad} ${L.height + SEA + 2 * pad}`} className="w-full rounded-xl border border-zinc-200 bg-white"
+      role="img" aria-label="Plan view of the simulated terminal with the vessel, two quay cranes, AGVs and yard blocks">
+      <defs>
+        <clipPath id={clipId}><rect x={0} y={-SEA} width={L.width} height={L.height + SEA} /></clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
+        {/* sea and vessel (schematic) */}
+        <rect x={0} y={-SEA} width={L.width} height={SEA} fill="#dbeafe" />
+        <g>
+          <title>Vessel at berth (schematic). Each crane works two bays; the stacks in those bays empty during discharge and fill again during loading.</title>
+          <path d={`M ${12} ${VESSEL.y1} L ${L.width + 40} ${VESSEL.y1} L ${L.width + 40} ${VESSEL.y0} L ${12} ${VESSEL.y0} Q ${-4} ${(VESSEL.y0 + VESSEL.y1) / 2} ${12} ${VESSEL.y1} Z`}
+            fill="#334155" />
+          <rect x={14} y={VESSEL.y0 + 2.5} width={L.width + 30} height={VESSEL.y1 - VESSEL.y0 - 5} fill="#475569" />
+          {allBays.filter((x) => x > 22).map((x) => {
+            const w = worked.get(Math.round(x * 10));
+            const cells = [];
+            const rows = 18;                                   // 40 ft boxes lie fore-aft: one bay = a column of rows across the beam
+            const rh = (VESSEL.y1 - VESSEL.y0 - 8) / rows;
+            const filled = w ? Math.round((w.present / w.cap) * rows) : rows;
+            for (let n = 0; n < rows; n++) {
+              const on = n >= rows - filled;                   // empty from the quay side outwards
+              cells.push(<rect key={n} x={x - BAY_W / 2 + 0.3} y={VESSEL.y0 + 4 + n * rh} width={BAY_W - 0.6} height={rh - 0.35}
+                fill={on ? STACK_COLORS[(Math.round(x) * 7 + n * 5) % STACK_COLORS.length] : '#64748b'} fillOpacity={on ? 0.85 : 0.3} />);
+            }
+            return (
+              <g key={x}>
+                {cells}
+                {w && <rect x={x - BAY_W / 2} y={VESSEL.y0 + 3.5} width={BAY_W} height={VESSEL.y1 - VESSEL.y0 - 7} fill="none"
+                  stroke={w.active ? '#fde047' : '#cbd5e1'} strokeWidth={w.active ? 0.9 : 0.4} />}
+              </g>
+            );
+          })}
+        </g>
+        {labels && <text x={L.width - 2} y={-SEA + 5} fontSize={4} textAnchor="end" fill="#475569">Vessel at berth (schematic)</text>}
+
+        {/* land-side zones (to scale) */}
+        {L.zones.map((z, i) => (
+          <g key={z.name}>
+            <rect x={0} y={z.y0} width={L.width} height={z.y1 - z.y0} fill={zoneFill[i]}><title>{ZONE_INFO[i]}</title></rect>
+            {labels && <text x={L.width - 2} y={i === L.zones.length - 1 ? z.y0 + 4.8 : z.y1 - 1.8} fontSize={4} textAnchor="end" fill="#71717a" pointerEvents="none">{z.name}</text>}
+          </g>
+        ))}
+        <line x1={0} x2={L.width} y1={0} y2={0} stroke="#334155" strokeWidth={0.8} />
+        {/* crane rails */}
+        {[L.railSea, L.railLand].map((y) => (
+          <g key={y}>
+            <line x1={0} x2={L.width} y1={y - 0.5} y2={y - 0.5} stroke="#71717a" strokeWidth={0.35} />
+            <line x1={0} x2={L.width} y1={y + 0.5} y2={y + 0.5} stroke="#71717a" strokeWidth={0.35} />
+          </g>
+        ))}
+        {/* handover lanes */}
+        {L.loadLanes.map((y, i) => (
+          <line key={`ll${i}`} x1={0} x2={L.width} y1={y} y2={y} stroke={L.ioLanes.includes(i) ? '#d4d4d8' : '#ececee'} strokeWidth={0.3} strokeDasharray="2 2" />
+        ))}
+        {/* driving lanes with direction ticks */}
+        {L.driveLanes.map((d, i) => (
+          <g key={`dl${i}`}>
+            <line x1={0} x2={L.width} y1={d.y} y2={d.y} stroke="#e4e4e7" strokeWidth={0.3} />
+            {[0.15, 0.5, 0.85].map((f) => (
+              <path key={f} d={`M ${L.width * f - 1.2 * d.dir} ${d.y - 1} L ${L.width * f + 1.2 * d.dir} ${d.y} L ${L.width * f - 1.2 * d.dir} ${d.y + 1}`} fill="none" stroke="#d4d4d8" strokeWidth={0.3} />
+            ))}
+          </g>
+        ))}
+        {/* buffer slots */}
+        {L.slots.map((x, k) => (
+          <rect key={`s${k}`} x={x - L.slotW / 2} y={L.bufY0 + 1} width={L.slotW} height={L.bufY1 - L.bufY0 - 2} fill="none" stroke="#d4d4d8" strokeWidth={0.25} pointerEvents="none" />
+        ))}
+        {/* yard blocks and racks */}
+        {L.blocks.map((b) => (
+          <g key={`b${b.id}`} pointerEvents="none">
+            <rect x={b.x0} y={L.rackY + L.agvLen / 2 - 2} width={b.w} height={9} fill="#d4d4d8" rx={0.8} />
+            <text x={b.x0 + b.w / 2} y={L.rackY + L.agvLen / 2 + 4} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
+            {b.racks.map((x, k) => {
+              const on = activeRacks.has(`${b.id}-${k + 1}`);
+              return <rect key={k} x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1}
+                fill={on ? '#fcd34d' : 'none'} stroke={on ? '#d97706' : '#d4d4d8'} strokeWidth={on ? 0.8 : 0.25} />;
+            })}
+          </g>
+        ))}
+
+        {/* AGVs (drawn before the cranes: they drive underneath the backreach) */}
+        {r.agvs.map((a, k) => {
+          const [x, y, h] = agvPose(r, a.legs, t);
+          const sws = prep[a.id] ?? [];
+          const j = lastIdx(sws, t, (s) => s[0]);
+          const loaded = j >= 0 ? sws[j][1] : false;
+          const col = AGV_COLORS[k % AGV_COLORS.length];
+          const deg = (h * 180) / Math.PI;
+          return (
+            <g key={`a${a.id}`} transform={`translate(${x} ${y}) rotate(${deg})`} pointerEvents="none">
+              <rect x={-L.agvLen / 2} y={-L.agvW / 2} width={L.agvLen} height={L.agvW} rx={0.6}
+                fill={loaded ? col : '#ffffff'} stroke={col} strokeWidth={0.7} />
+              {loaded && <rect x={-L.agvLen / 2 + 1.2} y={-L.agvW / 2 + 0.5} width={L.agvLen - 2.4} height={L.agvW - 1} fill="none" stroke="#ffffff" strokeWidth={0.3} strokeDasharray="1 0.6" />}
+              <g transform={`rotate(${-deg})`}>
+                <text y={1.3} fontSize={3.6} textAnchor="middle" fontWeight={700} fill={loaded ? '#ffffff' : col}>{a.id}</text>
+              </g>
+            </g>
+          );
+        })}
+
+        {/* quay cranes (schematic structure, real position and timing) */}
+        {L.qcs.map((q, i) => {
+          const s = st.qcState[i];
+          const tr = trolley(r.qcs[i].jobs as CraneJob[], t);
+          const waiting = tr.waiting && !s.finished;
+          const col = s.finished ? '#a1a1aa' : waiting ? '#dc2626' : '#1e293b';
+          const half = 13.5, girder = 3.6;
+          const yTip = VESSEL.y0 + 2, yBack = L.loadY1 - 1.5;
+          const yT = yLand + (ySea - yLand) * tr.pos;
+          return (
+            <g key={`q${q.id}`} pointerEvents="none">
+              {/* portal frame between the rails */}
+              <rect x={q.x - half} y={L.railSea - 1.5} width={2 * half} height={L.railLand - L.railSea + 3}
+                fill={waiting ? '#fee2e2' : '#ffffff'} fillOpacity={0.55} stroke={col} strokeWidth={waiting ? 1.1 : 0.8} />
+              <line x1={q.x - half} y1={L.railSea - 1.5} x2={q.x + half} y2={L.railLand + 1.5} stroke={col} strokeWidth={0.3} />
+              <line x1={q.x + half} y1={L.railSea - 1.5} x2={q.x - half} y2={L.railLand + 1.5} stroke={col} strokeWidth={0.3} />
+              {[L.railSea, L.railLand].flatMap((y) => [-1, 1].map((sgn) => (
+                <rect key={`${y}${sgn}`} x={q.x + sgn * half - 2} y={y - 2} width={4} height={4} fill={col} />
+              )))}
+              {/* boom over the vessel, girder and backreach over the handover lanes */}
+              <rect x={q.x - girder / 2} y={yTip} width={girder} height={yBack - yTip} fill={col} fillOpacity={0.18} stroke={col} strokeWidth={0.6} />
+              {/* trolley */}
+              <rect x={q.x - 4.5} y={yT - 3.2} width={9} height={6.4} rx={0.6} fill="#ffffff" stroke={col} strokeWidth={0.8} />
+              {tr.carrying && <rect x={q.x - 3.2} y={yT - 1.6} width={6.4} height={3.2} fill="#ea580c" />}
+              {labels && (
+                <>
+                  <text x={q.x + half + 2.5} y={L.railSea + 8} fontSize={5.4} fontWeight={700} fill={col}>QC{q.id}</text>
+                  <text x={q.x + half + 2.5} y={L.railSea + 14} fontSize={3.8} fontWeight={600} fill={col}>
+                    {s.finished ? 'finished' : waiting ? 'waiting for an AGV' : 'working'}
+                  </text>
+                  <text x={q.x + half + 2.5} y={L.railSea + 19.5} fontSize={3.4} fill="#52525b">
+                    {s.done}/{s.total} · idle {Math.round(s.idle)} s
+                  </text>
+                </>
+              )}
+            </g>
+          );
+        })}
+      </g>
+    </svg>
   );
 }
