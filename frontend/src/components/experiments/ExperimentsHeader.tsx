@@ -73,8 +73,8 @@ export default function ExperimentsHeader() {
               uncertain. This page reports those experiments and grows as new ones are completed.
             </p>
             <p>
-              The simulated terminal is a five-block section laid out after Yangshan Phase IV in Shanghai (Liu et al., 2016; Wu et al.,
-              2016), served by two quay cranes and a small fleet of AGVs.
+              The simulated terminal is a five-block section laid out after Yangshan Phase IV in Shanghai (<i>Liu et al., 2016</i>; <i>Wu et al.,
+              2016</i>), served by two quay cranes and a small fleet of AGVs.
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function ExperimentsHeader() {
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
           <p className="max-w-3xl leading-relaxed text-zinc-700">
             Every method is judged by quay crane idle time: the time a crane is ready to hand over or receive a container, but no AGV is
-            there for the handover. This is the &ldquo;QC waiting&rdquo; of Zheng et al. (2022) and the crane delay of Kim and Bae (2004).
+            there for the handover. This is the &ldquo;QC waiting&rdquo; of <i>Zheng et al. (2022)</i> and the crane delay of <i>Kim and Bae (2004)</i>.
             Results are reported as the average idle time per container:
           </p>
           <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-2 text-zinc-900 overflow-x-auto">
