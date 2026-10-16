@@ -165,7 +165,7 @@ function agvStatus(r: Replay, a: Replay['agvs'][number], t: number, prep: Record
   return { loaded, text: 'Parked in the buffer, no job' };
 }
 
-function Readouts({ r, t, prep, playing, onToggle }: {
+export function Readouts({ r, t, prep, playing, onToggle }: {
   r: Replay; t: number; prep: Record<number, [number, boolean][]>; playing: boolean; onToggle: () => void;
 }) {
   const st = stats(r, t);
