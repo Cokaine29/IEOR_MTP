@@ -54,8 +54,17 @@ export default function ExperimentsHeader() {
         <section className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Findings so far</h2>
-            <p className="text-sm text-zinc-500">{H.findingsGroup} uncertainty · updated {formatDate(GENERATED)}</p>
+            {H.findings.length > 0 && (
+              <p className="text-sm text-zinc-500">{H.findingsGroup} uncertainty · updated {formatDate(GENERATED)}</p>
+            )}
           </div>
+          {H.findings.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-zinc-300 bg-white px-5 py-6 text-zinc-600">
+              The simulator was recently made more realistic, with a wider yard, racks chosen when the AGV leaves and the
+              rack visit modelled in steps. Every experiment is being re-run on it, one at a time, and each finding will
+              appear here once its experiment is complete.
+            </div>
+          ) : (
           <ol className="flex flex-col divide-y divide-zinc-200 rounded-2xl border border-zinc-200 bg-white">
             {H.findings.map((f, k) => (
               <li key={k}>
@@ -70,6 +79,7 @@ export default function ExperimentsHeader() {
               </li>
             ))}
           </ol>
+          )}
         </section>
       </div>
     </>

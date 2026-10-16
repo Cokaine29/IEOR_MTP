@@ -193,32 +193,7 @@
    }
   ],
   "findingsGroup": "Crane cycle time",
-  "findings": [
-   {
-    "value": "4 AGVs",
-    "text": "Four AGVs is the smallest fleet that keeps both cranes nearly always busy. The uncertainty experiments use this fleet, because with more AGVs the spare vehicles hide most dispatching mistakes.",
-    "conditions": "No randomness · 2 to 12 AGVs · 30 instances",
-    "ref": "E1"
-   },
-   {
-    "value": "3.6 → 7.1 s",
-    "text": "Random crane times roughly double the crane idle time per container, for every rule.",
-    "conditions": "4 AGVs · crane cycle 75 s ± 40% · 30 seeds",
-    "ref": "E3"
-   },
-   {
-    "value": "−21% → +18%",
-    "text": "A schedule optimised in advance beats the best rule when nothing is random, but loses to it once crane times vary.",
-    "conditions": "Strict plan vs Briskorn rule · 4 AGVs · ±0% and ±40% · 30 seeds",
-    "ref": "E3b"
-   },
-   {
-    "value": "≥ 26%",
-    "text": "A dispatcher that knew all future crane times would cut the idle time of every rule by at least a quarter, so a better real-time dispatcher is possible.",
-    "conditions": "Perfect-information benchmark · 4 AGVs · ±0, ±20, ±40% · 10 seeds",
-    "ref": "E3-bench"
-   }
-  ],
+  "findings": [],
   "references": [
    "Briskorn, D., Drexl, A., & Hartmann, S. (2006). Inventory-based dispatching of automated guided vehicles on container terminals. OR Spectrum, 28(4), 611–630. https://doi.org/10.1007/s00291-006-0033-8",
    "Kim, K.H., & Bae, J.W. (2004). A look-ahead dispatching method for automated guided vehicles in automated port container terminals. Transportation Science, 38(2), 224–234. https://doi.org/10.1287/trsc.1030.0082",
@@ -231,7 +206,7 @@
   ]
  },
  "generated": "2026-10-16",
- "source": "ACT_MTP fa03294 / results_reference",
+ "source": "ACT_MTP 3768857 / results_reference",
  "stages": [
   {
    "n": 1,
