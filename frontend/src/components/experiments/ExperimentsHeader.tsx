@@ -1,13 +1,10 @@
 'use client';
 
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import 'katex/dist/katex.min.css';
 import { Fragment } from 'react';
 import { ChevronDown, FileText } from 'lucide-react';
 import DATA from '@/data/experiments.json';
 import SetupFigure from './SetupFigure';
+import MeasureSection from './MeasureSection';
 
 type Status = 'done' | 'next' | 'planned';
 type PlanRow = [string, string, Status[]];
@@ -22,16 +19,6 @@ type Header = {
 
 const H = (DATA as unknown as { header: Header; generated: string }).header;
 const GENERATED = (DATA as unknown as { generated: string }).generated;
-
-const FORMULA = String.raw`$$
-\bar{I} \;=\; \frac{1}{n}\sum_{i=1}^{n}\left(t_i^{\,\mathrm{handover}} - t_i^{\,\mathrm{ready}}\right)
-$$`;
-
-const VARS: [string, string][] = [
-  ['$n$', 'number of containers handled by the two cranes'],
-  [String.raw`$t_i^{\,\mathrm{ready}}$`, 'time at which the crane is ready for container i'],
-  [String.raw`$t_i^{\,\mathrm{handover}}$`, 'time at which container i actually passes between crane and AGV'],
-];
 
 function StatusMark({ s }: { s: Status }) {
   if (s === 'done')
@@ -83,27 +70,7 @@ export default function ExperimentsHeader() {
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-4 pt-12">
         <SetupFigure />
 
-        {/* how performance is measured */}
-        <section className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
-          <p className="max-w-3xl leading-relaxed text-zinc-700">
-            Every method is judged by quay crane idle time: the time a crane is ready to hand over or receive a container, but no AGV is
-            there for the handover. This is the &ldquo;QC waiting&rdquo; of <i>Zheng et al. (2022)</i> and the crane delay of <i>Kim and Bae (2004)</i>.
-            Results are reported as the average idle time per container:
-          </p>
-          <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-2 text-zinc-900 overflow-x-auto">
-            <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{FORMULA}</ReactMarkdown>
-          </div>
-          <dl className="grid max-w-3xl items-baseline gap-x-6 gap-y-1 text-sm text-zinc-700 sm:grid-cols-[6rem_1fr]">
-            {VARS.map(([sym, def]) => (
-              <Fragment key={def}>
-                <dt className="text-zinc-900 [&_p]:m-0"><ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>{sym}</ReactMarkdown></dt>
-                <dd>{def}</dd>
-              </Fragment>
-            ))}
-          </dl>
-          <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">Lower is better. Zero means the cranes never waited for an AGV.</p>
-        </section>
+        <MeasureSection />
 
         {/* plan and status */}
         <section className="flex flex-col gap-4">
