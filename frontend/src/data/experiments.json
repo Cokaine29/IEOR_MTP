@@ -4,13 +4,28 @@
   "conditions": [
    "No randomness",
    "Crane cycle time",
-   "AGV speed",
+   "Speed variation",
    "Congestion",
-   "Combined"
+   "Both together"
+  ],
+  "conditionGroups": [
+   [
+    "",
+    1
+   ],
+   [
+    "",
+    1
+   ],
+   [
+    "AGV travel time",
+    3
+   ]
   ],
   "plan": [
    {
     "group": "Traditional baselines",
+    "kind": "traditional",
     "rows": [
      [
       "Dispatching rules",
@@ -21,6 +36,13 @@
        "next",
        "planned",
        "planned"
+      ],
+      [
+       "E1",
+       "E3",
+       "",
+       "",
+       ""
       ]
      ],
      [
@@ -32,6 +54,13 @@
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "E3b",
+       "E3b",
+       "",
+       "",
+       ""
       ]
      ],
      [
@@ -43,6 +72,13 @@
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "",
+       "",
+       "",
+       "",
+       ""
       ]
      ],
      [
@@ -54,12 +90,20 @@
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "",
+       "",
+       "",
+       "",
+       ""
       ]
      ]
     ]
    },
    {
     "group": "Learning baseline (after the MDP design)",
+    "kind": "learning",
     "rows": [
      [
       "DQN",
@@ -70,12 +114,20 @@
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "",
+       "",
+       "",
+       "",
+       ""
       ]
      ]
     ]
    },
    {
     "group": "Proposed method",
+    "kind": "proposed",
     "rows": [
      [
       "PPO, then MAPPO",
@@ -86,33 +138,55 @@
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "",
+       "",
+       "",
+       "",
+       ""
       ]
      ]
     ]
    },
    {
     "group": "Reference points",
+    "kind": "reference",
     "rows": [
      [
       "Random dispatching",
-      "Lower reference",
+      "Worst case: no intelligence",
       [
        "done",
        "done",
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "E1",
+       "E3",
+       "",
+       "",
+       ""
       ]
      ],
      [
       "Perfect-information benchmark",
-      "Knows all future times; upper reference",
+      "Best achievable: knows all future times",
       [
        "done",
        "done",
        "planned",
        "planned",
        "planned"
+      ],
+      [
+       "E3-bench",
+       "E3-bench",
+       "",
+       "",
+       ""
       ]
      ]
     ]
@@ -157,7 +231,7 @@
   ]
  },
  "generated": "2026-10-16",
- "source": "ACT_MTP 9be154a / results_reference",
+ "source": "ACT_MTP 67a52f2 / results_reference",
  "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
  "headlines": [
   {

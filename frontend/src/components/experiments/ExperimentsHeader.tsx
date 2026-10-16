@@ -5,13 +5,10 @@ import { ChevronDown, FileText } from 'lucide-react';
 import DATA from '@/data/experiments.json';
 import SetupFigure from './SetupFigure';
 import MeasureSection from './MeasureSection';
+import PlanSection from './PlanSection';
 
-type Status = 'done' | 'next' | 'planned';
-type PlanRow = [string, string, Status[]];
 type Header = {
   title: string;
-  conditions: string[];
-  plan: { group: string; rows: PlanRow[] }[];
   findingsGroup: string;
   findings: { value: string; text: string; conditions: string; ref: string }[];
   references: string[];
@@ -19,26 +16,6 @@ type Header = {
 
 const H = (DATA as unknown as { header: Header; generated: string }).header;
 const GENERATED = (DATA as unknown as { generated: string }).generated;
-
-function StatusMark({ s }: { s: Status }) {
-  if (s === 'done')
-    return (
-      <span className="inline-flex items-center gap-1.5 text-zinc-900">
-        <span className="h-2.5 w-2.5 rounded-full bg-zinc-900" />Done
-      </span>
-    );
-  if (s === 'next')
-    return (
-      <span className="inline-flex items-center gap-1.5 font-medium text-amber-700">
-        <span className="h-2.5 w-2.5 rounded-full border-2 border-amber-600 bg-amber-100" />Next
-      </span>
-    );
-  return (
-    <span className="inline-flex items-center gap-1.5 text-zinc-400">
-      <span className="h-2.5 w-2.5 rounded-full border border-zinc-300" />Planned
-    </span>
-  );
-}
 
 function formatDate(iso: string) {
   const d = new Date(iso + 'T00:00:00');
@@ -72,47 +49,7 @@ export default function ExperimentsHeader() {
 
         <MeasureSection />
 
-        {/* plan and status */}
-        <section className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold tracking-tight text-zinc-900">What is being tested</h2>
-          <p className="max-w-3xl leading-relaxed text-zinc-700">
-            Each method is run without randomness and then under each source of uncertainty: the quay crane cycle time, and the AGV
-            travel time (speed variation, congestion between vehicles, and both together). The traditional baselines come first; the
-            learning methods follow once they are complete.
-          </p>
-          <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
-            <table className="w-full min-w-[760px] text-sm">
-              <thead>
-                <tr className="border-b border-zinc-200 bg-zinc-50 text-left">
-                  <th className="px-4 py-3 font-semibold text-zinc-900">Method</th>
-                  {H.conditions.map((c) => (
-                    <th key={c} className="px-3 py-3 font-semibold text-zinc-900 whitespace-nowrap">{c}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {H.plan.map((g) => (
-                  <Fragment key={g.group}>
-                    <tr className="border-t border-zinc-200">
-                      <td colSpan={H.conditions.length + 1} className="bg-zinc-50/60 px-4 pt-4 pb-1.5 text-xs font-semibold text-zinc-500">{g.group}</td>
-                    </tr>
-                    {g.rows.map(([name, note, st]) => (
-                      <tr key={name} className="border-t border-zinc-100">
-                        <td className="px-4 py-2.5">
-                          <div className="font-medium text-zinc-900">{name}</div>
-                          <div className="text-xs text-zinc-500">{note}</div>
-                        </td>
-                        {st.map((s, k) => (
-                          <td key={k} className="px-3 py-2.5 whitespace-nowrap"><StatusMark s={s} /></td>
-                        ))}
-                      </tr>
-                    ))}
-                  </Fragment>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <PlanSection />
 
         {/* findings so far */}
         <section className="flex flex-col gap-4">
