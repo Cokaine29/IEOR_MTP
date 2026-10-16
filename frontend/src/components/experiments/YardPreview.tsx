@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Replay, TerminalMap, prepare } from './ReplayPlayer';
 import { Readouts } from './SetupFigure';
 
-const FILE = '/replays/preview/preview_yard50_n8.json';
+const FILE = '/replays/preview/check_yard50_n8.json';
 const SPEEDS = [10, 20, 50, 100];
 const PX_PER_M = 2;
 
@@ -47,12 +47,14 @@ export default function YardPreview() {
     <div className="min-h-screen bg-zinc-50 px-4 pt-28 pb-24">
       <div className="mx-auto flex max-w-[1600px] flex-col gap-5">
         <div className="flex max-w-3xl flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Preview of the wider yard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Check run of the updated simulator</h1>
           <p className="leading-relaxed text-zinc-700">
-            A side test, not a thesis result. The yard is extended to 50 blocks, about 2.1 km, close to the 2,350 m quay of
-            Yangshan Phase IV. Discharged containers go to blocks up to 10 blocks either side of the 5 blocks behind the cranes, and
-            load containers come from up to 15 blocks either side, so this ship uses the middle 35 blocks. Eight AGVs (four per
-            crane), Briskorn rule, crane times exactly 75 s, rack visit 51 s. The rack rules of D-26 and D-27 are not built in yet.
+            A build check, not a thesis result. This run uses the updated simulator. The yard has 50 blocks, about 2.1 km,
+            with the cranes over the middle. Discharged containers go to blocks up to 10 either side of the 5 blocks behind the
+            cranes, and load containers come from up to 15 either side. Each AGV now takes the nearest free rack of its block
+            and reserves it when it leaves, so two AGVs never meet at one rack. The rack visit is shown in steps. The AGV raises
+            or lowers its platform and drives 15.5 m into the rack and back out, 51 s in all. Eight AGVs (four per crane),
+            Briskorn rule, crane times exactly 75 s.
           </p>
           <p className="text-sm text-zinc-500">Scroll the map sideways to follow AGVs fetching load containers from distant blocks.</p>
         </div>

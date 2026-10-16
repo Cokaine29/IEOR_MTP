@@ -157,9 +157,21 @@ function agvStatus(r: Replay, a: Replay['agvs'][number], t: number, prep: Record
       return { loaded, text: loaded ? `Carrying a container to ${dest}` : `Driving empty to ${dest}` };
     }
   }
-  const [x, y] = agvPose(r, a.legs, t);
+  const [x, y] = agvPose(r, a.legs, t);   // position at the rack stop (without the drive into the rack)
   const here = place(r, x, y);
-  if (r.racks.some(([ag, s, e]) => ag === a.id && s <= t && t < e)) return { loaded, text: `Rack handover at ${here.label}` };
+  const visit = r.racks.find(([ag, s, e]) => ag === a.id && s <= t && t < e);
+  if (visit) {
+    const [, s0, , b, rk, , steps] = visit;
+    if (!steps) return { loaded, text: `Rack handover at ${here.label}` };
+    let u = t - s0, name = steps[steps.length - 1][0];
+    for (const [nm, d] of steps) { if (u < d) { name = nm; break; } u -= d; }
+    const what: Record<string, string> = {
+      'raise': 'Raising its platform', 'lower': 'Lowering its platform',
+      'drive in': 'Driving into', 'drive out': 'Driving out of',
+    };
+    const where = name.startsWith('drive') ? `rack ${rk} of block ${b}` : `block ${b}, rack ${rk}`;
+    return { loaded, text: name.startsWith('drive') ? `${what[name]} ${where}` : `${what[name]} at ${where}` };
+  }
   if (here.kind === 'rack') return { loaded, text: `Waiting for its rack at ${here.label}` };
   if (here.kind === 'qc') return { loaded, text: loaded ? `Waiting to hand over at ${here.label}` : `Waiting for a container at ${here.label}` };
   return { loaded, text: 'Parked in the buffer, no job' };

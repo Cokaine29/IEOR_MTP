@@ -14,6 +14,7 @@ type Layout = {
   slots: number[]; slotY: number; slotW: number; bufY0: number; bufY1: number;
   blocks: { id: number; x0: number; w: number; racks: number[] }[];
   rackY: number; rzY0: number;
+  rackLane?: number;                                                  // depth the AGV drives into a rack (m), newer files only
   qcs: { id: number; x: number; flow: number }[];
   qcY: number; agvLen: number; agvW: number;
   railSea: number; railLand: number; loadY0: number; loadY1: number;
@@ -24,7 +25,8 @@ export type Replay = {
   layout: Layout; paths: Seg[][];
   agvs: { id: number; legs: Leg[] }[];
   qcs: { id: number; jobs: [number, number, string, number][] }[];   // [ready, handover, kind, agv]
-  racks: [number, number, number, number, number, string][];          // [agv, start, end, block, rack, kind]
+  // [agv, start, end, block, rack, kind, steps]; steps (newer files): [name, duration] in order, e.g. raise, drive in, lower, drive out
+  racks: [number, number, number, number, number, string, ([string, number][])?][];
 };
 export type ReplayPair = {
   label: string;
@@ -81,8 +83,46 @@ export function lastIdx<T>(arr: T[], t: number, key: (x: T) => number) {
   return ans;
 }
 
-/* where is AGV k at time t: [x, y, heading, moving] */
-export function agvPose(r: Replay, legs: Leg[], t: number): [number, number, number, boolean] {
+/* how far AGV `agv` has driven into its rack at time t (0 outside a rack visit or for files without steps) */
+export function rackDepth(r: Replay, agv: number, t: number): number {
+  const depth = r.layout.rackLane ?? 0;
+  if (!depth) return 0;
+  for (const v of r.racks) {
+    const [a, s, e, , , , steps] = v;
+    if (a !== agv || t < s || t >= e || !steps) continue;
+    let u = t - s, d = 0;
+    for (const [name, dur] of steps) {
+      if (u <= dur) {
+        if (name === 'drive in') return depth * (u / dur);
+        if (name === 'drive out') return depth * (1 - u / dur);
+        return d;
+      }
+      u -= dur;
+      if (name === 'drive in') d = depth;
+      if (name === 'drive out') d = 0;
+    }
+    return d;
+  }
+  return 0;
+}
+
+/* moment of a rack visit when the container changes hands: set down (discharge) or lifted (load) */
+function rackSwitch(v: Replay['racks'][number]) {
+  const [, s, e, , , k, steps] = v;
+  if (!steps) return e;
+  const n = k === 'D' ? 3 : 2;
+  return s + steps.slice(0, n).reduce((a, x) => a + x[1], 0);
+}
+
+/* where is AGV k at time t: [x, y, heading, moving]; pass the AGV id to include driving into a rack */
+export function agvPose(r: Replay, legs: Leg[], t: number, agv?: number): [number, number, number, boolean] {
+  const p = agvPoseLegs(r, legs, t);
+  if (agv === undefined || p[3]) return p;
+  const d = rackDepth(r, agv, t);
+  return d ? [p[0], p[1] + d, Math.PI / 2, true] : p;
+}
+
+function agvPoseLegs(r: Replay, legs: Leg[], t: number): [number, number, number, boolean] {
   const i = lastIdx(legs, t, (l) => l.t);
   if (i < 0) {
     const seg = r.paths[legs[0].path][0];
@@ -112,7 +152,7 @@ export function prepare(r: Replay) {
   const sw: Record<number, [number, boolean][]> = {};
   const add = (agv: number, t: number, v: boolean) => (sw[agv] ??= []).push([t, v]);
   r.qcs.forEach((q) => q.jobs.forEach(([, h, k, a]) => add(a, h, k === 'D')));
-  r.racks.forEach(([a, , end, , , k]) => add(a, end, k === 'L'));
+  r.racks.forEach((v) => add(v[0], rackSwitch(v), v[5] === 'L'));
   Object.values(sw).forEach((l) => l.sort((x, y) => x[0] - y[0]));
   return sw;
 }
@@ -454,11 +494,11 @@ export function TerminalMap({ r, t, prep, labels = true }: {
         {/* yard blocks and racks */}
         {L.blocks.map((b) => (
           <g key={`b${b.id}`} pointerEvents="none">
-            <rect x={b.x0} y={L.rackY + L.agvLen / 2 - 2} width={b.w} height={9} fill="#d4d4d8" rx={0.8} />
-            <text x={b.x0 + b.w / 2} y={L.rackY + L.agvLen / 2 + 4} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
+            <rect x={b.x0} y={L.rackY + L.agvLen / 2 - 2 + (L.rackLane ?? 0)} width={b.w} height={9} fill="#d4d4d8" rx={0.8} />
+            <text x={b.x0 + b.w / 2} y={L.rackY + L.agvLen / 2 + 4 + (L.rackLane ?? 0)} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
             {b.racks.map((x, k) => {
               const on = activeRacks.has(`${b.id}-${k + 1}`);
-              return <rect key={k} x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1}
+              return <rect key={k} x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1 + (L.rackLane ?? 0)}
                 fill={on ? '#fcd34d' : 'none'} stroke={on ? '#d97706' : '#d4d4d8'} strokeWidth={on ? 0.8 : 0.25} />;
             })}
           </g>
@@ -466,7 +506,7 @@ export function TerminalMap({ r, t, prep, labels = true }: {
 
         {/* AGVs (drawn before the cranes: they drive underneath the backreach) */}
         {r.agvs.map((a, k) => {
-          const [x, y, h] = agvPose(r, a.legs, t);
+          const [x, y, h] = agvPose(r, a.legs, t, a.id);
           const sws = prep[a.id] ?? [];
           const j = lastIdx(sws, t, (s) => s[0]);
           const loaded = j >= 0 ? sws[j][1] : false;
