@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Replay, TerminalMap, prepare } from './ReplayPlayer';
 import { Readouts } from './SetupFigure';
 
-const FILE = '/replays/preview/preview_yard45_n8.json';
+const FILE = '/replays/preview/preview_yard50_n8.json';
 const SPEEDS = [10, 20, 50, 100];
 const PX_PER_M = 2;
 
@@ -49,9 +49,10 @@ export default function YardPreview() {
         <div className="flex max-w-3xl flex-col gap-2">
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Preview of the wider yard</h1>
           <p className="leading-relaxed text-zinc-700">
-            A side test, not a thesis result. The yard is extended to 45 blocks (about 1.9 km). Discharged containers still go to the
-            5 blocks in front of the two cranes, while load containers can come from any of the 45 blocks. Eight AGVs (four per crane),
-            Briskorn rule, crane times exactly 75 s, rack visit 51 s. The rack rules of D-26 and D-27 are not built in yet.
+            A side test, not a thesis result. The yard is extended to 50 blocks, about 2.1 km, close to the 2,350 m quay of
+            Yangshan Phase IV. Discharged containers go to blocks up to 10 blocks either side of the 5 blocks behind the cranes, and
+            load containers come from up to 15 blocks either side, so this ship uses the middle 35 blocks. Eight AGVs (four per
+            crane), Briskorn rule, crane times exactly 75 s, rack visit 51 s. The rack rules of D-26 and D-27 are not built in yet.
           </p>
           <p className="text-sm text-zinc-500">Scroll the map sideways to follow AGVs fetching load containers from distant blocks.</p>
         </div>
