@@ -46,7 +46,7 @@ export default function PlanSection() {
   return (
     <section className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold tracking-tight text-zinc-900">What is being tested</h2>
-      <p className="max-w-3xl leading-relaxed text-zinc-700">
+      <p className="leading-relaxed text-zinc-700">
         Each method is tested <strong className="font-semibold text-zinc-900">without randomness</strong>, then under each{' '}
         <strong className="font-semibold text-zinc-900">source of uncertainty</strong>. The traditional baselines come first; the
         learning methods follow once they are complete.
