@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
 import { Pause, Play } from 'lucide-react';
 import { AGV_COLORS, Replay, TerminalMap, agvPose, fmtTime, lastIdx, prepare, stats } from './ReplayPlayer';
 
@@ -372,8 +371,7 @@ export default function SetupFigure() {
         <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
           A recording of one simulation run, played at {SPEED}× real time: 4 AGVs dispatched by the inventory rule
           of <i>Briskorn et al. (2006)</i>, crane times exactly as planned. Lanes, slots, blocks and racks are drawn to scale; the
-          crane structures and the vessel are schematic. Hover a zone for its size and source. The full Yangshan Phase IV layout
-          is on the <Link href="/simulation" className="font-medium text-zinc-900 underline underline-offset-2">Simulation</Link> page.
+          crane structures and the vessel are schematic.
         </figcaption>
       </figure>
 
