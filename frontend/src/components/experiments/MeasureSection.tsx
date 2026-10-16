@@ -14,7 +14,9 @@ const MUTED = '#71717a';
 const INK_GREY = '#52525b';
 const LINE = '#a1a1aa';
 
-const FORMULA = String.raw`$$\bar{I}\;=\;\frac{1}{n}\sum_{i=1}^{n}\left(t_i^{\,\mathrm{handover}}-t_i^{\,\mathrm{ready}}\right)$$`;
+const FORMULA = String.raw`$$
+\bar{I}\;=\;\underbrace{\frac{1}{n}\sum_{i=1}^{n}}_{\text{average over all containers}}\;\underbrace{\Big(\,\textcolor{#ea580c}{t_i^{\,\mathrm{handover}}}\;-\;t_i^{\,\mathrm{ready}}\,\Big)}_{\text{idle time of container } i}
+$$`;
 
 function Tex({ tex }: { tex: string }) {
   return (
@@ -161,29 +163,29 @@ function KeyIcon({ kind }: { kind: 'ready' | 'handover' | 'count' }) {
   );
 }
 
-const KEY: { kind: 'ready' | 'handover' | 'count'; tex: string; text: string }[] = [
-  { kind: 'ready', tex: String.raw`$t_i^{\,\mathrm{ready}}$`, text: 'the moment the crane is ready for container i' },
-  { kind: 'handover', tex: String.raw`$t_i^{\,\mathrm{handover}}$`, text: 'the moment container i actually passes between crane and AGV' },
-  { kind: 'count', tex: '$n$', text: 'the number of containers handled by the two cranes' },
+const KEY: { kind: 'ready' | 'handover' | 'count'; tex: string; text: React.ReactNode }[] = [
+  { kind: 'ready', tex: String.raw`$t_i^{\,\mathrm{ready}}$`, text: <>The moment the crane is ready for container <i>i</i></> },
+  { kind: 'handover', tex: String.raw`$t_i^{\,\mathrm{handover}}$`, text: <>The moment container <i>i</i> actually passes between crane and AGV</> },
+  { kind: 'count', tex: '$n$', text: 'The number of containers handled by the two cranes' },
 ];
 
 function FormulaBlock() {
   return (
-    <div className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white lg:grid-cols-[1.15fr_1fr]">
-      <div className="flex flex-col justify-center gap-3 px-6 py-8">
-        <div className="overflow-x-auto text-zinc-900 [&_.katex-display]:my-0 [&_.katex]:text-[1.7rem]">
+    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+      <div className="flex flex-col items-center gap-2 px-4 pb-6 pt-8">
+        <div className="max-w-full overflow-x-auto overflow-y-hidden px-2 py-1 text-zinc-900 [&_.katex-display]:my-0 text-[0.8rem] sm:text-[1.35rem]">
           <Tex tex={FORMULA} />
         </div>
-        <div className="text-sm text-zinc-600">Average idle time per container, in seconds</div>
+        <div className="text-center text-sm text-zinc-500">Average idle time per container, in seconds. Lower is better.</div>
       </div>
-      <ul className="flex flex-col justify-center gap-4 border-t border-zinc-200 bg-zinc-50/70 p-6 lg:border-t-0 lg:border-l">
-        {KEY.map((k) => (
-          <li key={k.tex} className="flex items-center gap-3">
-            <KeyIcon kind={k.kind} />
-            <div className="flex items-baseline gap-3 text-sm text-zinc-700">
-              <span className="w-16 shrink-0 text-zinc-900 [&_p]:m-0"><Tex tex={k.tex} /></span>
-              <span>{k.text}</span>
+      <ul className="grid border-t border-zinc-200 bg-zinc-50/70 sm:grid-cols-3">
+        {KEY.map((k, i) => (
+          <li key={k.tex} className={`flex flex-col gap-2 p-5 ${i > 0 ? 'border-t border-zinc-200 sm:border-l sm:border-t-0' : ''}`}>
+            <div className="flex items-center gap-3">
+              <KeyIcon kind={k.kind} />
+              <span className={`text-lg [&_p]:m-0 ${k.kind === 'handover' ? 'text-orange-600' : 'text-zinc-900'}`}><Tex tex={k.tex} /></span>
             </div>
+            <span className="text-sm leading-relaxed text-zinc-700">{k.text}</span>
           </li>
         ))}
       </ul>
