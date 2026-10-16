@@ -3,19 +3,314 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Pause, Play } from 'lucide-react';
-import { Replay, TerminalMap, fmtTime, prepare } from './ReplayPlayer';
+import { AGV_COLORS, Replay, TerminalMap, agvPose, fmtTime, lastIdx, prepare, stats } from './ReplayPlayer';
 
 const FILE = 'n4_d0_briskorn';
 const SPEED = 20;        // simulated seconds per real second
 const START = 1500;      // start inside the run, when all four AGVs are busy
 
-const SPECS: { label: string; value: string; source: string }[] = [
-  { label: 'Quay cranes', value: '2 cranes, one move every 75 s', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
-  { label: 'AGVs', value: '4 vehicles, 14.8 m × 3.0 m; 6 m/s straight, 3 m/s in turns', source: 'Luo, 2016' },
-  { label: 'Yard', value: '5 blocks, 31 m wide, 5 transfer racks each', source: 'Wu et al., 2016' },
-  { label: 'Driving area', value: '7 handover lanes, 27 m buffer, 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
-  { label: 'Workload', value: '200 containers per run, half discharge and half load', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
+const ORANGE = '#ea580c';   // container
+const TEAL = '#0f766e';     // AGV
+const INK = '#3f3f46';
+const LINE = '#a1a1aa';
+
+/* ---------------------------------------------------------------- journey diagram */
+
+function Vessel() {
+  return (
+    <g>
+      <path d="M-46 8 L46 8 L38 26 L-38 26 Z" fill="#334155" />
+      {[-34, -22, -10, 2, 14, 26].map((x, i) => [0, 1, 2].slice(0, 3 - (i % 2)).map((r) => (
+        <rect key={`${x}${r}`} x={x} y={-1 - r * 8} width={11} height={7} fill={['#9a3412', '#115e59', '#52525b'][(i + r) % 3]} />
+      )))}
+      <rect x={34} y={-22} width={8} height={30} fill="#e2e8f0" stroke="#334155" strokeWidth={1.5} />
+    </g>
+  );
+}
+
+function Crane() {
+  return (
+    <g stroke={INK} strokeWidth={2.2} fill="none" strokeLinecap="round">
+      <path d="M-20 26 L-14 -18 M20 26 L14 -18 M-14 -18 L14 -18" />
+      <path d="M-44 -24 L34 -24" strokeWidth={3} />
+      <path d="M-14 -18 L-4 -40 L14 -18 M-4 -40 L-44 -24 M-4 -40 L34 -24" strokeWidth={1.4} />
+      <rect x={-34} y={-22} width={10} height={5} fill="#fff" strokeWidth={1.4} />
+      <path d="M-29 -17 L-29 -6" strokeWidth={1} />
+      <rect x={-35} y={-6} width={12} height={6} fill={ORANGE} stroke="none" />
+    </g>
+  );
+}
+
+function Agv() {
+  return (
+    <g>
+      <rect x={-30} y={8} width={60} height={12} rx={2} fill={TEAL} />
+      <rect x={-26} y={-6} width={52} height={14} fill={ORANGE} />
+      {[-20, -7, 7, 20].map((x) => <circle key={x} cx={x} cy={22} r={4} fill="#27272a" />)}
+    </g>
+  );
+}
+
+function Rack() {
+  return (
+    <g>
+      <rect x={-26} y={-4} width={52} height={12} fill={ORANGE} />
+      <g stroke={INK} strokeWidth={2.2} strokeLinecap="round">
+        <path d="M-24 8 L-24 26 M24 8 L24 26 M-28 8 L28 8" />
+      </g>
+      <path d="M-20 26 L20 26" stroke={LINE} strokeWidth={1.5} strokeDasharray="3 3" />
+    </g>
+  );
+}
+
+function Block() {
+  return (
+    <g>
+      {[0, 1, 2, 3].map((c) => [0, 1, 2].map((r) => (
+        <rect key={`${c}${r}`} x={-28 + c * 14.5} y={18 - r * 9} width={13} height={8} fill={['#9a3412', '#115e59', '#52525b', '#854d0e'][(c + r) % 4]} />
+      )))}
+      <g stroke={INK} strokeWidth={2.2} fill="none" strokeLinecap="round">
+        <path d="M-34 26 L-34 -24 M34 26 L34 -24 M-38 -24 L38 -24" />
+      </g>
+      <rect x={-6} y={-22} width={12} height={5} fill="#fff" stroke={INK} strokeWidth={1.4} />
+    </g>
+  );
+}
+
+const STATIONS: { x: number; name: string; note: string; icon: () => React.JSX.Element }[] = [
+  { x: 70, name: 'Vessel', note: 'bays of containers', icon: Vessel },
+  { x: 230, name: 'Quay crane', note: 'one move every 75 s', icon: Crane },
+  { x: 390, name: 'AGV', note: 'carries one container', icon: Agv },
+  { x: 550, name: 'Transfer rack', note: 'handover in 46 s', icon: Rack },
+  { x: 710, name: 'Yard block', note: 'stacking crane stores it', icon: Block },
 ];
+
+function Arrow({ x0, x1, y, color }: { x0: number; x1: number; y: number; color: string }) {
+  const dir = Math.sign(x1 - x0);
+  return (
+    <g stroke={color} strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d={`M${x0} ${y} L${x1} ${y}`} />
+      <path d={`M${x1 - dir * 7} ${y - 5} L${x1} ${y} L${x1 - dir * 7} ${y + 5}`} />
+    </g>
+  );
+}
+
+function JourneyDiagram() {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
+      <svg viewBox="0 0 780 196" className="w-full min-w-[640px]" role="img"
+        aria-label="A discharged container moves from the vessel to the quay crane, an AGV, a transfer rack and the yard block; a loaded container makes the same trip in reverse">
+        {STATIONS.map((s) => {
+          const Icon = s.icon;
+          return (
+            <g key={s.name}>
+              <g transform={`translate(${s.x} 62)`}><Icon /></g>
+              <text x={s.x} y={112} textAnchor="middle" fontSize={14} fontWeight={600} fill="#18181b">{s.name}</text>
+              <text x={s.x} y={129} textAnchor="middle" fontSize={11.5} fill="#71717a">{s.note}</text>
+            </g>
+          );
+        })}
+        {STATIONS.slice(0, -1).map((s, i) => (
+          <g key={`ar${i}`}>
+            <Arrow x0={s.x + 50} x1={STATIONS[i + 1].x - 50} y={152} color={ORANGE} />
+            <Arrow x0={STATIONS[i + 1].x - 50} x1={s.x + 50} y={172} color={TEAL} />
+          </g>
+        ))}
+        <text x={20} y={156} fontSize={12} fontWeight={600} fill={ORANGE}>Discharge</text>
+        <text x={20} y={176} fontSize={12} fontWeight={600} fill={TEAL}>Load</text>
+      </svg>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------- live readouts */
+
+function endPoint(r: Replay, path: number) {
+  const segs = r.paths[path];
+  const pts = segs[segs.length - 1].p;
+  return pts[pts.length - 1];
+}
+
+function place(r: Replay, x: number, y: number) {
+  const L = r.layout;
+  if (y > L.rzY0) {
+    const b = L.blocks.find((bl) => x >= bl.x0 - 3 && x <= bl.x0 + bl.w + 3);
+    return { kind: 'rack' as const, label: `block ${b?.id ?? '?'}` };
+  }
+  if (y >= L.loadY0 - 1 && y <= L.loadY1 + 0.1) {
+    const q = L.qcs.reduce((a, c) => (Math.abs(c.x - x) < Math.abs(a.x - x) ? c : a));
+    return { kind: 'qc' as const, label: `QC${q.id}` };
+  }
+  return { kind: 'buffer' as const, label: 'the buffer' };
+}
+
+function agvStatus(r: Replay, a: Replay['agvs'][number], t: number, prep: Record<number, [number, boolean][]>) {
+  const sws = prep[a.id] ?? [];
+  const j = lastIdx(sws, t, (s) => s[0]);
+  const loaded = j >= 0 ? sws[j][1] : false;
+  const i = lastIdx(a.legs, t, (l) => l.t);
+  if (i >= 0) {
+    const lg = a.legs[i];
+    if (t < lg.t + lg.d.reduce((s, d) => s + d, 0)) {
+      const [ex, ey] = endPoint(r, lg.path);
+      const to = place(r, ex, ey);
+      const dest = to.kind === 'buffer' ? 'the buffer' : to.label;
+      return { loaded, text: loaded ? `Carrying a container to ${dest}` : `Driving empty to ${dest}` };
+    }
+  }
+  const [x, y] = agvPose(r, a.legs, t);
+  const here = place(r, x, y);
+  if (r.racks.some(([ag, s, e]) => ag === a.id && s <= t && t < e)) return { loaded, text: `Rack handover at ${here.label}` };
+  if (here.kind === 'rack') return { loaded, text: `Waiting for its rack at ${here.label}` };
+  if (here.kind === 'qc') return { loaded, text: loaded ? `Waiting to hand over at ${here.label}` : `Waiting for a container at ${here.label}` };
+  return { loaded, text: 'Parked in the buffer, no job' };
+}
+
+function Readouts({ r, t, prep, playing, onToggle }: {
+  r: Replay; t: number; prep: Record<number, [number, boolean][]>; playing: boolean; onToggle: () => void;
+}) {
+  const st = stats(r, t);
+  return (
+    <div className="flex flex-col gap-5 border-t border-zinc-200 bg-zinc-50/70 p-5 lg:border-t-0 lg:border-l">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="text-xs text-zinc-500">Simulated time</div>
+          <div className="text-3xl font-semibold tracking-tight tabular-nums text-zinc-900">{fmtTime(t)}</div>
+        </div>
+        <button onClick={onToggle} aria-label={playing ? 'Pause the recording' : 'Play the recording'}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white hover:bg-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900">
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <div className="text-sm font-semibold text-zinc-900">Quay cranes</div>
+        {r.qcs.map((q, k) => {
+          const s = st.qcState[k];
+          const next = q.jobs.find((jb) => jb[1] > t);
+          const phase = s.finished ? 'Finished' : s.waiting ? 'Waiting for an AGV' : next?.[2] === 'D' ? 'Discharging' : 'Loading';
+          return (
+            <div key={q.id} className="flex flex-col gap-1.5">
+              <div className="flex items-baseline justify-between gap-2 text-sm">
+                <span className="font-medium text-zinc-900">QC{q.id}</span>
+                <span className={s.waiting ? 'font-medium text-red-600' : 'text-zinc-600'}>{phase}</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200">
+                <div className="h-full rounded-full bg-zinc-800" style={{ width: `${(100 * s.done) / s.total}%` }} />
+              </div>
+              <div className="flex justify-between text-xs tabular-nums text-zinc-500">
+                <span>{s.done} of {s.total} containers</span>
+                <span>idle {Math.round(s.idle)} s</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="text-sm font-semibold text-zinc-900">AGVs</div>
+        <ul className="flex flex-col gap-2">
+          {r.agvs.map((a, k) => {
+            const s = agvStatus(r, a, t, prep);
+            const col = AGV_COLORS[k % AGV_COLORS.length];
+            return (
+              <li key={a.id} className="flex items-center gap-3 text-sm">
+                <span className="flex h-5 w-9 shrink-0 items-center justify-center rounded text-[11px] font-bold"
+                  style={{ background: s.loaded ? col : '#fff', color: s.loaded ? '#fff' : col, border: `2px solid ${col}` }}>{a.id}</span>
+                <span className="leading-snug text-zinc-700">{s.text}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------- spec pictograms */
+
+function PicCrane() {
+  const moves = [0, 75, 150, 225];
+  return (
+    <svg viewBox="0 0 160 56" className="h-14 w-full" aria-hidden>
+      <path d="M8 34 L152 34" stroke={LINE} strokeWidth={1.2} />
+      {moves.map((m) => <rect key={m} x={8 + (m / 300) * 144} y={22} width={(60 / 300) * 144} height={12} rx={1.5} fill={ORANGE} />)}
+      {[0, 75, 150, 225, 300].map((m) => (
+        <g key={m}>
+          <path d={`M${8 + (m / 300) * 144} 34 L${8 + (m / 300) * 144} 39`} stroke={LINE} strokeWidth={1.2} />
+          <text x={8 + (m / 300) * 144} y={50} fontSize={9} textAnchor="middle" fill="#71717a">{m}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function PicAgv() {
+  // to scale: 14.8 m x 3.0 m
+  return (
+    <svg viewBox="0 0 160 56" className="h-14 w-full" aria-hidden>
+      <path d="M4 12 L152 12 M4 8 L4 16 M152 8 L152 16" stroke={LINE} strokeWidth={1.1} />
+      <text x={78} y={8} fontSize={9} textAnchor="middle" fill="#71717a">14.8 m</text>
+      <rect x={4} y={20} width={148} height={30} rx={2.5} fill="#fff" stroke={TEAL} strokeWidth={2} />
+      <rect x={10} y={25} width={136} height={20} fill={ORANGE} fillOpacity={0.85} />
+      <path d="M156 20 L156 50" stroke={LINE} strokeWidth={1.1} />
+    </svg>
+  );
+}
+
+function PicYard() {
+  return (
+    <svg viewBox="0 0 160 56" className="h-14 w-full" aria-hidden>
+      {[0, 1, 2, 3, 4].map((b) => (
+        <g key={b}>
+          <rect x={4 + b * 31.5} y={6} width={26} height={34} fill="#e4e4e7" />
+          {[0, 1, 2, 3, 4].map((k) => <rect key={k} x={5.5 + b * 31.5 + k * 4.8} y={42} width={3.2} height={8} rx={0.6} fill="#fcd34d" />)}
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function PicLanes() {
+  // to scale: 7 x 4 m handover lanes, 27 m buffer, 26.5 m of driving lanes
+  const h = 56 / (28 + 27 + 26.5);
+  const bands = [{ y: 0, d: 28, fill: '#f4f4f5', n: 7 }, { y: 28, d: 27, fill: '#e4e4e7', n: 0 }, { y: 55, d: 26.5, fill: '#fafafa', n: 6 }];
+  return (
+    <svg viewBox="0 0 160 56" className="h-14 w-full" aria-hidden>
+      {bands.map((b) => (
+        <g key={b.y}>
+          <rect x={0} y={b.y * h} width={160} height={b.d * h} fill={b.fill} />
+          {Array.from({ length: Math.max(0, b.n - 1) }, (_, i) => (
+            <path key={i} d={`M0 ${(b.y + ((i + 1) * b.d) / b.n) * h} L160 ${(b.y + ((i + 1) * b.d) / b.n) * h}`} stroke={LINE} strokeWidth={0.6} strokeDasharray="3 3" />
+          ))}
+        </g>
+      ))}
+      {Array.from({ length: 13 }, (_, i) => <rect key={i} x={4 + i * 12} y={(28 + 4) * h} width={9} height={19 * h} fill="none" stroke="#a1a1aa" strokeWidth={0.6} />)}
+    </svg>
+  );
+}
+
+function PicWork() {
+  // one square per container: 100 discharge, then 100 load
+  return (
+    <svg viewBox="0 0 160 56" className="h-14 w-full" aria-hidden>
+      {Array.from({ length: 200 }, (_, i) => (
+        <rect key={i} x={2 + (i % 25) * 6.3} y={2 + Math.floor(i / 25) * 6.6 + (i >= 100 ? 2 : 0)} width={5} height={5} rx={0.8}
+          fill={i < 100 ? ORANGE : TEAL} />
+      ))}
+    </svg>
+  );
+}
+
+const SPECS: { pic: () => React.JSX.Element; value: string; detail: string; source: string }[] = [
+  { pic: PicCrane, value: '75 s', detail: 'per crane move, 2 quay cranes', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
+  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '4 AGVs; 6 m/s straight, 3 m/s in turns', source: 'Luo, 2016' },
+  { pic: PicYard, value: '5 blocks', detail: '31 m wide, 5 transfer racks each', source: 'Wu et al., 2016' },
+  { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard: 7 handover lanes, 27 m buffer, 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
+  { pic: PicWork, value: '200 containers', detail: 'per run: 100 discharge (orange), 100 load (teal)', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
+];
+
+/* ---------------------------------------------------------------- section */
 
 export default function SetupFigure() {
   const [r, setR] = useState<Replay | null>(null);
@@ -47,50 +342,54 @@ export default function SetupFigure() {
   const prep = useMemo(() => (r ? prepare(r) : {}), [r]);
 
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold tracking-tight text-zinc-900">The simulated terminal</h2>
-      <p className="max-w-3xl leading-relaxed text-zinc-700">
-        Two quay cranes unload and load a vessel. AGVs carry each container between the cranes and the transfer racks at the
-        end of the yard blocks, waiting in the buffer when they have no job. Below is a recording of an actual simulation run.
-      </p>
+    <section className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-900">The simulated terminal</h2>
+        <p className="max-w-3xl leading-relaxed text-zinc-700">
+          Two quay cranes unload and load a vessel. Every container passes through the same chain of equipment, in one
+          direction or the other, and the AGVs are the link the dispatcher controls.
+        </p>
+      </div>
+
+      <JourneyDiagram />
 
       <figure className="flex flex-col gap-3">
-        <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-          {r ? <TerminalMap r={r} t={t} prep={prep} /> : <div className="aspect-[235/220] w-full bg-zinc-100" />}
-          {r && (
-            <div className="absolute right-3 top-3 flex items-center gap-2 rounded-full bg-white/90 px-2 py-1 shadow-sm">
-              <span className="font-mono text-xs tabular-nums text-zinc-700">{fmtTime(t)}</span>
-              <button onClick={() => setPlaying(!playing)} aria-label={playing ? 'Pause the animation' : 'Play the animation'}
-                className="rounded-full p-1 text-zinc-800 hover:bg-zinc-100">
-                {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              </button>
+        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_18rem]">
+            <div className="min-w-0">
+              {r ? <TerminalMap r={r} t={t} prep={prep} /> : <div className="aspect-[235/220] w-full bg-zinc-100" />}
             </div>
-          )}
+            {r && <Readouts r={r} t={t} prep={prep} playing={playing} onToggle={() => setPlaying(!playing)} />}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-zinc-600">
-          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm bg-teal-700" />AGV carrying a container</span>
-          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm border-2 border-teal-700 bg-white" />empty AGV</span>
-          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-3 bg-orange-600" />container on a crane trolley</span>
+        <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-zinc-600">
+          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm" style={{ background: TEAL }} />AGV carrying a container</span>
+          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm border-2 bg-white" style={{ borderColor: TEAL }} />empty AGV (each AGV has its own colour)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-3" style={{ background: ORANGE }} />container on a crane trolley</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" />rack handover in progress</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
         <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-          Plan view, {SPEED}× real time: 4 AGVs, Briskorn inventory rule, crane times as planned. Lanes, slots, blocks and racks
-          are drawn to scale in metres; the crane structures and the vessel are schematic, since the simulator uses only each
-          crane&apos;s position and timing. Hover a zone for its size and source. The full Yangshan Phase IV layout is on
-          the <Link href="/simulation" className="font-medium text-zinc-900 underline underline-offset-2">Simulation</Link> page.
+          A recording of one simulation run, played at {SPEED}× real time: 4 AGVs dispatched by the inventory rule
+          of <i>Briskorn et al. (2006)</i>, crane times exactly as planned. Lanes, slots, blocks and racks are drawn to scale; the
+          crane structures and the vessel are schematic. Hover a zone for its size and source. The full Yangshan Phase IV layout
+          is on the <Link href="/simulation" className="font-medium text-zinc-900 underline underline-offset-2">Simulation</Link> page.
         </figcaption>
       </figure>
 
-      <dl className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white sm:grid-cols-2 lg:grid-cols-5">
-        {SPECS.map((s) => (
-          <div key={s.label} className="flex flex-col gap-1 border-zinc-200 p-4 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-r lg:border-b-0">
-            <dt className="text-xs font-semibold text-zinc-500">{s.label}</dt>
-            <dd className="text-sm font-medium leading-snug text-zinc-900">{s.value}</dd>
-            <dd className="mt-auto pt-1 text-xs italic text-zinc-500">{s.source}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white sm:grid-cols-2 lg:grid-cols-5">
+        {SPECS.map((s, k) => {
+          const Pic = s.pic;
+          return (
+            <div key={k} className="flex flex-col gap-2 border-zinc-200 p-4 [&:not(:last-child)]:border-b sm:[&:not(:last-child)]:border-r lg:border-b-0">
+              <Pic />
+              <div className="text-xl font-semibold tracking-tight text-zinc-900 tabular-nums">{s.value}</div>
+              <div className="text-sm leading-snug text-zinc-600">{s.detail}</div>
+              <div className="mt-auto pt-1 text-xs italic text-zinc-500">{s.source}</div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

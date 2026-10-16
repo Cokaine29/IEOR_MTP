@@ -33,7 +33,7 @@ export type ReplayPair = {
   right: string;
 };
 
-const AGV_COLORS = ['#0f766e', '#2563eb', '#a16207', '#7c3aed', '#be123c', '#0891b2'];
+export const AGV_COLORS = ['#0f766e', '#2563eb', '#a16207', '#7c3aed', '#be123c', '#0891b2'];
 
 /* distance travelled after time u in one segment: accelerate, (cruise), decelerate at the same rate a */
 function distAt(s: Seg, T: number, u: number, a: number) {
@@ -72,7 +72,7 @@ function along(pts: number[][], f: number): [number, number, number] {
   return [p[0], p[1], 0];
 }
 
-function lastIdx<T>(arr: T[], t: number, key: (x: T) => number) {
+export function lastIdx<T>(arr: T[], t: number, key: (x: T) => number) {
   let lo = 0, hi = arr.length - 1, ans = -1;
   while (lo <= hi) {
     const m = (lo + hi) >> 1;
