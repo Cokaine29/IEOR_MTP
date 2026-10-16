@@ -303,10 +303,10 @@ function PicWork() {
 
 const SPECS: { pic: () => React.JSX.Element; value: string; detail: string; source: string }[] = [
   { pic: PicCrane, value: '75 s', detail: 'per crane move, 2 quay cranes', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
-  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '4 AGVs; 6 m/s straight, 3 m/s in turns', source: 'Luo, 2016' },
+  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '4 AGVs, at 6 m/s on straights and 3 m/s in turns', source: 'Luo, 2016' },
   { pic: PicYard, value: '5 blocks', detail: '31 m wide, 5 transfer racks each', source: 'Wu et al., 2016' },
-  { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard: 7 handover lanes, 27 m buffer, 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
-  { pic: PicWork, value: '200 containers', detail: 'per run: 100 discharge (orange), 100 load (teal)', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
+  { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard, across 7 handover lanes, a 27 m buffer and 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
+  { pic: PicWork, value: '200 containers', detail: '100 discharge (orange) and 100 load (teal) in each run', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
 ];
 
 /* ---------------------------------------------------------------- section */
@@ -369,9 +369,9 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
         <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-          A recording of one simulation run, played at {SPEED}× real time: 4 AGVs dispatched by the inventory rule
-          of <i>Briskorn et al. (2006)</i>, crane times exactly as planned. Lanes, slots, blocks and racks are drawn to scale; the
-          crane structures and the vessel are schematic.
+          A recording of one simulation run, played at {SPEED}× real time. Four AGVs are dispatched by the inventory rule
+          of <i>Briskorn et al. (2006)</i>, and the cranes work exactly at their planned times. Lanes, slots, blocks and racks are
+          drawn to scale, while the crane structures and the vessel are schematic.
         </figcaption>
       </figure>
 

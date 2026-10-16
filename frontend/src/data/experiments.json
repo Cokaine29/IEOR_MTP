@@ -155,7 +155,7 @@
     "rows": [
      [
       "Random dispatching",
-      "Worst case: no intelligence",
+      "Worst case, with no intelligence",
       [
        "done",
        "done",
@@ -173,7 +173,7 @@
      ],
      [
       "Perfect-information benchmark",
-      "Best achievable: knows all future times",
+      "Best achievable, as it knows all future times",
       [
        "done",
        "done",
@@ -231,7 +231,7 @@
   ]
  },
  "generated": "2026-10-16",
- "source": "ACT_MTP 67a52f2 / results_reference",
+ "source": "ACT_MTP 6081049 / results_reference",
  "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
  "headlines": [
   {

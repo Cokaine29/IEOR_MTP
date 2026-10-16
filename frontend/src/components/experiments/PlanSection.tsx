@@ -112,12 +112,12 @@ export default function PlanSection() {
                       <td key={k} className={`px-3 py-2.5 ${groupStart.has(k) ? 'border-l border-zinc-100' : ''}`}>
                         <div className="flex justify-center">
                           {s === 'done' && links[k] ? (
-                            <button onClick={() => go(links[k])} title="Done: go to the result" aria-label={`${name}, ${P.conditions[k]}: done, go to the result`}
+                            <button onClick={() => go(links[k])} title="Done. Click to go to the result" aria-label={`${name} under ${P.conditions[k]} is done. Go to the result`}
                               className="rounded-full p-1 transition-transform hover:scale-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900">
                               <Mark s={s} />
                             </button>
                           ) : (
-                            <span className="p-1" aria-label={`${name}, ${P.conditions[k]}: ${LABEL[s].toLowerCase()}`}><Mark s={s} /></span>
+                            <span className="p-1" aria-label={`${name} under ${P.conditions[k]} is ${LABEL[s].toLowerCase()}`}><Mark s={s} /></span>
                           )}
                         </div>
                       </td>

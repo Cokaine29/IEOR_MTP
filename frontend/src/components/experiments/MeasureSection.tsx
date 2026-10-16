@@ -87,7 +87,7 @@ function LoadPanel({ y0 }: { y0: number }) {
   const xHand = 500;
   return (
     <g transform={`translate(0 ${y0})`}>
-      <text x={8} y={20} fontSize={14} fontWeight={600} fill="#18181b">Loading: the next container is not there yet</text>
+      <text x={8} y={20} fontSize={14} fontWeight={600} fill="#18181b">Loading, before the next container has arrived</text>
       <text x={8} y={53} fontSize={13} fill={MUTED}>Crane</text>
       <text x={8} y={85} fontSize={13} fill={MUTED}>AGV</text>
       <text x={8} y={115} fontSize={13} fill={MUTED}>AGV</text>
@@ -97,7 +97,7 @@ function LoadPanel({ y0 }: { y0: number }) {
       <rect x={XREADY} y={36} width={xHand - XREADY} height={24} rx={3} fill="url(#idle-hatch)" stroke={RED} strokeWidth={1.5} />
       <text x={(XREADY + xHand) / 2} y={52} fontSize={12.5} fontWeight={700} fill={RED} textAnchor="middle">idle</text>
 
-      {/* AGV carrying a later container: already here, but it is not its turn */}
+      {/* AGV carrying a later container, already here but not its turn */}
       <rect x={230} y={68} width={640 - 230} height={22} rx={3} fill="#f4f4f5" stroke={LINE} strokeWidth={1.6} />
       <text x={XREADY + 14} y={83} fontSize={12} fill={INK_GREY}>container 6 is here, but waits for 5</text>
 
@@ -120,7 +120,7 @@ function TimelineFigure() {
     <figure className="flex flex-col gap-3">
       <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
         <svg viewBox="0 0 720 490" className="w-full min-w-[600px]" role="img"
-          aria-label="Three timelines. Discharge with an AGV already waiting: idle time zero. Discharge with an AGV arriving late: the gap is the idle time. Loading: the crane needs the AGV carrying the next container in its order, and an AGV with a later container does not help, so the crane waits until the right one arrives.">
+          aria-label="Three timelines. In discharge with an AGV already waiting, the idle time is zero. In discharge with an AGV arriving late, the gap is the idle time. In loading the crane needs the AGV carrying the next container in its order, and an AGV with a later container does not help, so the crane waits until the right one arrives.">
           <defs>
             <pattern id="idle-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <rect width="8" height="8" fill="#fee2e2" />
@@ -128,11 +128,11 @@ function TimelineFigure() {
             </pattern>
           </defs>
           <g transform="translate(10 10)">
-            <Panel y0={0} title="Discharge: an AGV is already waiting" late={false} />
+            <Panel y0={0} title="Discharge, with an AGV already waiting" late={false} />
             <path d="M0 132 L680 132" stroke="#e4e4e7" strokeWidth={1} />
             <path d="M0 274 L680 274" stroke="#e4e4e7" strokeWidth={1} />
             <LoadPanel y0={284} />
-            <Panel y0={142} title="Discharge: the AGV arrives late" late />
+            <Panel y0={142} title="Discharge, with the AGV arriving late" late />
             <path d="M8 460 L630 460" stroke={MUTED} strokeWidth={1.2} />
             <path d="M623 455 L631 460 L623 465" stroke={MUTED} strokeWidth={1.2} fill="none" />
             <text x={640} y={464} fontSize={12.5} fill={MUTED}>time</text>
@@ -140,7 +140,7 @@ function TimelineFigure() {
         </svg>
       </div>
       <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-        Idle time is the gap between two moments: <strong className="font-semibold text-zinc-900">crane ready</strong> (dashed line) and{' '}
+        Idle time is the gap between two moments, the <strong className="font-semibold text-zinc-900">crane ready</strong> (dashed line) and the{' '}
         <strong className="font-semibold text-zinc-900">handover</strong> (orange diamond). It is zero when the AGV is already in place.
         In loading, an AGV with a later container standing nearby does not shorten the wait.
       </figcaption>
@@ -231,7 +231,7 @@ function Example() {
         </table>
       </div>
       <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-        Made-up numbers, only to show the calculation; they are not a result. Lower is better, and zero means the cranes never
+        These numbers are made up to show the calculation and are not a result. Lower is better, and zero means the cranes never
         waited for an AGV.
       </p>
     </div>
@@ -244,8 +244,8 @@ export default function MeasureSection() {
       <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
         <p className="max-w-3xl leading-relaxed text-zinc-700">
-          Every method is judged by <strong className="font-semibold text-zinc-900">quay crane idle time</strong>: how long a crane stands
-          ready while the AGV it needs is not in place. What the crane needs depends on the job:
+          Every method is judged by <strong className="font-semibold text-zinc-900">quay crane idle time</strong>, which is how long a crane
+          stands ready while the AGV it needs is not in place. What the crane needs depends on the job.
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-zinc-200 bg-white p-4">
@@ -258,7 +258,7 @@ export default function MeasureSection() {
           </div>
         </div>
         <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-          Literature name for the same quantity: &ldquo;QC waiting&rdquo; in <i>Zheng et al. (2022)</i>, crane delay in <i>Kim and Bae (2004)</i>.
+          The same quantity is called &ldquo;QC waiting&rdquo; by <i>Zheng et al. (2022)</i> and crane delay by <i>Kim and Bae (2004)</i>.
         </p>
       </div>
       <TimelineFigure />

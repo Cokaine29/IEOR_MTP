@@ -316,11 +316,11 @@ const SEA = 66;                       // drawn sea band north of the quay edge (
 const BAY_W = 12.2;                   // one 40 ft bay (schematic)
 const VESSEL = { y0: -56, y1: -5 };   // hull, schematic beam about 51 m
 const ZONE_INFO = [
-  'Quay apron: 30 m between the crane rails, with the manual truck lanes and hatch covers; no AGVs here (Liu et al., 2016; Wu et al., 2016).',
-  'AGV handover lanes: 7 lanes of 4 m under the crane backreach; AGVs stop here for the crane (Liu et al., 2016; Wu et al., 2016).',
-  'Buffer: 27 m deep, one AGV per slot; slots 3.3 m wide (Wu et al., 2016; slot width from satellite imagery).',
-  'Driving lanes: 6 lanes, 26.5 m in total, alternating directions (Liu et al., 2016; Wu et al., 2016).',
-  'Yard blocks: 31 m wide, 5 transfer racks at the sea-side end of each block (Wu et al., 2016).',
+  'The quay apron is 30 m between the crane rails and holds the manual truck lanes and hatch covers. No AGVs drive here (Liu et al., 2016; Wu et al., 2016).',
+  'Seven AGV handover lanes, each 4 m wide, lie under the crane backreach. AGVs stop here for the crane (Liu et al., 2016; Wu et al., 2016).',
+  'The buffer is 27 m deep, with one AGV per 3.3 m slot (Wu et al., 2016). The slot width is measured from satellite imagery.',
+  'Six driving lanes, 26.5 m in total, run in alternating directions (Liu et al., 2016; Wu et al., 2016).',
+  'Each yard block is 31 m wide and has 5 transfer racks at its sea-side end (Wu et al., 2016).',
 ];
 const STACK_COLORS = ['#9a3412', '#115e59', '#52525b', '#854d0e', '#1e3a8a', '#7f1d1d', '#a8a29e'];
 
