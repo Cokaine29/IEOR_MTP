@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import { ChevronDown, FileText } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import DATA from '@/data/experiments.json';
 import SetupFigure from './SetupFigure';
 import MeasureSection from './MeasureSection';
@@ -11,7 +11,6 @@ type Header = {
   title: string;
   findingsGroup: string;
   findings: { value: string; text: string; conditions: string; ref: string }[];
-  references: string[];
 };
 
 const H = (DATA as unknown as { header: Header; generated: string }).header;
@@ -72,17 +71,6 @@ export default function ExperimentsHeader() {
             ))}
           </ol>
         </section>
-
-        {/* references */}
-        <div className="flex gap-3 rounded-2xl border border-zinc-200 bg-zinc-100 p-4">
-          <FileText className="mt-0.5 h-5 w-5 shrink-0 text-zinc-600" />
-          <div className="space-y-3 text-sm">
-            <p className="font-semibold text-zinc-900">Literature References</p>
-            {H.references.map((r) => (
-              <p key={r} className="text-zinc-700 italic break-words">{r}</p>
-            ))}
-          </div>
-        </div>
       </div>
     </>
   );

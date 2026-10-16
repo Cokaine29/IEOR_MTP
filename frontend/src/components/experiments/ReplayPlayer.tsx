@@ -143,19 +143,19 @@ function TerminalView({ r, t, prep, end }: { r: Replay; t: number; prep: Record<
     <div className="flex flex-col gap-2 min-w-0">
       <div className="flex items-baseline justify-between gap-2">
         <div className="font-semibold text-zinc-900">{r.label}</div>
-        <div className="text-xs text-zinc-500 tabular-nums">{r.nAgv} AGVs · cycle ±{Math.round(r.delta * 100)}%</div>
+        <div className="text-xs text-zinc-500 tabular-nums">{r.nAgv} AGVs, crane cycle ±{Math.round(r.delta * 100)}%</div>
       </div>
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="rounded-xl bg-zinc-50 px-2 py-1.5">
-          <div className="text-[10px] uppercase tracking-wider text-zinc-500">Containers</div>
+          <div className="text-xs text-zinc-500">Containers</div>
           <div className="font-semibold tabular-nums text-zinc-900">{st.done} / {r.boxes}</div>
         </div>
         <div className="rounded-xl bg-zinc-50 px-2 py-1.5">
-          <div className="text-[10px] uppercase tracking-wider text-zinc-500">Crane idle so far</div>
+          <div className="text-xs text-zinc-500">Crane idle so far</div>
           <div className="font-semibold tabular-nums text-zinc-900">{Math.round(st.idle)} s</div>
         </div>
         <div className="rounded-xl bg-zinc-50 px-2 py-1.5">
-          <div className="text-[10px] uppercase tracking-wider text-zinc-500">Idle per box</div>
+          <div className="text-xs text-zinc-500">Idle per container</div>
           <div className="font-semibold tabular-nums text-zinc-900">{st.done ? (st.idle / Math.max(st.done, 1)).toFixed(1) : '0.0'} s</div>
         </div>
       </div>
@@ -244,7 +244,7 @@ export default function ReplayPlayer({ pairs }: { pairs: ReplayPair[] }) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50/60 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Replay on the terminal layout</div>
+        <div className="text-sm font-semibold text-zinc-800">Replay on the terminal layout</div>
         {pairs.length > 1 && (
           <div className="inline-flex rounded-full border border-zinc-200 bg-white p-0.5" role="group" aria-label="Scenario">
             {pairs.map((p, k) => (
@@ -294,16 +294,16 @@ export default function ReplayPlayer({ pairs }: { pairs: ReplayPair[] }) {
 
           <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-zinc-600">
             <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm bg-teal-700" /> AGV carrying a container</span>
-            <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm border-2 border-teal-700 bg-white" /> empty AGV</span>
+            <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm border-2 border-teal-700 bg-white" /> empty AGV (each AGV has its own colour)</span>
             <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-200" /> rack handover (46 s)</span>
             <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-green-600" /> crane working</span>
             <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-red-600" /> crane waiting for an AGV (idle)</span>
-            <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 bg-green-100" /><span className="-ml-1.5 inline-block h-2.5 w-1 bg-red-600" /> strip under each map: whole run, red where the crane waited</span>
+            <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 bg-green-100" /><span className="-ml-1.5 inline-block h-2.5 w-1 bg-red-600" /> strip under each map shows the whole run, red where the crane waited</span>
           </div>
           <p className="text-xs text-zinc-500">
-            Exact recording of one simulation run (seed {left.seed}, the seed closest to the 30-seed average), drawn to scale in metres.
-            Same containers and the same random crane times on both sides; only the dispatching differs.
-            Final idle per container: {left.label} {left.idlePerBox.toFixed(2)} s, {right.label} {right.idlePerBox.toFixed(2)} s.
+            An exact recording of one simulation run, drawn to scale. It uses seed {left.seed}, the seed closest to the 30-seed average.
+            Both sides have the same containers and the same random crane times, so only the dispatching differs.
+            Final idle time per container is {left.idlePerBox.toFixed(2)} s for {left.label} and {right.idlePerBox.toFixed(2)} s for {right.label}.
           </p>
         </>
       )}
@@ -511,7 +511,7 @@ export function TerminalMap({ r, t, prep, labels = true }: {
                     {s.finished ? 'finished' : waiting ? 'waiting for an AGV' : 'working'}
                   </text>
                   <text x={q.x + half + 2.5} y={L.railSea + 19.5} fontSize={3.4} fill="#52525b">
-                    {s.done}/{s.total} · idle {Math.round(s.idle)} s
+                    {s.done}/{s.total}, idle {Math.round(s.idle)} s
                   </text>
                 </>
               )}

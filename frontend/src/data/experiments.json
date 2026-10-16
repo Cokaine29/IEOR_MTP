@@ -231,201 +231,97 @@
   ]
  },
  "generated": "2026-10-16",
- "source": "ACT_MTP 6081049 / results_reference",
- "measure": "QC idle time per container (s): how long each quay crane waits, per container, because no AGV is there.",
- "headlines": [
+ "source": "ACT_MTP 5c4abb5 / results_reference",
+ "stages": [
   {
-   "label": "Where it matters",
-   "value": "4",
-   "unit": "AGVs",
-   "text": "With 2 cranes, dispatching decisions only matter at 3-5 AGVs. Fewer: always short. More: always enough.",
-   "ref": "E1"
+   "n": 1,
+   "question": "Can the simulator be trusted?",
+   "why": "Every later number depends on the simulator moving AGVs exactly as the layout and vehicle data say."
   },
   {
-   "label": "Randomness hurts",
-   "value": "3.6 → 7.1",
-   "unit": "s / box",
-   "text": "At 4 AGVs, crane idle time doubles when crane cycle times vary by up to ±40%. All rules suffer alike.",
-   "ref": "E3"
+   "n": 2,
+   "question": "Where do dispatching decisions matter?",
+   "why": "Before adding randomness, the fleet size and rule settings must be chosen where the choice of dispatcher can make a difference."
   },
   {
-   "label": "Room to improve",
-   "value": "26–30",
-   "unit": "%",
-   "text": "Every rule leaves this much more idle time than a dispatcher that knew the future could achieve.",
-   "ref": "E3-bench"
+   "n": 3,
+   "question": "Is the optimiser strong enough to serve as a benchmark?",
+   "why": "The benchmark and the optimised plans both come from a search, so the search itself has to be checked first."
+  },
+  {
+   "n": 4,
+   "question": "What happens when crane times become random?",
+   "why": "This is the core test of the traditional baselines, and the reason a real-time dispatcher is needed."
   }
  ],
- "glossary": {
-  "QC": "Quay crane: the large crane that moves containers between the ship and an AGV.",
-  "AGV": "Automated guided vehicle: a driverless truck carrying one container between the quay and the yard.",
-  "QC idle time": "Seconds a crane waits, per container, because no AGV is ready. This is what we minimise.",
-  "Dispatching rule": "A simple rule that decides, the moment an AGV becomes free, which crane and which container it serves next.",
-  "δ (noise)": "Each crane cycle is drawn from Uniform(75 ± δ·75) s. δ = 0.4 means anywhere from 45 to 105 s.",
-  "Perfect information": "A search that already knows every future crane time. No real dispatcher can beat it, so it marks the best possible.",
-  "Common random numbers": "Every method sees exactly the same containers and the same random crane times, so differences come from the method, not luck.",
-  "95% CI": "The ± after a number: if we repeated the experiment, the true mean would lie in this range 95% of the time."
- },
- "map": [
-  {
-   "stage": "Trust the simulator",
-   "items": [
-    {
-     "id": "E0",
-     "label": "Matches a hand-built answer key",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "P1-P3",
-     "label": "First looks, 1 and 2 cranes",
-     "status": "superseded",
-     "card": false
-    }
-   ]
-  },
-  {
-   "stage": "Where decisions matter",
-   "items": [
-    {
-     "id": "E1",
-     "label": "Fleet sweep: knee at 4 AGVs",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "E1b",
-     "label": "Look-ahead window",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "E5a",
-     "label": "Instance size",
-     "status": "final",
-     "card": true
-    }
-   ]
-  },
-  {
-   "stage": "Build a strong optimiser",
-   "items": [
-    {
-     "id": "E2",
-     "label": "First GA: too weak",
-     "status": "superseded",
-     "card": false
-    },
-    {
-     "id": "E2b-f",
-     "label": "Memetic search",
-     "status": "method",
-     "card": false
-    },
-    {
-     "id": "E3a",
-     "label": "Search vs exact best",
-     "status": "final",
-     "card": true
-    }
-   ]
-  },
-  {
-   "stage": "Add randomness",
-   "items": [
-    {
-     "id": "E3",
-     "label": "Rules under crane noise",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "E3-bench",
-     "label": "26–30% headroom",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "E3b",
-     "label": "Plan vs rules: crossover",
-     "status": "final",
-     "card": true
-    },
-    {
-     "id": "E3c",
-     "label": "QC-level strict plan",
-     "status": "method",
-     "card": true
-    }
-   ]
-  },
-  {
-   "stage": "Next",
-   "items": [
-    {
-     "id": "GA-R",
-     "label": "GA with re-planning",
-     "status": "next",
-     "card": false
-    },
-    {
-     "id": "Step 2",
-     "label": "Travel-time noise",
-     "status": "next",
-     "card": false
-    },
-    {
-     "id": "E3b+",
-     "label": "3 and 5 AGVs; 60/120 s cycles",
-     "status": "next",
-     "card": false
-    }
-   ]
-  }
+ "notation": [
+  [
+   "δ",
+   "How much crane cycle times vary. With δ = 0.4 each cycle takes between 45 and 105 s instead of exactly 75 s."
+  ],
+  [
+   "±",
+   "The number after ± is a 95% confidence interval over the seeds."
+  ],
+  [
+   "Paired seeds",
+   "Each seed fixes one instance and one draw of crane times, and every method runs on the same seeds. Differences between methods are therefore measured under identical conditions (common random numbers)."
+  ],
+  [
+   "NV/FCFS",
+   "Nearest vehicle, first come first served. A free AGV takes the oldest released job."
+  ],
+  [
+   "Perfect information",
+   "The benchmark sees all realised crane times in advance. No real dispatcher can, so it shows how much room is left."
+  ]
  ],
  "cards": [
   {
    "id": "E0",
-   "status": "final",
-   "log": "R-01 to R-04",
-   "title": "Is the simulator correct?",
-   "question": "Before trusting any result: does the simulator move AGVs exactly as the layout and kinematics say?",
-   "answer": "Yes. For five hand-worked cases, every event time and every path segment matches a hand-built answer key to within a millionth of a second.",
-   "simple": "We worked out five small scenarios by hand, then checked the simulator reproduces them exactly. 340 automatic tests guard this on every change.",
-   "technical": "Cases E0a-E0e cover single moves, rack handovers, lane booking and parking. Kinematics: 6 m/s straight, 3 m/s arcs, 0.5 m/s² acceleration and deceleration. Tolerance 1e-6 s.",
+   "stage": 1,
+   "title": "The simulator matches hand-worked cases exactly",
+   "lead": "Five small scenarios were worked out by hand, event by event. The simulator reproduces every event time and every path segment to within a millionth of a second.",
+   "body": "A suite of 340 automatic tests reruns these checks after every change to the code.",
+   "details": [
+    [
+     "Cases",
+     "Single moves, rack handovers, lane booking at the buffer, and parking."
+    ],
+    [
+     "Vehicle motion",
+     "AGVs drive at 6 m/s on straights and 3 m/s in turns, with 0.5 m/s² acceleration and braking (Luo, 2016)."
+    ],
+    [
+     "Tolerance",
+     "Every event time must agree within 10⁻⁶ s."
+    ]
+   ],
    "reproduce": "python -m pytest -q tests"
   },
   {
    "id": "E1",
-   "status": "final",
-   "log": "R-08",
-   "title": "How many AGVs before dispatching stops mattering?",
-   "question": "If we keep adding AGVs, at what fleet size does the choice of dispatching rule stop making a difference?",
-   "answer": "Only between 3 and 5 AGVs. With 6 or more, every sensible rule keeps the cranes almost never waiting. 4 AGVs is the knee, so later experiments use 4.",
-   "simple": "Random choices (grey) waste time at every fleet size. The three real rules overlap almost everywhere, except at 3 AGVs, where splitting the fleet into fixed crane groups backfires.",
-   "technical": "Each AGV needs 144.5 s of work per container (1.93 QC cycles of 75 s), so at least 3.9 AGVs are needed to keep 2 QCs busy with perfect sharing: the knee sits at 4. At 3 AGVs fixed groups (2+1) leave one QC under-served.",
-   "setup": [
+   "stage": 2,
+   "title": "Dispatching matters only when the fleet is just large enough",
+   "lead": "With two cranes, the choice of rule makes a difference only between 3 and 5 AGVs. From 6 AGVs on, every sensible rule keeps the cranes almost never waiting, so the later experiments use 4 AGVs.",
+   "body": "Random dispatching (grey) wastes time at every fleet size. The three real rules overlap almost everywhere except at 3 AGVs, where fixed crane groups split the fleet two and one and leave one crane short of vehicles. The replay shows that case.",
+   "details": [
     [
      "Setup",
-     "2 quay cranes (QCs); each QC works 2 bays of 25 discharge then 25 load containers in a fixed order; nominal QC cycle 75 s; Yangshan-IV-style layout with 5 yard blocks, buffer and driving lanes. No randomness."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s, and the layout follows Yangshan Phase IV with 5 yard blocks. No randomness."
+    ],
+    [
+     "Why 4 AGVs",
+     "Each container needs 144.5 s of AGV work, which is 1.93 crane cycles. Two cranes therefore need at least 3.9 AGVs even with perfect sharing, so the knee sits at 4."
     ],
     [
      "Rules",
-     "Briskorn inventory (phase factor 1.6), NV/FCFS (window 3), fixed groups, Random."
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 3 jobs, fixed crane groups, and random dispatching."
     ],
     [
      "Statistics",
-     "30 seeds, paired by common random numbers; mean ± 95% confidence interval (t = 2.045)."
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
-   ],
-   "reproduce": "python experiments/e1_agv_sweep.py",
-   "replay": [
-    {
-     "label": "3 AGVs",
-     "left": "e1_n3_briskorn",
-     "right": "e1_n3_fixed",
-     "caption": "Same 200 containers, 3 AGVs, no randomness. On the right, fixed groups give QC1 two AGVs and QC2 only one: QC2 keeps turning red (waiting), 68 s per container against 3 s for QC1. QC1 finishes at 2 h 10 min and its AGVs then stand idle, while QC2 needs until 3 h 59 min. On the left, Briskorn shares all 3 AGVs between both cranes."
-    }
    ],
    "chart": {
     "xLabel": "Number of AGVs (2 cranes)",
@@ -580,6 +476,14 @@
      }
     ]
    },
+   "replay": [
+    {
+     "label": "3 AGVs",
+     "left": "e1_n3_briskorn",
+     "right": "e1_n3_fixed",
+     "caption": "The same 200 containers with 3 AGVs and no randomness. On the right, fixed groups give QC1 two AGVs and QC2 only one, so QC2 keeps turning red and waits 68 s per container against 3 s for QC1. QC1 finishes at 2 h 10 min and its AGVs then stand idle, while QC2 needs until 3 h 59 min. On the left, the Briskorn rule shares all 3 AGVs between both cranes."
+    }
+   ],
    "table": {
     "head": [
      "AGVs",
@@ -667,32 +571,33 @@
       "1.1 ± 0.4"
      ]
     ]
-   }
+   },
+   "reproduce": "python experiments/e1_agv_sweep.py"
   },
   {
    "id": "E1b",
-   "status": "final",
-   "log": "R-17",
-   "title": "How far ahead must a rule look?",
-   "question": "A rule only sees the next few jobs of each crane (the look-ahead window). Does the window size change the result?",
-   "answer": "Only when it is tiny. From 3 jobs onward Briskorn and fixed groups are flat; NV/FCFS is best at 3 and slowly gets worse with a longer window.",
-   "simple": "Seeing just 1 job ahead is a disaster (the crane waits 30+ s per box). From 3 jobs on, looking further does not help.",
-   "technical": "Window 10 (Kim & Bae) is the default for Briskorn and fixed groups. NV/FCFS releases a job at the handover of the job `window` places earlier, so a long window lets AGVs pile onto one crane: window set to 3 (D-22).",
-   "setup": [
+   "stage": 2,
+   "title": "Looking three jobs ahead is enough",
+   "lead": "A rule only sees the next few jobs of each crane, called the look-ahead window. A window of one job works very poorly, and from three jobs on a longer window brings no further gain.",
+   "body": "With a single job in view the rule cannot fetch load containers early, so the crane waits for every load trip. NV/FCFS gets slowly worse with a long window, because with many jobs released at once its first-come order carries little information. It is therefore run with a window of 3.",
+   "details": [
     [
      "Setup",
-     "2 quay cranes (QCs); each QC works 2 bays of 25 discharge then 25 load containers in a fixed order; nominal QC cycle 75 s; Yangshan-IV-style layout with 5 yard blocks, buffer and driving lanes."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s, and the layout follows Yangshan Phase IV with 5 yard blocks."
     ],
     [
-     "Windows",
-     "1, 2, 3, 5, 10, 20, 50 jobs per QC"
+     "Windows tested",
+     "1, 2, 3, 5, 10, 20 and 50 jobs per crane."
+    ],
+    [
+     "Default",
+     "10 jobs for the Briskorn rule and fixed groups, following Kim and Bae (2004). NV/FCFS uses 3, chosen on a separate set of training seeds."
     ],
     [
      "Statistics",
-     "30 seeds, paired by common random numbers; mean ± 95% confidence interval (t = 2.045)."
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
    ],
-   "reproduce": "python experiments/e1b_lookahead.py",
    "chart": {
     "xLabel": "Look-ahead window (jobs per crane)",
     "xFmt": "int",
@@ -1215,24 +1120,25 @@
      }
     ],
     "defaultVariant": 1
-   }
+   },
+   "reproduce": "python experiments/e1b_lookahead.py"
   },
   {
    "id": "E5a",
-   "status": "final",
-   "log": "R-16",
-   "title": "Does the instance size matter?",
-   "question": "Would a longer ship (more containers per crane) change the comparison between rules?",
-   "answer": "Total size does not, from 100 jobs per crane up. The size of each bay does: bigger bays mean fewer discharge/load switches and less idle time.",
-   "simple": "Doubling or quadrupling the number of bays gives the same idle per box. Making each bay bigger lowers it a little, and the ranking of the rules never changes.",
-   "technical": "Instances 1×(12+12), 2×(25+25) (base), 4×(25+25), 2×(50+50), 8×(25+25) per QC, N = 3/4/5, δ = 0 and 0.2.",
-   "setup": [
+   "stage": 2,
+   "title": "The size of the ship does not change the comparison",
+   "lead": "Adding more bays leaves the idle time per container unchanged once each crane has about 100 jobs. Larger bays lower it a little, because the crane switches between discharge and loading less often.",
+   "body": "The ranking of the rules is the same in every case. The smallest instance, with only 24 jobs per crane, is distorted by the start of the run.",
+   "details": [
+    [
+     "Instances",
+     "1, 2, 4 and 8 bays of 25 discharge and 25 load containers per crane, and 2 bays of 50 and 50. Fleets of 3, 4 and 5 AGVs, with crane times fixed or varying by up to 20%."
+    ],
     [
      "Statistics",
-     "30 seeds, paired by common random numbers; mean ± 95% confidence interval (t = 2.045)."
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
    ],
-   "reproduce": "python experiments/e5a_instance_size.py",
    "table": {
     "head": [
      "AGVs",
@@ -1515,50 +1421,58 @@
       "14.1 ± 0.7"
      ]
     ]
-   }
+   },
+   "reproduce": "python experiments/e5a_instance_size.py"
   },
   {
    "id": "E3a",
-   "status": "final",
-   "log": "R-12",
-   "title": "Can the optimiser be trusted?",
-   "question": "Our benchmark comes from a search (memetic algorithm), not an exact solver. How close does it get to the true best?",
-   "answer": "Close. On instances small enough to try every possible order, the search recovers about 85-92% of the true room for improvement.",
-   "simple": "So when we say a rule is \"at least X seconds\" from the best possible, the truth is only a little larger than X.",
-   "technical": "Small 2×(3D+3L): 924 order lists, 20 instances; medium 2×(4D+4L): 12,870 lists, 10 instances; N = 2, 3; δ = 0, 0.3. Medium: best of 3 runs within 0.83-2.15 s per container of the exact best; rules 6.6-20 s above it.",
+   "stage": 3,
+   "title": "The search finds most of the true room for improvement",
+   "lead": "The perfect-information benchmark comes from a search, not an exact solver. On instances small enough to try every possible order, the search recovers about 85 to 92% of the true room for improvement.",
+   "body": "When a rule is said to be at least some seconds away from the benchmark, the true distance is therefore only a little larger. Weaker searches tried first, a plain genetic algorithm and iterated local search, found less, which is why a memetic search is used.",
+   "details": [
+    [
+     "Small instances",
+     "2 cranes with 3 discharge and 3 load containers each, giving 924 possible orders, on 20 instances."
+    ],
+    [
+     "Medium instances",
+     "4 discharge and 4 load containers per crane, giving 12,870 orders, on 10 instances."
+    ],
+    [
+     "Settings",
+     "2 and 3 AGVs, with crane times fixed or varying by up to 30%."
+    ],
+    [
+     "Result",
+     "On the medium instances the best of 3 search runs ends within 0.83 to 2.15 s per container of the exact best, while the rules are 6.6 to 20 s above it."
+    ]
+   ],
    "reproduce": "python experiments/e3a_search_validation.py (full tier)"
   },
   {
    "id": "E3",
-   "status": "final",
-   "log": "R-13",
-   "title": "What happens to the rules when crane times become random?",
-   "question": "Real crane cycles are not exactly 75 s. If each cycle varies by up to ±δ, how much more do cranes wait?",
-   "answer": "At 4 AGVs crane idle time roughly doubles, from 3.6 to 7.1 s per container, as variation grows to ±40%. All three rules suffer alike: none of them handles randomness better.",
-   "simple": "More randomness means more waiting, for every rule. The rules stay tied with each other, so picking a \"better rule\" is not the fix.",
-   "technical": "QC cycle ~ Uniform(75 ± δ·75) s, drawn once per container (common random numbers across rules). Switch between 3, 4 and 5 AGVs above the chart; Random is hidden by default.",
-   "setup": [
+   "stage": 4,
+   "title": "Random crane times double the idle time of every rule",
+   "lead": "With 4 AGVs, idle time per container grows from 3.6 to 7.1 s as crane cycles vary by up to ±40%. All three rules suffer alike, so none of them copes with randomness better than the others.",
+   "body": "Choosing a better rule is therefore not the fix. The chart can be switched between 3, 4 and 5 AGVs, and the replay shows the same rule and fleet with fixed and with random crane times.",
+   "details": [
     [
      "Setup",
-     "2 quay cranes (QCs); each QC works 2 bays of 25 discharge then 25 load containers in a fixed order; nominal QC cycle 75 s; Yangshan-IV-style layout with 5 yard blocks, buffer and driving lanes."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s, and the layout follows Yangshan Phase IV with 5 yard blocks."
     ],
     [
-     "Noise",
-     "δ = 0, 0.1, 0.2, 0.3, 0.4"
+     "Randomness",
+     "Each crane cycle is drawn uniformly between 75(1 − δ) and 75(1 + δ) s, once per container, with the same draws for every rule. δ takes the values 0, 0.1, 0.2, 0.3 and 0.4."
+    ],
+    [
+     "Rules",
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 3 jobs, fixed crane groups, and random dispatching."
     ],
     [
      "Statistics",
-     "30 seeds, paired by common random numbers; mean ± 95% confidence interval (t = 2.045)."
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
-   ],
-   "reproduce": "python experiments/e3_rules_degradation.py",
-   "replay": [
-    {
-     "label": "Briskorn: ±0% vs ±40%",
-     "left": "n4_d0_briskorn",
-     "right": "n4_d04_briskorn",
-     "caption": "The same rule (Briskorn inventory) and the same 4 AGVs; on the right every crane cycle is drawn between 45 and 105 s instead of exactly 75 s. Watch the cranes turn red more often on the right: idle per container 3.9 s → 7.0 s."
-    }
    ],
    "chart": {
     "xLabel": "Variation in crane cycle time (δ)",
@@ -1842,214 +1756,48 @@
      }
     ],
     "defaultVariant": 1
-   }
-  },
-  {
-   "id": "E3-bench",
-   "status": "final",
-   "log": "R-14",
-   "title": "How much better could dispatching be?",
-   "question": "Suppose a dispatcher knew every future crane time in advance. How much less would cranes wait than with the best rule?",
-   "answer": "Every rule leaves at least 26–30% more idle time than this perfect-information benchmark, at every noise level. There is real room for a smarter dispatcher.",
-   "simple": "The dashed line is an upper bound on what any dispatcher could achieve. The gap between it and the rules is the room a learning dispatcher can aim for.",
-   "technical": "Benchmark: best of 3 memetic searches × 10,000 simulations per seed, seeds 0-9, N = 4, with the realised cycle times known. Gaps are paired over the same 10 seeds (t = 2.262). Since the search is not exact (E3a), the true gap is a little larger.",
-   "setup": [
-    [
-     "Setup",
-     "2 quay cranes (QCs); each QC works 2 bays of 25 discharge then 25 load containers in a fixed order; nominal QC cycle 75 s; Yangshan-IV-style layout with 5 yard blocks, buffer and driving lanes. 4 AGVs."
-    ],
-    [
-     "Seeds",
-     "10 (search is expensive: about 3 min per run)"
-    ]
-   ],
-   "reproduce": "python experiments/e3_perfect_information.py (full tier); python experiments/e3_pi_rules_update.py",
-   "chart": {
-    "xLabel": "Variation in crane cycle time (δ)",
-    "xFmt": "pct",
-    "variants": [
-     {
-      "label": "all",
-      "x": [
-       0.0,
-       0.2,
-       0.4
-      ],
-      "series": [
-       {
-        "name": "Perfect information",
-        "color": "#18181b",
-        "mean": [
-         2.57,
-         3.51,
-         5.17
-        ],
-        "ci": null,
-        "dash": true,
-        "hidden": false
-       },
-       {
-        "name": "Briskorn inventory",
-        "color": "#0f766e",
-        "mean": [
-         3.59,
-         4.73,
-         7.34
-        ],
-        "ci": null,
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "NV/FCFS",
-        "color": "#2563eb",
-        "mean": [
-         3.67,
-         4.82,
-         7.11
-        ],
-        "ci": null,
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Fixed groups",
-        "color": "#a16207",
-        "mean": [
-         3.68,
-         4.85,
-         7.1
-        ],
-        "ci": null,
-        "dash": false,
-        "hidden": false
-       }
-      ]
-     }
-    ]
    },
-   "table": {
-    "head": [
-     "δ",
-     "Rule",
-     "Rule idle",
-     "Benchmark",
-     "Gap (s/box)",
-     "Gap / rule idle"
-    ],
-    "rows": [
-     [
-      "0.0",
-      "Briskorn inventory",
-      "3.59",
-      "2.57",
-      "1.02 ± 0.19",
-      "28%"
-     ],
-     [
-      "0.2",
-      "Briskorn inventory",
-      "4.73",
-      "3.51",
-      "1.22 ± 0.29",
-      "26%"
-     ],
-     [
-      "0.4",
-      "Briskorn inventory",
-      "7.34",
-      "5.17",
-      "2.16 ± 0.36",
-      "29%"
-     ],
-     [
-      "0.0",
-      "NV/FCFS",
-      "3.67",
-      "2.57",
-      "1.10 ± 0.15",
-      "30%"
-     ],
-     [
-      "0.2",
-      "NV/FCFS",
-      "4.82",
-      "3.51",
-      "1.31 ± 0.43",
-      "27%"
-     ],
-     [
-      "0.4",
-      "NV/FCFS",
-      "7.11",
-      "5.17",
-      "1.94 ± 0.30",
-      "27%"
-     ],
-     [
-      "0.0",
-      "Fixed groups",
-      "3.68",
-      "2.57",
-      "1.11 ± 0.22",
-      "30%"
-     ],
-     [
-      "0.2",
-      "Fixed groups",
-      "4.85",
-      "3.51",
-      "1.33 ± 0.28",
-      "28%"
-     ],
-     [
-      "0.4",
-      "Fixed groups",
-      "7.10",
-      "5.17",
-      "1.93 ± 0.32",
-      "27%"
-     ]
-    ]
-   }
+   "replay": [
+    {
+     "label": "Fixed against random crane times",
+     "left": "n4_d0_briskorn",
+     "right": "n4_d04_briskorn",
+     "caption": "The same Briskorn rule and the same 4 AGVs on both sides. On the right every crane cycle is drawn between 45 and 105 s instead of exactly 75 s, and the cranes turn red more often. Idle time per container rises from 3.9 s to 7.0 s."
+    }
+   ],
+   "reproduce": "python experiments/e3_rules_degradation.py"
   },
   {
    "id": "E3b",
-   "status": "final",
-   "log": "R-18",
-   "title": "Does a schedule optimised in advance survive a random terminal?",
-   "question": "We optimise a full schedule beforehand, as GA/MIP papers do, assuming every crane cycle takes exactly 75 s. Then the real cycles vary. Does the plan still beat simple rules?",
-   "answer": "Only when nothing is random. From ±20% variation onward the plan is significantly worse than the rules, and the more strictly it is followed, the worse it gets.",
-   "simple": "Watch where the orange and red lines cross the teal one. A plan made in advance wins on paper and loses in a random terminal. This is the gap a real-time (learning) dispatcher has to close.",
-   "technical": "Paired difference vs Briskorn: δ = 0: -0.76 ± 0.11 s; δ = 0.2: soft +0.29 ± 0.17, strict +0.44 ± 0.34; δ = 0.4: soft +0.60 ± 0.20, strict +1.26 ± 0.48. Soft plan: follows the planned job order, any free AGV takes the next job. Strict plan: each AGV follows its own task list. The dashed benchmark is from E3-bench (10 seeds), shown only as a reference level.",
-   "setup": [
+   "stage": 4,
+   "title": "A plan optimised in advance wins on paper and loses under randomness",
+   "lead": "A full schedule is optimised beforehand, as GA and MIP studies do, assuming every crane cycle takes exactly 75 s. When nothing is random it beats the best rule by 21%. From ±20% variation onward it is significantly worse than the rules, and the more strictly it is followed, the worse it gets.",
+   "body": "Watch where the orange and red lines cross the teal one. That crossing is the gap a real-time dispatcher has to close.",
+   "details": [
     [
      "Setup",
-     "2 quay cranes (QCs); each QC works 2 bays of 25 discharge then 25 load containers in a fixed order; nominal QC cycle 75 s; Yangshan-IV-style layout with 5 yard blocks, buffer and driving lanes. 4 AGVs."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s, and the layout follows Yangshan Phase IV with 5 yard blocks. 4 AGVs."
     ],
     [
      "Plans",
-     "One order-list memetic search per seed on nominal (δ = 0) data."
+     "One memetic search per seed on the fixed-time data, with 10,000 simulations each."
+    ],
+    [
+     "Soft and strict plan",
+     "The soft plan keeps the planned job order and lets any free AGV take the next job. The strict plan makes each AGV follow its own planned task list."
+    ],
+    [
+     "Stricter variant",
+     "A further variant, where each AGV keeps only its planned sequence of cranes, is worse again, by 2.41 s per container at δ = 0.4. It is kept as a variant and not used for conclusions."
+    ],
+    [
+     "Benchmark line",
+     "The dashed line comes from the perfect-information experiment with 10 seeds and is shown only as a reference level."
     ],
     [
      "Statistics",
-     "30 seeds, paired by common random numbers; mean ± 95% confidence interval (t = 2.045)."
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
-   ],
-   "reproduce": "python experiments/e3b_30.py (uses saved plans); full: python experiments/e3b_plans.py",
-   "replay": [
-    {
-     "label": "No randomness (±0%)",
-     "left": "n4_d0_briskorn",
-     "right": "n4_d0_plan",
-     "caption": "Crane times exactly as planned. The optimised plan (right) sends each AGV to the right place in advance: 3.09 s idle per container against 3.85 s for the Briskorn rule (left). The plan wins."
-    },
-    {
-     "label": "Random crane times (±40%)",
-     "left": "n4_d04_briskorn",
-     "right": "n4_d04_plan",
-     "caption": "The same plan, but crane cycles now vary between 45 and 105 s. The plan still follows its fixed task lists, so AGVs arrive at the wrong moment; the rule (left) reacts to what actually happens. Plan 8.08 s against rule 7.05 s per container: the plan now loses."
-    }
    ],
    "chart": {
     "xLabel": "Variation in crane cycle time (δ)",
@@ -2183,6 +1931,20 @@
      }
     ]
    },
+   "replay": [
+    {
+     "label": "No randomness (±0%)",
+     "left": "n4_d0_briskorn",
+     "right": "n4_d0_plan",
+     "caption": "Crane times are exactly as planned. The optimised plan on the right sends each AGV to the right place in advance, with 3.09 s of idle time per container against 3.85 s for the Briskorn rule on the left. Here the plan wins."
+    },
+    {
+     "label": "Random crane times (±40%)",
+     "left": "n4_d04_briskorn",
+     "right": "n4_d04_plan",
+     "caption": "The same plan, but crane cycles now vary between 45 and 105 s. The plan keeps following its fixed task lists, so AGVs arrive at the wrong moment, while the rule on the left reacts to what actually happens. The plan now loses, with 8.08 s per container against 7.05 s for the rule."
+    }
+   ],
    "table": {
     "head": [
      "δ",
@@ -2234,18 +1996,178 @@
       "8.37 ± 0.60  [+1.26 ± 0.48]"
      ]
     ]
-   }
+   },
+   "reproduce": "python experiments/e3b_30.py (uses saved plans); full: python experiments/e3b_plans.py"
   },
   {
-   "id": "E3c",
-   "status": "method",
-   "log": "R-19",
-   "title": "A stricter plan: each AGV keeps its list of cranes",
-   "question": "What if each AGV only follows the sequence of cranes it was planned for, taking whatever job is next there?",
-   "answer": "Even more fragile than the strict plan in E3b: +2.41 s per container against Briskorn at ±40%. Kept as a variant, not used for conclusions.",
-   "simple": "The more rigidly a fixed plan is followed, the worse it copes with surprises.",
-   "technical": "Same 30 seeds and plans as E3b; QC-level executor (AGVPlan). Strict-plan recoveries: 0 in 30 runs at every δ.",
-   "reproduce": "python experiments/e3c_static_plans_30.py (archive)"
+   "id": "E3-bench",
+   "stage": 4,
+   "title": "A dispatcher that knew the future would cut idle time by at least a quarter",
+   "lead": "Suppose a dispatcher knew every future crane time in advance. At every level of randomness it would remove at least 26% of each rule's idle time, so a better real-time dispatcher is possible.",
+   "body": "The dashed line is this benchmark, and the gap down to it is the room a learning dispatcher can aim for. The search behind the benchmark is not exact, so the true gap is a little larger.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s, and the layout follows Yangshan Phase IV with 5 yard blocks. 4 AGVs."
+    ],
+    [
+     "Benchmark",
+     "Best of 3 memetic searches with 10,000 simulations each, per seed, with the realised crane times known in advance."
+    ],
+    [
+     "Seeds",
+     "10 seeds, because one search takes about 3 minutes. Gaps are paired over the same seeds, with a 95% confidence interval (t = 2.262)."
+    ]
+   ],
+   "chart": {
+    "xLabel": "Variation in crane cycle time (δ)",
+    "xFmt": "pct",
+    "variants": [
+     {
+      "label": "all",
+      "x": [
+       0.0,
+       0.2,
+       0.4
+      ],
+      "series": [
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         2.57,
+         3.51,
+         5.17
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       },
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         3.59,
+         4.73,
+         7.34
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         3.67,
+         4.82,
+         7.11
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         3.68,
+         4.85,
+         7.1
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "table": {
+    "head": [
+     "δ",
+     "Rule",
+     "Rule idle",
+     "Benchmark",
+     "Gap (s per container)",
+     "Gap / rule idle"
+    ],
+    "rows": [
+     [
+      "0.0",
+      "Briskorn inventory",
+      "3.59",
+      "2.57",
+      "1.02 ± 0.19",
+      "28%"
+     ],
+     [
+      "0.2",
+      "Briskorn inventory",
+      "4.73",
+      "3.51",
+      "1.22 ± 0.29",
+      "26%"
+     ],
+     [
+      "0.4",
+      "Briskorn inventory",
+      "7.34",
+      "5.17",
+      "2.16 ± 0.36",
+      "29%"
+     ],
+     [
+      "0.0",
+      "NV/FCFS",
+      "3.67",
+      "2.57",
+      "1.10 ± 0.15",
+      "30%"
+     ],
+     [
+      "0.2",
+      "NV/FCFS",
+      "4.82",
+      "3.51",
+      "1.31 ± 0.43",
+      "27%"
+     ],
+     [
+      "0.4",
+      "NV/FCFS",
+      "7.11",
+      "5.17",
+      "1.94 ± 0.30",
+      "27%"
+     ],
+     [
+      "0.0",
+      "Fixed groups",
+      "3.68",
+      "2.57",
+      "1.11 ± 0.22",
+      "30%"
+     ],
+     [
+      "0.2",
+      "Fixed groups",
+      "4.85",
+      "3.51",
+      "1.33 ± 0.28",
+      "28%"
+     ],
+     [
+      "0.4",
+      "Fixed groups",
+      "7.10",
+      "5.17",
+      "1.93 ± 0.32",
+      "27%"
+     ]
+    ]
+   },
+   "reproduce": "python experiments/e3_perfect_information.py (full tier); python experiments/e3_pi_rules_update.py"
   }
  ]
 }
