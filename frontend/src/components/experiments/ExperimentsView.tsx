@@ -105,7 +105,7 @@ export default function ExperimentsView() {
         <div className="flex flex-col gap-3">
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Results, stage by stage</h2>
           <p className="leading-relaxed text-zinc-700">
-            The experiments were run in four stages. Each stage answers a question that the previous one raised, so read from top to bottom.
+            The experiments run in four stages. Each stage answers a question that the previous one raised, so read from top to bottom. The stages are being re-run on the updated simulator, and each result appears under its stage once it is complete.
           </p>
         </div>
 
@@ -121,7 +121,13 @@ export default function ExperimentsView() {
               </div>
             </div>
             <span aria-hidden className="absolute left-[21px] top-14 bottom-0 hidden w-px bg-zinc-300 md:block" />
-            {D.cards.filter((c) => c.stage === s.n).map((c) => <ResultCard key={c.id} c={c} />)}
+            {D.cards.some((c) => c.stage === s.n) ? (
+              D.cards.filter((c) => c.stage === s.n).map((c) => <ResultCard key={c.id} c={c} />)
+            ) : (
+              <div className="rounded-2xl border border-dashed border-zinc-300 bg-white px-5 py-4 text-sm text-zinc-500">
+                To be re-run on the updated simulator.
+              </div>
+            )}
           </section>
         ))}
 
