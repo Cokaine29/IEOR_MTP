@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import JobCards from './JobCards';
 
 const ORANGE = '#ea580c';
 const TEAL = '#0f766e';
@@ -140,8 +141,8 @@ function TimelineFigure() {
         </svg>
       </div>
       <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-        Idle time is the gap between two moments, the <strong className="font-semibold text-zinc-900">crane ready</strong> (dashed line) and the{' '}
-        <strong className="font-semibold text-zinc-900">handover</strong> (orange diamond). It is zero when the AGV is already in place.
+        Idle time is the gap between two moments, the <strong className="font-semibold text-zinc-900">Crane Ready</strong> moment (dashed line) and the{' '}
+        <strong className="font-semibold text-zinc-900">Handover</strong> (orange diamond). It is zero when the AGV is already in place.
         In loading, an AGV with a later container standing nearby does not shorten the wait.
       </figcaption>
     </figure>
@@ -244,19 +245,10 @@ export default function MeasureSection() {
       <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
         <p className="max-w-3xl leading-relaxed text-zinc-700">
-          Every method is judged by <strong className="font-semibold text-zinc-900">quay crane idle time</strong>, which is how long a crane
+          Every method is judged by <strong className="font-semibold text-zinc-900">Quay Crane Idle Time</strong>, which is how long a crane
           stands ready while the AGV it needs is not in place. What the crane needs depends on the job.
         </p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
-            <div className="font-semibold text-zinc-900">Discharge</div>
-            <p className="mt-1 text-sm leading-relaxed text-zinc-700">The crane lifts a container off the vessel and needs <strong className="font-semibold text-zinc-900">any empty AGV</strong> underneath it.</p>
-          </div>
-          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
-            <div className="font-semibold text-zinc-900">Loading</div>
-            <p className="mt-1 text-sm leading-relaxed text-zinc-700">The crane takes containers in a fixed order and needs <strong className="font-semibold text-zinc-900">the AGV carrying the next one</strong>.</p>
-          </div>
-        </div>
+        <JobCards />
         <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
           The same quantity is called &ldquo;QC waiting&rdquo; by <i>Zheng et al. (2022)</i> and crane delay by <i>Kim and Bae (2004)</i>.
         </p>
