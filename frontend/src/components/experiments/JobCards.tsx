@@ -14,7 +14,6 @@ type Frame = [number, number, number]; // [keyTime, x, y]
 
 const times = (f: Frame[]) => f.map((p) => p[0]).join(';');
 const xy = (f: Frame[]) => f.map((p) => `${p[1]} ${p[2]}`).join(';');
-const col = (f: Frame[], i: 1 | 2) => f.map((p) => p[i]).join(';');
 
 /** A group that follows a list of [time, x, y] frames. */
 function Mover({ frames, dur, children, opacity }: {
@@ -94,13 +93,13 @@ function Backdrop() {
   );
 }
 
-function IdleMeter({ widths, dur }: { widths: Frame[]; dur: number }) {
+function IdleMeter({ widths, dur }: { widths: [number, number][]; dur: number }) {
   return (
     <g transform="translate(0 0)">
       <text x={14} y={186} fontSize={11.5} fill={MUTED}>Crane idle</text>
       <rect x={82} y={177} width={150} height={10} rx={2} fill="#fff" stroke="#d4d4d8" />
       <rect x={82} y={177} height={10} rx={2} fill="url(#job-hatch)" stroke={RED} strokeWidth={1}>
-        <animate attributeName="width" keyTimes={times(widths)} values={col(widths, 1)} dur={`${dur}s`} repeatCount="indefinite" />
+        <animate attributeName="width" keyTimes={widths.map((w) => w[0]).join(";")} values={widths.map((w) => w[1]).join(";")} dur={`${dur}s`} repeatCount="indefinite" />
       </rect>
     </g>
   );
@@ -165,7 +164,10 @@ function Card({ title, dur, scene, children, label }: {
     if (!svg || typeof window === 'undefined') return;
     try {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        svg.pauseAnimations(); svg.setCurrentTime(dur * 0.55); setPlaying(false);
+        svg.pauseAnimations(); svg.setCurrentTime(dur * 0.55);
+        // one-time sync with the reduced-motion setting
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setPlaying(false);
       }
     } catch { /* animation controls are optional */ }
   }, [dur]);
@@ -173,7 +175,9 @@ function Card({ title, dur, scene, children, label }: {
   const toggle = () => {
     const svg = ref.current;
     if (!svg) return;
-    try { playing ? svg.pauseAnimations() : svg.unpauseAnimations(); } catch { /* ignore */ }
+    try {
+      if (playing) svg.pauseAnimations(); else svg.unpauseAnimations();
+    } catch { /* ignore */ }
     setPlaying(!playing);
   };
 
