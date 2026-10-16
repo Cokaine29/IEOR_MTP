@@ -29,17 +29,17 @@
     "rows": [
      [
       "Dispatching rules",
-      "Briskorn inventory rule, NV/FCFS, fixed groups",
+      "Briskorn inventory rule, nearest vehicle first come first served (NV/FCFS), fixed groups",
       [
-       "done",
-       "done",
        "next",
+       "planned",
+       "planned",
        "planned",
        "planned"
       ],
       [
-       "E1",
-       "E3",
+       "",
+       "",
        "",
        "",
        ""
@@ -47,17 +47,17 @@
      ],
      [
       "Genetic algorithm, planned once",
-      "Memetic search on the nominal data, plan then executed",
+      "Memetic search on the expected times, plan made once then followed",
       [
-       "done",
-       "done",
+       "planned",
+       "planned",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "E3b",
-       "E3b",
+       "",
+       "",
        "",
        "",
        ""
@@ -68,7 +68,7 @@
       "Rolling horizon, re-plans as the terminal evolves",
       [
        "planned",
-       "next",
+       "planned",
        "planned",
        "planned",
        "planned"
@@ -155,17 +155,17 @@
     "rows": [
      [
       "Random dispatching",
-      "Worst case, with no intelligence",
+      "Lower reference, with no intelligence",
       [
-       "done",
-       "done",
+       "planned",
+       "planned",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "E1",
-       "E3",
+       "",
+       "",
        "",
        "",
        ""
@@ -175,15 +175,15 @@
       "Perfect-information benchmark",
       "Best achievable, as it knows all future times",
       [
-       "done",
-       "done",
+       "planned",
+       "planned",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "E3-bench",
-       "E3-bench",
+       "",
+       "",
        "",
        "",
        ""
@@ -231,7 +231,7 @@
   ]
  },
  "generated": "2026-10-16",
- "source": "ACT_MTP 5c4abb5 / results_reference",
+ "source": "ACT_MTP fa03294 / results_reference",
  "stages": [
   {
    "n": 1,
