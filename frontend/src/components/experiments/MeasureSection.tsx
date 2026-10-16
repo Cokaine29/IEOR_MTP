@@ -98,8 +98,8 @@ function LoadPanel({ y0 }: { y0: number }) {
       <text x={(XREADY + xHand) / 2} y={52} fontSize={12.5} fontWeight={700} fill={RED} textAnchor="middle">idle</text>
 
       {/* AGV carrying a later container: already here, but it is not its turn */}
-      <rect x={230} y={68} width={xHand + 64 - 230} height={22} rx={3} fill="#f4f4f5" stroke={LINE} strokeWidth={1.6} />
-      <text x={XREADY + 14} y={83} fontSize={12} fill={INK_GREY}>container 6 is here, but must wait for 5</text>
+      <rect x={230} y={68} width={640 - 230} height={22} rx={3} fill="#f4f4f5" stroke={LINE} strokeWidth={1.6} />
+      <text x={XREADY + 14} y={83} fontSize={12} fill={INK_GREY}>container 6 is here, but waits for 5</text>
 
       {/* AGV carrying the container the crane needs now */}
       <path d={`M${X0 + 20} 109 L${xHand - 1} 109`} stroke={TEAL} strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" />
@@ -140,9 +140,9 @@ function TimelineFigure() {
         </svg>
       </div>
       <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-        For each container, idle time is the time between the two marked moments: when the crane is ready and when the container
-        actually passes between crane and AGV. In discharge, any empty AGV will do. In loading, the crane takes containers in a
-        fixed order, so only the AGV carrying the next one will do; an AGV with a later container standing nearby does not help.
+        Idle time is the gap between two moments: <strong className="font-semibold text-zinc-900">crane ready</strong> (dashed line) and{' '}
+        <strong className="font-semibold text-zinc-900">handover</strong> (orange diamond). It is zero when the AGV is already in place.
+        In loading, an AGV with a later container standing nearby does not shorten the wait.
       </figcaption>
     </figure>
   );
@@ -241,11 +241,24 @@ function Example() {
 export default function MeasureSection() {
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
         <p className="max-w-3xl leading-relaxed text-zinc-700">
-          Every method is judged by quay crane idle time: how long a crane stands ready while the AGV it needs is not in place.
-          That is an AGV to take a discharged container, or the AGV that brings the next container to be loaded. This is the &ldquo;QC waiting&rdquo; of <i>Zheng et al. (2022)</i> and the crane delay of <i>Kim and Bae (2004)</i>.
+          Every method is judged by <strong className="font-semibold text-zinc-900">quay crane idle time</strong>: how long a crane stands
+          ready while the AGV it needs is not in place. What the crane needs depends on the job:
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+            <div className="font-semibold text-zinc-900">Discharge</div>
+            <p className="mt-1 text-sm leading-relaxed text-zinc-700">The crane lifts a container off the vessel and needs <strong className="font-semibold text-zinc-900">any empty AGV</strong> underneath it.</p>
+          </div>
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+            <div className="font-semibold text-zinc-900">Loading</div>
+            <p className="mt-1 text-sm leading-relaxed text-zinc-700">The crane takes containers in a fixed order and needs <strong className="font-semibold text-zinc-900">the AGV carrying the next one</strong>.</p>
+          </div>
+        </div>
+        <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+          Literature name for the same quantity: &ldquo;QC waiting&rdquo; in <i>Zheng et al. (2022)</i>, crane delay in <i>Kim and Bae (2004)</i>.
         </p>
       </div>
       <TimelineFigure />
