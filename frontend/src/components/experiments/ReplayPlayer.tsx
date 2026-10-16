@@ -315,6 +315,7 @@ export default function ReplayPlayer({ pairs }: { pairs: ReplayPair[] }) {
 const SEA = 66;                       // drawn sea band north of the quay edge (schematic)
 const BAY_W = 12.2;                   // one 40 ft bay (schematic)
 const VESSEL = { y0: -56, y1: -5 };   // hull, schematic beam about 51 m
+const LOA = 400;                      // vessel length overall (m), schematic: a large container ship centred on the two cranes
 const ZONE_INFO = [
   'The quay apron is 30 m between the crane rails and holds the manual truck lanes and hatch covers. No AGVs drive here (Liu et al., 2016; Wu et al., 2016).',
   'Seven AGV handover lanes, each 4 m wide, lie under the crane backreach. AGVs stop here for the crane (Liu et al., 2016; Wu et al., 2016).',
@@ -362,6 +363,8 @@ export function TerminalMap({ r, t, prep, labels = true }: {
   for (let x = bayX0 - pitch * Math.ceil(bayX0 / pitch); x < L.width + pitch; x += pitch) allBays.push(x);
   const yLand = (L.loadY0 + L.loadY1) / 2;
   const ySea = (VESSEL.y0 + VESSEL.y1) / 2;
+  const shipMid = (L.qcs[0].x + L.qcs[L.qcs.length - 1].x) / 2;
+  const hullX0 = shipMid - LOA / 2, hullX1 = shipMid + LOA / 2;
   const clipId = `clip-${r.name}`;
 
   // containers currently in each worked bay (5 x 5 stacks drawn)
@@ -390,10 +393,11 @@ export function TerminalMap({ r, t, prep, labels = true }: {
         <rect x={0} y={-SEA} width={L.width} height={SEA} fill="#dbeafe" />
         <g>
           <title>Vessel at berth (schematic). Each crane works two bays; the stacks in those bays empty during discharge and fill again during loading.</title>
-          <path d={`M ${12} ${VESSEL.y1} L ${L.width + 40} ${VESSEL.y1} L ${L.width + 40} ${VESSEL.y0} L ${12} ${VESSEL.y0} Q ${-4} ${(VESSEL.y0 + VESSEL.y1) / 2} ${12} ${VESSEL.y1} Z`}
+          <path d={`M ${hullX0 + 16} ${VESSEL.y1} L ${hullX1} ${VESSEL.y1} L ${hullX1} ${VESSEL.y0} L ${hullX0 + 16} ${VESSEL.y0} Q ${hullX0} ${(VESSEL.y0 + VESSEL.y1) / 2} ${hullX0 + 16} ${VESSEL.y1} Z`}
             fill="#334155" />
-          <rect x={14} y={VESSEL.y0 + 2.5} width={L.width + 30} height={VESSEL.y1 - VESSEL.y0 - 5} fill="#475569" />
-          {allBays.filter((x) => x > 22).map((x) => {
+          <rect x={hullX0 + 18} y={VESSEL.y0 + 2.5} width={hullX1 - hullX0 - 21} height={VESSEL.y1 - VESSEL.y0 - 5} fill="#475569" />
+          <rect x={hullX1 - 34} y={VESSEL.y0 + 4} width={10} height={VESSEL.y1 - VESSEL.y0 - 8} fill="#e2e8f0" />
+          {allBays.filter((x) => x > hullX0 + 26 && x < hullX1 - 40).map((x) => {
             const w = worked.get(Math.round(x * 10));
             const cells = [];
             const rows = 18;                                   // 40 ft boxes lie fore-aft: one bay = a column of rows across the beam
@@ -413,7 +417,7 @@ export function TerminalMap({ r, t, prep, labels = true }: {
             );
           })}
         </g>
-        {labels && <text x={L.width - 2} y={-SEA + 5} fontSize={4} textAnchor="end" fill="#475569">Vessel at berth (schematic)</text>}
+        {labels && <text x={Math.min(L.width - 2, hullX1)} y={-SEA + 5} fontSize={4} textAnchor="end" fill="#475569">Vessel at berth, {LOA} m (schematic)</text>}
 
         {/* land-side zones (to scale) */}
         {L.zones.map((z, i) => (
