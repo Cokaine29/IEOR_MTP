@@ -10,6 +10,8 @@ const TEAL = '#0f766e';
 const SLATE = '#334155';
 const RED = '#dc2626';
 const MUTED = '#71717a';
+const INK_GREY = '#52525b';
+const LINE = '#a1a1aa';
 
 const FORMULA = String.raw`$$\bar{I}\;=\;\frac{1}{n}\sum_{i=1}^{n}\left(t_i^{\,\mathrm{handover}}-t_i^{\,\mathrm{ready}}\right)$$`;
 
@@ -81,12 +83,44 @@ function Panel({ y0, title, late }: { y0: number; title: string; late: boolean }
   );
 }
 
+function LoadPanel({ y0 }: { y0: number }) {
+  const xHand = 500;
+  return (
+    <g transform={`translate(0 ${y0})`}>
+      <text x={8} y={20} fontSize={14} fontWeight={600} fill="#18181b">Loading: the next container is not there yet</text>
+      <text x={8} y={53} fontSize={13} fill={MUTED}>Crane</text>
+      <text x={8} y={85} fontSize={13} fill={MUTED}>AGV</text>
+      <text x={8} y={115} fontSize={13} fill={MUTED}>AGV</text>
+
+      <rect x={X0} y={36} width={XREADY - X0} height={24} rx={3} fill={SLATE} />
+      <text x={(X0 + XREADY) / 2} y={52} fontSize={12.5} fill="#fff" textAnchor="middle">crane finishes its last move</text>
+      <rect x={XREADY} y={36} width={xHand - XREADY} height={24} rx={3} fill="url(#idle-hatch)" stroke={RED} strokeWidth={1.5} />
+      <text x={(XREADY + xHand) / 2} y={52} fontSize={12.5} fontWeight={700} fill={RED} textAnchor="middle">idle</text>
+
+      {/* AGV carrying a later container: already here, but it is not its turn */}
+      <rect x={230} y={68} width={xHand + 64 - 230} height={22} rx={3} fill="#f4f4f5" stroke={LINE} strokeWidth={1.6} />
+      <text x={XREADY + 14} y={83} fontSize={12} fill={INK_GREY}>container 6 is here, but must wait for 5</text>
+
+      {/* AGV carrying the container the crane needs now */}
+      <path d={`M${X0 + 20} 109 L${xHand - 1} 109`} stroke={TEAL} strokeWidth={2} strokeDasharray="2 5" strokeLinecap="round" />
+      <text x={230} y={132} fontSize={12} fill={TEAL} textAnchor="middle">AGV with container 5 is still driving</text>
+      <rect x={xHand} y={98} width={64} height={22} rx={3} fill={TEAL} />
+      <text x={xHand + 32} y={113} fontSize={12} fill="#fff" textAnchor="middle">arrives</text>
+
+      <path d={`M${XREADY} 28 L${XREADY} 128`} stroke="#18181b" strokeWidth={1.4} strokeDasharray="4 4" />
+      <Diamond x={xHand} y={109} />
+      <text x={XREADY + 8} y={21} fontSize={12.5} fill="#18181b">crane ready for container 5</text>
+      <text x={xHand + 8} y={143} fontSize={12.5} fill={ORANGE} fontWeight={600}>handover</text>
+    </g>
+  );
+}
+
 function TimelineFigure() {
   return (
     <figure className="flex flex-col gap-3">
       <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
-        <svg viewBox="0 0 720 290" className="w-full min-w-[600px]" role="img"
-          aria-label="Two timelines of one container. In the first the AGV is already waiting when the crane is ready, so the idle time is zero. In the second the AGV arrives after the crane is ready, and the gap is the idle time.">
+        <svg viewBox="0 0 720 490" className="w-full min-w-[600px]" role="img"
+          aria-label="Three timelines. Discharge with an AGV already waiting: idle time zero. Discharge with an AGV arriving late: the gap is the idle time. Loading: the crane needs the AGV carrying the next container in its order, and an AGV with a later container does not help, so the crane waits until the right one arrives.">
           <defs>
             <pattern id="idle-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <rect width="8" height="8" fill="#fee2e2" />
@@ -94,18 +128,21 @@ function TimelineFigure() {
             </pattern>
           </defs>
           <g transform="translate(10 10)">
-            <Panel y0={0} title="The AGV is already waiting" late={false} />
+            <Panel y0={0} title="Discharge: an AGV is already waiting" late={false} />
             <path d="M0 132 L680 132" stroke="#e4e4e7" strokeWidth={1} />
-            <Panel y0={142} title="The AGV arrives late" late />
-            <path d="M8 268 L630 268" stroke={MUTED} strokeWidth={1.2} />
-            <path d="M623 263 L631 268 L623 273" stroke={MUTED} strokeWidth={1.2} fill="none" />
-            <text x={640} y={272} fontSize={12.5} fill={MUTED}>time</text>
+            <path d="M0 274 L680 274" stroke="#e4e4e7" strokeWidth={1} />
+            <LoadPanel y0={284} />
+            <Panel y0={142} title="Discharge: the AGV arrives late" late />
+            <path d="M8 460 L630 460" stroke={MUTED} strokeWidth={1.2} />
+            <path d="M623 455 L631 460 L623 465" stroke={MUTED} strokeWidth={1.2} fill="none" />
+            <text x={640} y={464} fontSize={12.5} fill={MUTED}>time</text>
           </g>
         </svg>
       </div>
       <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
         For each container, idle time is the time between the two marked moments: when the crane is ready and when the container
-        actually passes between crane and AGV. It is zero when the AGV is already in place.
+        actually passes between crane and AGV. In discharge, any empty AGV will do. In loading, the crane takes containers in a
+        fixed order, so only the AGV carrying the next one will do; an AGV with a later container standing nearby does not help.
       </figcaption>
     </figure>
   );
@@ -207,8 +244,8 @@ export default function MeasureSection() {
       <div className="flex flex-col gap-3">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
         <p className="max-w-3xl leading-relaxed text-zinc-700">
-          Every method is judged by quay crane idle time: how long a crane stands ready while no AGV is in place for the
-          handover. This is the &ldquo;QC waiting&rdquo; of <i>Zheng et al. (2022)</i> and the crane delay of <i>Kim and Bae (2004)</i>.
+          Every method is judged by quay crane idle time: how long a crane stands ready while the AGV it needs is not in place.
+          That is an AGV to take a discharged container, or the AGV that brings the next container to be loaded. This is the &ldquo;QC waiting&rdquo; of <i>Zheng et al. (2022)</i> and the crane delay of <i>Kim and Bae (2004)</i>.
         </p>
       </div>
       <TimelineFigure />
