@@ -71,10 +71,10 @@ function ResultCard({ c }: { c: Card }) {
   return (
     <article id={c.id} className="scroll-mt-24 flex flex-col gap-5 rounded-3xl border border-zinc-200 bg-white p-6 md:p-8">
       <h3 className="text-xl font-bold tracking-tight text-zinc-900 text-balance md:text-2xl">{c.title}</h3>
-      <p className="max-w-3xl text-lg leading-relaxed text-zinc-800">{c.lead}</p>
+      <p className="text-lg leading-relaxed text-zinc-800">{c.lead}</p>
       {c.chart && <LineChart spec={c.chart} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
-      <p className="max-w-3xl leading-relaxed text-zinc-600">{c.body}</p>
+      <p className="leading-relaxed text-zinc-600">{c.body}</p>
       <Details c={c} />
     </article>
   );
@@ -104,7 +104,7 @@ export default function ExperimentsView() {
       <div className="mx-auto mt-16 flex max-w-5xl flex-col gap-10 px-4">
         <div className="flex flex-col gap-3">
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Results, stage by stage</h2>
-          <p className="max-w-3xl leading-relaxed text-zinc-700">
+          <p className="leading-relaxed text-zinc-700">
             The experiments were run in four stages. Each stage answers a question that the previous one raised, so read from top to bottom.
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function ExperimentsView() {
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-lg font-bold text-white md:absolute md:left-0 md:top-0">{s.n}</span>
               <div className="flex flex-col gap-1.5">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 text-balance">{s.question}</h2>
-                <p className="max-w-3xl leading-relaxed text-zinc-600">{s.why}</p>
+                <p className="leading-relaxed text-zinc-600">{s.why}</p>
               </div>
             </div>
             <span aria-hidden className="absolute left-[21px] top-14 bottom-0 hidden w-px bg-zinc-300 md:block" />

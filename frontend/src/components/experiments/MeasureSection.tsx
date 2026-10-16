@@ -142,7 +142,7 @@ function TimelineFigure() {
           </g>
         </svg>
       </div>
-      <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+      <figcaption className="text-sm leading-relaxed text-zinc-600">
         Idle time is the gap between two moments, the <strong className="font-semibold text-zinc-900">Crane Ready</strong> moment (dashed line) and the{' '}
         <strong className="font-semibold text-zinc-900">Handover</strong> (orange diamond). It is zero when the AGV is already in place.
         In loading, an AGV with a later container standing nearby does not shorten the wait.
@@ -233,7 +233,7 @@ function Example() {
           </tbody>
         </table>
       </div>
-      <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+      <p className="text-sm leading-relaxed text-zinc-600">
         These numbers are made up to show the calculation and are not a result. Lower is better, and zero means the cranes never
         waited for an AGV.
       </p>
@@ -246,12 +246,12 @@ export default function MeasureSection() {
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">How performance is measured</h2>
-        <p className="max-w-3xl leading-relaxed text-zinc-700">
+        <p className="leading-relaxed text-zinc-700">
           Every method is judged by <strong className="font-semibold text-zinc-900">Quay Crane Idle Time</strong>, which is how long a crane
           stands ready while the AGV it needs is not in place. What the crane needs depends on the job.
         </p>
         <JobCards />
-        <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+        <p className="text-sm leading-relaxed text-zinc-600">
           The same quantity is called &ldquo;QC waiting&rdquo; by <i>Zheng et al. (2022)</i> and crane delay by <i>Kim and Bae (2004)</i>.
         </p>
       </div>

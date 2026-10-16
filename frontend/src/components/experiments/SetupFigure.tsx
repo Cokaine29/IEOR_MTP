@@ -344,7 +344,7 @@ export default function SetupFigure() {
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">The simulated terminal</h2>
-        <p className="max-w-3xl leading-relaxed text-zinc-700">
+        <p className="leading-relaxed text-zinc-700">
           Two quay cranes unload and load a vessel. Every container passes through the same chain of equipment, in one
           direction or the other, and the AGVs are the link the dispatcher controls.
         </p>
@@ -368,7 +368,7 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" />rack handover in progress</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
-        <figcaption className="max-w-3xl text-sm leading-relaxed text-zinc-600">
+        <figcaption className="text-sm leading-relaxed text-zinc-600">
           A recording of one simulation run, played at {SPEED}× real time. Four AGVs are dispatched by the inventory rule
           of <i>Briskorn et al. (2006)</i>, and the cranes work exactly at their planned times. Lanes, slots, blocks and racks are
           drawn to scale, while the crane structures and the vessel are schematic.
