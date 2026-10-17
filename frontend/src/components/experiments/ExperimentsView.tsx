@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, FileText, Sigma } from 'lucide-react';
+import { ChevronDown, CircleCheck, FileText, Gauge, Lock, MessageCircleQuestion, Sigma, SlidersHorizontal, Target } from 'lucide-react';
 import LineChart, { ChartSpec } from './LineChart';
 import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
 import ExperimentsHeader from './ExperimentsHeader';
@@ -21,6 +21,8 @@ type Card = {
   replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
   maths?: { step: string; text: string; tex: string; calc?: string }[];
+  label?: string;
+  design?: { question: string; why: string; vary: string; fixed: string; measure: string; decide: string };
 };
 type Stage = { n: number; question: string; why: string };
 
@@ -105,11 +107,50 @@ function Maths({ c }: { c: Card }) {
   );
 }
 
+const DESIGN: { key: keyof NonNullable<Card['design']>; label: string; icon: typeof Target }[] = [
+  { key: 'why', label: 'Why it matters', icon: Target },
+  { key: 'vary', label: 'What is varied', icon: SlidersHorizontal },
+  { key: 'fixed', label: 'What stays fixed', icon: Lock },
+  { key: 'measure', label: 'What is measured', icon: Gauge },
+  { key: 'decide', label: 'How the answer is chosen', icon: CircleCheck },
+];
+
+/** The experiment itself, before its result: the question, why it is asked, and how it is set up. */
+function Design({ c }: { c: Card }) {
+  if (!c.design) return null;
+  const d = c.design;
+  return (
+    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50/70">
+      <div className="flex gap-3 border-b border-zinc-200 bg-white px-5 py-4">
+        <MessageCircleQuestion className="mt-0.5 h-5 w-5 shrink-0 text-zinc-500" />
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">The question</div>
+          <p className="mt-0.5 font-medium leading-relaxed text-zinc-900">{d.question}</p>
+        </div>
+      </div>
+      <dl className="grid gap-x-6 gap-y-4 px-5 py-4 md:grid-cols-2">
+        {DESIGN.map(({ key, label, icon: Icon }) => (
+          <div key={key} className={`flex gap-3 ${key === 'why' ? 'md:col-span-2' : ''}`}>
+            <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
+            <div>
+              <dt className="text-sm font-semibold text-zinc-900">{label}</dt>
+              <dd className="mt-0.5 text-sm leading-relaxed text-zinc-700">{d[key]}</dd>
+            </div>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 function ResultCard({ c }: { c: Card }) {
   return (
     <article id={c.id} className="scroll-mt-24 flex flex-col gap-5 rounded-3xl border border-zinc-200 bg-white p-6 md:p-8">
-      <h3 className="text-xl font-bold tracking-tight text-zinc-900 text-balance md:text-2xl">{c.title}</h3>
-      <p className="text-lg leading-relaxed text-zinc-800">{c.lead}</p>
+      {c.label && <div className="text-sm font-semibold text-zinc-500">{c.label}</div>}
+      <h3 className="-mt-3 text-xl font-bold tracking-tight text-zinc-900 text-balance md:text-2xl">{c.title}</h3>
+      <Design c={c} />
+      <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">What we found</div>
+      <p className="-mt-3 text-lg leading-relaxed text-zinc-800">{c.lead}</p>
       {c.chart && <LineChart spec={c.chart} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
       <p className="leading-relaxed text-zinc-600">{c.body}</p>
