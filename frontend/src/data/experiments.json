@@ -213,7 +213,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP d3c10ee / results_reference",
+ "source": "ACT_MTP 3b2d5dd / results_reference",
  "stages": [
   {
    "n": 1,
@@ -283,6 +283,15 @@
      "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
    ],
+   "label": "Experiment 2.1 · Fleet size",
+   "design": {
+    "question": "How many AGVs do the two cranes need on this yard, and at what fleet size does the choice of dispatcher make a difference?",
+    "why": "Every later experiment runs with one fleet. With too many AGVs, spare vehicles hide every dispatching mistake and all methods look the same. With too few, no method can keep the cranes busy. The comparison is only meaningful in between.",
+    "vary": "The fleet, from 2 to 16 AGVs (1 to 8 per crane), and the dispatching rule, all four rules.",
+    "fixed": "No randomness, so every crane move takes exactly 75 s. Each run has 200 containers on the 50-block yard. Each fleet and rule is run on the same 30 instances.",
+    "measure": "Crane idle time per container, the mean over the 30 instances with its 95% confidence interval.",
+    "decide": "The smallest fleet at which the good rules leave little waiting while random dispatching still wastes clearly more. Checked against the crane productivity reported by Luo (2016)."
+   },
    "maths": [
     {
      "step": "The work an AGV does for one container",
