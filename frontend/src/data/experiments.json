@@ -195,6 +195,12 @@
   "findingsGroup": "",
   "findings": [
    {
+    "value": "Exact",
+    "text": "The simulator reproduces hand-worked cases to within a millionth of a second, and its rack rules give the hand-worked answer in every check.",
+    "conditions": "5 hand-built cases · 96 random runs · 756 automatic tests",
+    "ref": "E0"
+   },
+   {
     "value": "8 AGVs",
     "text": "Four AGVs per crane is the operating fleet. The best rule then keeps each crane waiting 5.7 s per container, against 13.3 s for random dispatching, so the choice of dispatcher clearly matters.",
     "conditions": "No randomness · 2 to 16 AGVs · 30 instances",
@@ -213,7 +219,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP 3b2d5dd / results_reference",
+ "source": "ACT_MTP 88aa379 / results_reference",
  "stages": [
   {
    "n": 1,
@@ -259,6 +265,122 @@
   ]
  ],
  "cards": [
+  {
+   "id": "E0",
+   "stage": 1,
+   "title": "The simulator reproduces hand-worked cases exactly",
+   "lead": "Yes. In five hand-built cases with 190 event times and 308 path segments, the largest gap is 5 × 10⁻⁷ s, below the required millionth of a second. The rack rules give the hand-worked answer in every check, and in 96 random runs on the full yard no two AGVs ever used one rack at the same time.",
+   "body": "The five cases were built on the earlier 5-block section of the yard, where every path can be traced on paper. The rack rules of the current yard are checked on separate small cases. A suite of 756 automatic tests repeats all of these checks after every change to the code.",
+   "details": [
+    [
+     "Cases",
+     "Single trips, rack visits, lane booking at the buffer, a crane with all four lanes full, a single open lane, parking, and loads fetched from racks."
+    ],
+    [
+     "Vehicle motion",
+     "AGVs drive at 6 m/s on straights and 3 m/s in turns, with 0.5 m/s² acceleration and braking (Luo, 2016)."
+    ],
+    [
+     "Rack visit",
+     "Driving 15.5 m into the rack lane and back at 1 m/s, as in the earlier 46 s visit. Raising and lowering the platform take 10 s each, an assumption since no published value was found."
+    ],
+    [
+     "Tolerance",
+     "Every event time must agree within 10⁻⁶ s, every segment length within 10⁻⁶ m."
+    ]
+   ],
+   "label": "Experiment 1.1 · Simulator check",
+   "design": {
+    "question": "Does the simulator move AGVs, cranes and racks exactly as the layout, the vehicle data and the rules say?",
+    "why": "Every later number comes from the simulator. If it moved AGVs wrongly, every comparison of dispatchers would be wrong with it.",
+    "vary": "Small cases that each exercise one rule. Single trips, lane booking under the crane, waiting at a full crane, parking, choosing the nearest free rack, a block whose racks are all busy, and the steps of a rack visit.",
+    "fixed": "Each case is worked out by hand before the simulator is run, without using any of its code.",
+    "measure": "The largest gap between the simulator and the hand-worked value, over every event time and every path segment.",
+    "decide": "The simulator passes only if every gap is below a millionth of a second and every rack rule gives the hand-worked answer."
+   },
+   "checks": [
+    {
+     "check": "Hand-built answer key, 5 cases, 190 event times and 308 path segments",
+     "expected": "every gap below 10⁻⁶ s",
+     "got": "largest gap 5 × 10⁻⁷ s",
+     "ok": true
+    },
+    {
+     "check": "Two AGVs leave QC1 for block 20, west of the crane",
+     "expected": "racks 5, then 4",
+     "got": "racks 5, then 4",
+     "ok": true
+    },
+    {
+     "check": "Two AGVs leave QC1 for block 30, east of the crane",
+     "expected": "racks 1, then 2",
+     "got": "racks 1, then 2",
+     "ok": true
+    },
+    {
+     "check": "Six AGVs for one block of 5 racks while every rack is busy",
+     "expected": "the sixth waits for the rack that frees first",
+     "got": "waits 1 time, for rack 1 (first reserved: rack 1)",
+     "ok": true
+    },
+    {
+     "check": "Discharge visit, container on the rack",
+     "expected": "35.5 s after the visit starts",
+     "got": "35.5 s",
+     "ok": true
+    },
+    {
+     "check": "Discharge visit, AGV free again",
+     "expected": "51.0 s",
+     "got": "51.0 s",
+     "ok": true
+    },
+    {
+     "check": "Load visit, container lifted",
+     "expected": "25.5 s",
+     "got": "25.5 s",
+     "ok": true
+    },
+    {
+     "check": "Load visit, AGV leaves for the crane",
+     "expected": "51.0 s",
+     "got": "51.0 s",
+     "ok": true
+    },
+    {
+     "check": "96 random runs on the full yard, 2 to 12 AGVs, all four rules, with and without randomness",
+     "expected": "no two AGVs at one rack at a time",
+     "got": "0 overlaps",
+     "ok": true
+    }
+   ],
+   "maths": [
+    {
+     "step": "Speed where two path segments meet",
+     "text": "A path is a chain of straights (at most $v = 6$ m/s) and turns (at most 3 m/s, *Luo, 2016*). The AGV starts and stops at rest and accelerates and brakes at $a = 0.5$ m/s². Going forward, the speed $w_{i+1}$ at the end of segment $i$ of length $L_i$ is what the AGV can reach from $w_i$. A backward pass then lowers it wherever the AGV could not brake in time.",
+     "tex": "$$w_{i+1} = \\min\\Big(\\bar v_{i,i+1},\\ \\sqrt{w_i^{2} + 2 a L_i}\\Big)$$"
+    },
+    {
+     "step": "Time to drive one segment",
+     "text": "Inside a segment the AGV speeds up, cruises and slows down. If the peak speed $v_p$ stays below the limit $V$ there is no cruise. For a 100 m straight from rest to rest, $v_p = \\sqrt{50} = 7.07$ m/s is above 6 m/s, so the AGV cruises.",
+     "tex": "$$v_p = \\sqrt{a L + \\tfrac{1}{2}(v_0^{2}+v_1^{2})},\\qquad t = \\begin{cases}\\dfrac{2v_p - v_0 - v_1}{a} & v_p \\le V\\\\[8pt] \\dfrac{2V - v_0 - v_1}{a} + \\dfrac{1}{V}\\Big(L - \\dfrac{V^{2}-v_0^{2}}{2a} - \\dfrac{V^{2}-v_1^{2}}{2a}\\Big) & v_p > V\\end{cases}$$",
+     "calc": "$$t = \\frac{2\\times 6}{0.5} + \\frac{1}{6}\\Big(100 - 36 - 36\\Big) = 24 + 4.67 = 28.67\\ \\text{s}$$"
+    },
+    {
+     "step": "Length of a rack visit",
+     "text": "The AGV drives $\\ell = 15.5$ m into the rack lane and back at $v_r = 1$ m/s, and raises and lowers its platform in 10 s each. A discharge places the container after raise, drive in and lower. A load lifts it after drive in and raise.",
+     "tex": "$$r = \\frac{2\\ell}{v_r} + t_{\\text{raise}} + t_{\\text{lower}}$$",
+     "calc": "$$r = \\frac{2\\times 15.5}{1} + 10 + 10 = 51\\ \\text{s}$$ $$t_{\\text{placed}} = 10 + 15.5 + 10 = 35.5\\ \\text{s},\\qquad t_{\\text{lifted}} = 15.5 + 10 = 25.5\\ \\text{s}$$"
+    },
+    {
+     "step": "The pass criterion",
+     "text": "Every event time of the simulator is compared with the value worked out by hand, and the largest gap must be below a millionth of a second.",
+     "tex": "$$\\max_{e}\\ \\big|t_e^{\\text{simulator}} - t_e^{\\text{hand}}\\big| < 10^{-6}\\ \\text{s}$$",
+     "calc": "$$\\max_e |\\Delta t_e| = 5.0\\times 10^{-7}\\ \\text{s}$$"
+    }
+   ],
+   "reproduce": "python -m pytest -q tests"
+  },
   {
    "id": "E1",
    "stage": 2,

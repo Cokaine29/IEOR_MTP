@@ -22,6 +22,7 @@ type Card = {
   table?: { head: string[]; rows: string[][] };
   maths?: { step: string; text: string; tex: string; calc?: string }[];
   label?: string;
+  checks?: { check: string; expected: string; got: string; ok: boolean }[];
   design?: { question: string; why: string; vary: string; fixed: string; measure: string; decide: string };
 };
 type Stage = { n: number; question: string; why: string };
@@ -143,6 +144,39 @@ function Design({ c }: { c: Card }) {
   );
 }
 
+/** Each check with what was expected and what the simulator gave. */
+function Checks({ c }: { c: Card }) {
+  if (!c.checks?.length) return null;
+  return (
+    <div className="relative overflow-x-auto rounded-2xl border border-zinc-200">
+      <table className="w-full min-w-[560px] text-sm">
+        <thead className="bg-zinc-50 text-left text-zinc-600">
+          <tr>
+            <th className="px-4 py-2.5 font-medium">Check</th>
+            <th className="px-4 py-2.5 font-medium">Worked out by hand</th>
+            <th className="px-4 py-2.5 font-medium">Simulator</th>
+            <th className="px-2 py-2.5"><span className="sr-only">Result</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {c.checks.map((k, i) => (
+            <tr key={i} className="border-t border-zinc-100 align-top">
+              <td className="px-4 py-2.5 text-zinc-800">{k.check}</td>
+              <td className="px-4 py-2.5 text-zinc-600">{k.expected}</td>
+              <td className="px-4 py-2.5 font-medium text-zinc-900 tabular-nums">{k.got}</td>
+              <td className="px-2 py-2.5">
+                {k.ok
+                  ? <CircleCheck aria-label="passed" className="h-5 w-5 text-emerald-600" />
+                  : <span className="text-xs font-semibold text-red-600">failed</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function ResultCard({ c }: { c: Card }) {
   return (
     <article id={c.id} className="scroll-mt-24 flex flex-col gap-5 rounded-3xl border border-zinc-200 bg-white p-6 md:p-8">
@@ -151,6 +185,7 @@ function ResultCard({ c }: { c: Card }) {
       <Design c={c} />
       <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">What we found</div>
       <p className="-mt-3 text-lg leading-relaxed text-zinc-800">{c.lead}</p>
+      <Checks c={c} />
       {c.chart && <LineChart spec={c.chart} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
       <p className="leading-relaxed text-zinc-600">{c.body}</p>
