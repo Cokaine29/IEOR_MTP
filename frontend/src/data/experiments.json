@@ -219,7 +219,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP 88aa379 / results_reference",
+ "source": "ACT_MTP 08ce438 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -379,7 +379,7 @@
      "calc": "$$\\max_e |\\Delta t_e| = 5.0\\times 10^{-7}\\ \\text{s}$$"
     }
    ],
-   "reproduce": "python -m pytest -q tests"
+   "reproduce": "python experiments/e0_checks.py"
   },
   {
    "id": "E1",
