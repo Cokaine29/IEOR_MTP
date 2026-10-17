@@ -225,7 +225,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP e372f47 / legacy_slice",
+ "source": "ACT_MTP a85bf84 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -1142,7 +1142,7 @@
     },
     {
      "step": "Why three jobs are too few on this yard",
-     "text": "To fetch a load, an AGV must drive to the block, visit the rack and come back, which takes about the AGV work per container $\\bar W$ found in the fleet sweep. The lead time must cover it. Press play, or step through, to see the window grow.",
+     "text": "To fetch a load, an AGV must drive to the block, visit the rack and come back, which takes about the AGV work per container $\\bar W$ found in the fleet sweep. The lead time must cover it. The scene below grows the window one job at a time, and it can be paused or stepped through.",
      "tex": "$$w\\,c > \\bar W \\quad\\Longrightarrow\\quad w > \\frac{\\bar W}{c}$$",
      "calc": "$$w > \\frac{228.7}{75} = 3.05\\quad\\Longrightarrow\\quad w \\ge 4$$",
      "scene": {
