@@ -36,8 +36,8 @@ export default function ExperimentsHeader() {
               uncertain. This page reports those experiments and grows as new ones are completed.
             </p>
             <p>
-              The simulated terminal is a five-block section laid out after Yangshan Phase IV in Shanghai (<i>Liu et al., 2016</i>; <i>Wu et al.,
-              2016</i>), served by two quay cranes and a small fleet of AGVs.
+              The simulated terminal is a yard of 50 blocks, about 2.1 km long, laid out after Yangshan Phase IV in Shanghai
+              (<i>Liu et al., 2016</i>; <i>Wu et al., 2016</i>), served by two quay cranes and eight AGVs.
             </p>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function ExperimentsHeader() {
           <div className="flex flex-col gap-1">
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Findings so far</h2>
             {H.findings.length > 0 && (
-              <p className="text-sm text-zinc-500">{H.findingsGroup} uncertainty · updated {formatDate(GENERATED)}</p>
+              <p className="text-sm text-zinc-500">{H.findingsGroup ? `${H.findingsGroup} uncertainty · updated` : 'Updated'} {formatDate(GENERATED)}</p>
             )}
           </div>
           {H.findings.length === 0 ? (
