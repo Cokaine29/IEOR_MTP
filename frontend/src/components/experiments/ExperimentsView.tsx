@@ -21,6 +21,7 @@ type Card = {
   chart?: ChartSpec;
   replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
+  tableTop?: { head: string[]; rows: string[][]; caption?: string; highlightRow?: number };
   maths?: { step: string; text: string; tex: string; calc?: string; scene?: SceneSpec }[];
   label?: string;
   checks?: { check: string; expected: string; got: string; ok: boolean }[];
@@ -178,6 +179,35 @@ function Checks({ c }: { c: Card }) {
   );
 }
 
+/** A result table shown with the finding (not hidden in the method details). */
+function TopTable({ c }: { c: Card }) {
+  const t = c.tableTop;
+  if (!t) return null;
+  return (
+    <figure className="flex flex-col gap-2">
+      <div className="relative overflow-x-auto rounded-2xl border border-zinc-200">
+        <table className="w-full min-w-[560px] text-sm tabular-nums">
+          <thead className="bg-zinc-50">
+            <tr>{t.head.map((h) => <th key={h} className="whitespace-nowrap px-4 py-2.5 text-right text-xs font-semibold text-zinc-600 first:text-left">{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {t.rows.map((r, i) => (
+              <tr key={i} className={`border-t border-zinc-100 ${i === t.highlightRow ? 'bg-amber-50/70' : ''}`}>
+                {r.map((v, j) => (
+                  <td key={j} className={`whitespace-nowrap px-4 py-2 text-right first:text-left ${j === 0 ? 'font-medium text-zinc-900' : 'text-zinc-800'}`}>
+                    {v}{j === 0 && i === t.highlightRow && <span className="ml-2 rounded-full bg-amber-200/70 px-2 py-0.5 text-xs font-medium text-amber-900">standard</span>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {t.caption && <figcaption className="text-sm text-zinc-500">{t.caption}</figcaption>}
+    </figure>
+  );
+}
+
 function ResultCard({ c }: { c: Card }) {
   return (
     <article id={c.id} className="scroll-mt-24 flex flex-col gap-5 rounded-3xl border border-zinc-200 bg-white p-6 md:p-8">
@@ -187,6 +217,7 @@ function ResultCard({ c }: { c: Card }) {
       <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">What we found</div>
       <p className="-mt-3 text-lg leading-relaxed text-zinc-800">{c.lead}</p>
       <Checks c={c} />
+      <TopTable c={c} />
       {c.chart && <LineChart spec={c.chart} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
       <p className="leading-relaxed text-zinc-600">{c.body}</p>
