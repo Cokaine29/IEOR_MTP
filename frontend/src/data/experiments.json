@@ -38,7 +38,7 @@
        "planned"
       ],
       [
-       "",
+       "E1",
        "",
        "",
        "",
@@ -157,14 +157,14 @@
       "Random dispatching",
       "Lower reference, with no intelligence",
       [
-       "planned",
+       "done",
        "planned",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "",
+       "E1",
        "",
        "",
        "",
@@ -192,8 +192,15 @@
     ]
    }
   ],
-  "findingsGroup": "Crane cycle time",
-  "findings": [],
+  "findingsGroup": "",
+  "findings": [
+   {
+    "value": "8 AGVs",
+    "text": "Four AGVs per crane is the operating fleet. The best rule then keeps each crane waiting 5.7 s per container, against 13.3 s for random dispatching, so the choice of dispatcher clearly matters.",
+    "conditions": "No randomness · 2 to 16 AGVs · 30 instances",
+    "ref": "E1"
+   }
+  ],
   "references": [
    "Briskorn, D., Drexl, A., & Hartmann, S. (2006). Inventory-based dispatching of automated guided vehicles on container terminals. OR Spectrum, 28(4), 611–630. https://doi.org/10.1007/s00291-006-0033-8",
    "Kim, K.H., & Bae, J.W. (2004). A look-ahead dispatching method for automated guided vehicles in automated port container terminals. Transportation Science, 38(2), 224–234. https://doi.org/10.1287/trsc.1030.0082",
@@ -205,8 +212,8 @@
    "Zheng, X., Liang, C., Wang, Y., Shi, J., & Lim, G. (2022). Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach. Mathematics, 10, 4575. https://doi.org/10.3390/math10234575"
   ]
  },
- "generated": "2026-10-16",
- "source": "ACT_MTP 0abdd35 / results_reference",
+ "generated": "2026-10-17",
+ "source": "ACT_MTP 7bb9803 / results_reference",
  "stages": [
   {
    "n": 1,
@@ -251,5 +258,337 @@
    "The benchmark sees all realised crane times in advance. No real dispatcher can, so it shows how much room is left."
   ]
  ],
- "cards": []
+ "cards": [
+  {
+   "id": "E1",
+   "stage": 2,
+   "title": "Four AGVs per crane keep the cranes nearly always busy",
+   "lead": "The cranes wait less with every AGV added and almost never wait from 12 AGVs on. With 8 AGVs, four per crane, the best rule keeps each crane waiting 5.7 s per container while random dispatching wastes 13.3 s, so the later experiments use 8 AGVs.",
+   "body": "The yard is long, and each container needs 229 s of AGV work, about 3 crane cycles. Two cranes therefore need at least 6 AGVs even with perfect sharing. With two AGVs per crane the cranes manage 29.4 moves per hour, close to the 30.5 reported by Luo (2016). NV/FCFS stops improving and stays between 12 and 13 s from 8 AGVs on, all of it while load containers are fetched. Its window of three jobs was tuned on the earlier, shorter yard and is tuned again in the next experiment.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
+    ],
+    [
+     "Why 8 AGVs",
+     "It is the smallest even fleet at which the good rules leave little waiting while random dispatching still wastes more than twice as much. It also matches Luo (2016), who reports that at least four lift-AGVs per crane are needed for 40 moves per hour. Fleets of 6 and 10 are kept as a scarce and a comfortable case."
+    ],
+    [
+     "Rules",
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 3 jobs, fixed crane groups, and random dispatching."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
+    ]
+   ],
+   "chart": {
+    "xLabel": "Number of AGVs (2 cranes)",
+    "xFmt": "int",
+    "highlight": 8,
+    "variants": [
+     {
+      "label": "all",
+      "x": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12,
+       13,
+       14,
+       15,
+       16
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         149.49,
+         81.23,
+         47.44,
+         28.5,
+         16.88,
+         10.42,
+         5.7,
+         3.49,
+         2.06,
+         1.18,
+         0.68,
+         0.31,
+         0.12,
+         0.03,
+         0.01
+        ],
+        "ci": [
+         1.95,
+         1.15,
+         0.86,
+         0.63,
+         0.49,
+         0.34,
+         0.26,
+         0.24,
+         0.18,
+         0.2,
+         0.13,
+         0.11,
+         0.05,
+         0.03,
+         0.02
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         157.07,
+         84.88,
+         50.01,
+         29.4,
+         16.74,
+         14.06,
+         12.98,
+         12.37,
+         12.18,
+         12.07,
+         12.08,
+         12.27,
+         12.42,
+         12.54,
+         12.73
+        ],
+        "ci": [
+         2.24,
+         1.33,
+         0.9,
+         0.8,
+         0.52,
+         0.38,
+         0.37,
+         0.34,
+         0.37,
+         0.42,
+         0.41,
+         0.41,
+         0.43,
+         0.43,
+         0.41
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         150.59,
+         99.92,
+         48.61,
+         33.26,
+         17.15,
+         11.42,
+         5.41,
+         3.76,
+         1.91,
+         1.3,
+         0.66,
+         0.41,
+         0.12,
+         0.07,
+         0.0
+        ],
+        "ci": [
+         1.76,
+         1.3,
+         0.84,
+         0.69,
+         0.49,
+         0.41,
+         0.3,
+         0.22,
+         0.2,
+         0.21,
+         0.19,
+         0.13,
+         0.05,
+         0.04,
+         0.0
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         152.82,
+         86.01,
+         53.53,
+         35.35,
+         24.45,
+         17.77,
+         13.29,
+         10.12,
+         8.14,
+         6.42,
+         4.6,
+         2.82,
+         1.36,
+         0.73,
+         0.44
+        ],
+        "ci": [
+         2.6,
+         1.94,
+         1.4,
+         1.17,
+         1.14,
+         1.11,
+         1.04,
+         1.04,
+         1.07,
+         0.93,
+         0.7,
+         0.48,
+         0.28,
+         0.2,
+         0.17
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "table": {
+    "head": [
+     "AGVs",
+     "Briskorn inventory",
+     "NV/FCFS",
+     "Fixed groups",
+     "Random"
+    ],
+    "rows": [
+     [
+      "2",
+      "149.5 ± 1.9",
+      "157.1 ± 2.2",
+      "150.6 ± 1.8",
+      "152.8 ± 2.6"
+     ],
+     [
+      "3",
+      "81.2 ± 1.1",
+      "84.9 ± 1.3",
+      "99.9 ± 1.3",
+      "86.0 ± 1.9"
+     ],
+     [
+      "4",
+      "47.4 ± 0.9",
+      "50.0 ± 0.9",
+      "48.6 ± 0.8",
+      "53.5 ± 1.4"
+     ],
+     [
+      "5",
+      "28.5 ± 0.6",
+      "29.4 ± 0.8",
+      "33.3 ± 0.7",
+      "35.3 ± 1.2"
+     ],
+     [
+      "6",
+      "16.9 ± 0.5",
+      "16.7 ± 0.5",
+      "17.2 ± 0.5",
+      "24.5 ± 1.1"
+     ],
+     [
+      "7",
+      "10.4 ± 0.3",
+      "14.1 ± 0.4",
+      "11.4 ± 0.4",
+      "17.8 ± 1.1"
+     ],
+     [
+      "8",
+      "5.7 ± 0.3",
+      "13.0 ± 0.4",
+      "5.4 ± 0.3",
+      "13.3 ± 1.0"
+     ],
+     [
+      "9",
+      "3.5 ± 0.2",
+      "12.4 ± 0.3",
+      "3.8 ± 0.2",
+      "10.1 ± 1.0"
+     ],
+     [
+      "10",
+      "2.1 ± 0.2",
+      "12.2 ± 0.4",
+      "1.9 ± 0.2",
+      "8.1 ± 1.1"
+     ],
+     [
+      "11",
+      "1.2 ± 0.2",
+      "12.1 ± 0.4",
+      "1.3 ± 0.2",
+      "6.4 ± 0.9"
+     ],
+     [
+      "12",
+      "0.7 ± 0.1",
+      "12.1 ± 0.4",
+      "0.7 ± 0.2",
+      "4.6 ± 0.7"
+     ],
+     [
+      "13",
+      "0.3 ± 0.1",
+      "12.3 ± 0.4",
+      "0.4 ± 0.1",
+      "2.8 ± 0.5"
+     ],
+     [
+      "14",
+      "0.1 ± 0.0",
+      "12.4 ± 0.4",
+      "0.1 ± 0.1",
+      "1.4 ± 0.3"
+     ],
+     [
+      "15",
+      "0.0 ± 0.0",
+      "12.5 ± 0.4",
+      "0.1 ± 0.0",
+      "0.7 ± 0.2"
+     ],
+     [
+      "16",
+      "0.0 ± 0.0",
+      "12.7 ± 0.4",
+      "0.0 ± 0.0",
+      "0.4 ± 0.2"
+     ]
+    ]
+   },
+   "reproduce": "python experiments/e1_agv_sweep.py"
+  }
+ ]
 }

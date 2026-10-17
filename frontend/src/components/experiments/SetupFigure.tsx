@@ -4,9 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { AGV_COLORS, Replay, TerminalMap, agvPose, fmtTime, lastIdx, prepare, stats } from './ReplayPlayer';
 
-const FILE = 'n4_d0_briskorn';
+const FILE = 'n8_d0_briskorn';
 const SPEED = 20;        // simulated seconds per real second
-const START = 1500;      // start inside the run, when all four AGVs are busy
+const START = 1500;      // start inside the run, when all eight AGVs are busy
+const PX_PER_M = 2;      // the 2.1 km yard is drawn to scale and scrolled sideways
 
 const ORANGE = '#ea580c';   // container
 const TEAL = '#0f766e';     // AGV
@@ -80,7 +81,7 @@ const STATIONS: { x: number; name: string; note: string; icon: () => React.JSX.E
   { x: 70, name: 'Vessel', note: 'bays of containers', icon: Vessel },
   { x: 230, name: 'Quay crane', note: 'one move every 75 s', icon: Crane },
   { x: 390, name: 'AGV', note: 'carries one container', icon: Agv },
-  { x: 550, name: 'Transfer rack', note: 'handover in 46 s', icon: Rack },
+  { x: 550, name: 'Transfer rack', note: 'visit of 51 s', icon: Rack },
   { x: 710, name: 'Yard block', note: 'stacking crane stores it', icon: Block },
 ];
 
@@ -313,10 +314,63 @@ function PicWork() {
   );
 }
 
+/* ---------------------------------------------------------------- yard overview strip */
+
+/** The whole yard in one row: which blocks this ship uses, where the cranes stand, and where every AGV is now. */
+function YardStrip({ r, t, view, onSeek }: { r: Replay; t: number; view: [number, number] | null; onSeek: (xm: number) => void }) {
+  const L = r.layout;
+  const W = 1000, H = 92, k = W / L.width;
+  const used = (kind: string) => {
+    const bs = r.racks.filter((v) => v[5] === kind).map((v) => v[3]);
+    return [Math.min(...bs), Math.max(...bs)];
+  };
+  const [d0, d1] = used('D'), [l0, l1] = used('L');
+  const bx = (b: number) => L.blocks[b - 1].x0 * k;
+  const bw = L.blocks[0].w * k;
+  return (
+    <div className="flex flex-col gap-1 border-t border-zinc-200 bg-zinc-50/60 px-3 py-2">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-600">
+        <span className="font-medium text-zinc-800">The whole yard</span>
+        <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2 w-5 rounded-full" style={{ background: TEAL }} />load containers from blocks {l0} to {l1}</span>
+        <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2 w-5 rounded-full" style={{ background: ORANGE }} />discharge containers to blocks {d0} to {d1}</span>
+        <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-full bg-zinc-500" />AGVs now</span>
+        <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-4 rounded-sm border-[1.5px] border-zinc-900" />part shown on the map</span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full cursor-pointer" role="img"
+        onClick={(e) => {
+          const b = e.currentTarget.getBoundingClientRect();
+          onSeek(((e.clientX - b.left) / b.width) * W / k);
+        }}
+        aria-label={`Overview of the yard. Load containers come from blocks ${l0} to ${l1}, discharge containers go to blocks ${d0} to ${d1}.`}>
+        <rect x={bx(l0)} y={4} width={bx(l1) + bw - bx(l0)} height={8} rx={4} fill={TEAL} opacity={0.85} />
+        <rect x={bx(d0)} y={18} width={bx(d1) + bw - bx(d0)} height={8} rx={4} fill={ORANGE} opacity={0.85} />
+        {L.blocks.map((b) => (
+          <rect key={b.id} x={b.x0 * k} y={34} width={bw} height={22} rx={2}
+            fill={b.id >= l0 && b.id <= l1 ? '#d4d4d8' : '#f4f4f5'} stroke="#e4e4e7" strokeWidth={0.5} />
+        ))}
+        {view && <rect x={view[0] * k} y={30} width={(view[1] - view[0]) * k} height={30} rx={3} fill="none" stroke="#18181b" strokeWidth={1.5} />}
+        {L.qcs.map((q) => (
+          <g key={q.id}>
+            <path d={`M${q.x * k} 33 l-6 -6 h12 z`} fill="#1e293b" />
+            <text x={q.x * k} y={74} fontSize={13} textAnchor="middle" fill="#1e293b">QC{q.id}</text>
+          </g>
+        ))}
+        {r.agvs.map((a, i) => {
+          const [x] = agvPose(r, a.legs, t);
+          return <circle key={a.id} cx={x * k} cy={45} r={5} fill={AGV_COLORS[i % AGV_COLORS.length]} stroke="#fff" strokeWidth={1.2} />;
+        })}
+        <text x={2} y={74} fontSize={13} fill="#71717a">block 1</text>
+        <text x={W - 2} y={74} fontSize={13} textAnchor="end" fill="#71717a">block {L.blocks.length}</text>
+        <text x={W / 2} y={89} fontSize={12} textAnchor="middle" fill="#a1a1aa">select a point to move the map there</text>
+      </svg>
+    </div>
+  );
+}
+
 const SPECS: { pic: () => React.JSX.Element; value: string; detail: string; source: string }[] = [
   { pic: PicCrane, value: '75 s', detail: 'per crane move, 2 quay cranes', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
-  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '4 AGVs, at 6 m/s on straights and 3 m/s in turns', source: 'Luo, 2016' },
-  { pic: PicYard, value: '5 blocks', detail: '31 m wide, 5 transfer racks each', source: 'Wu et al., 2016' },
+  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '8 AGVs, 4 per crane, at 6 m/s on straights and 3 m/s in turns', source: 'Luo, 2016' },
+  { pic: PicYard, value: '50 blocks', detail: '31 m wide with 5 transfer racks each, about 2.1 km of yard in all', source: 'Wu et al., 2016; Liu et al., 2016' },
   { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard, across 7 handover lanes, a 27 m buffer and 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
   { pic: PicWork, value: '200 containers', detail: '100 discharge (orange) and 100 load (teal) in each run', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
 ];
@@ -331,7 +385,7 @@ export default function SetupFigure() {
   const last = useRef<number | null>(null);
 
   useEffect(() => {
-    fetch(`/replays/v2/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
+    fetch(`/replays/v3/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
   }, []);
 
@@ -352,6 +406,19 @@ export default function SetupFigure() {
 
   const prep = useMemo(() => (r ? prepare(r) : {}), [r]);
 
+  // start the map centred on the two cranes
+  const scroller = useRef<HTMLDivElement>(null);
+  const [view, setView] = useState<[number, number] | null>(null);
+  const onScroll = () => {
+    const el = scroller.current;
+    if (el) setView([el.scrollLeft / PX_PER_M, (el.scrollLeft + el.clientWidth) / PX_PER_M]);
+  };
+  useEffect(() => {
+    if (!r || !scroller.current) return;
+    const mid = (r.layout.qcs[0].x + r.layout.qcs[1].x) / 2;
+    scroller.current.scrollLeft = mid * PX_PER_M - scroller.current.clientWidth / 2;
+  }, [r]);
+
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
@@ -367,8 +434,18 @@ export default function SetupFigure() {
       <figure className="flex flex-col gap-3">
         <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
           <div className="grid lg:grid-cols-[minmax(0,1fr)_18rem]">
-            <div className="min-w-0">
-              {r ? <TerminalMap r={r} t={t} prep={prep} /> : <div className="aspect-[235/220] w-full bg-zinc-100" />}
+            <div className="flex min-w-0 flex-col">
+              <div ref={scroller} onScroll={onScroll} className="min-w-0 overflow-x-auto">
+                {r ? (
+                  <div style={{ width: r.layout.width * PX_PER_M }}>
+                    <TerminalMap r={r} t={t} prep={prep} />
+                  </div>
+                ) : <div className="h-[420px] w-full bg-zinc-100" />}
+              </div>
+              {r && <YardStrip r={r} t={t} view={view} onSeek={(xm) => {
+                const el = scroller.current;
+                if (el) el.scrollTo({ left: xm * PX_PER_M - el.clientWidth / 2, behavior: 'smooth' });
+              }} />}
             </div>
             {r && <Readouts r={r} t={t} prep={prep} playing={playing} onToggle={() => setPlaying(!playing)} />}
           </div>
@@ -377,13 +454,15 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm" style={{ background: TEAL }} />AGV carrying a container</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm border-2 bg-white" style={{ borderColor: TEAL }} />empty AGV (each AGV has its own colour)</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-3" style={{ background: ORANGE }} />container on a crane trolley</span>
-          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" />rack handover in progress</span>
+          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" />rack visit in progress</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
         <figcaption className="text-sm leading-relaxed text-zinc-600">
-          A recording of one simulation run, played at {SPEED}× real time. Four AGVs are dispatched by the inventory rule
-          of <i>Briskorn et al. (2006)</i>, and the cranes work exactly at their planned times. Lanes, slots, blocks and racks are
-          drawn to scale, while the crane structures and the vessel are schematic.
+          A recording of one simulation run, played at {SPEED}× real time. Eight AGVs are dispatched by the inventory rule
+          of <i>Briskorn et al. (2006)</i>, and the cranes work exactly at their planned times. The map opens at the two cranes. Scroll it
+          sideways, or use the strip below it, to follow AGVs to distant blocks. Each AGV takes the nearest free rack of its block,
+          raises or lowers its platform and drives into the rack and back out. Lanes, slots, blocks and racks are drawn to scale,
+          while the crane structures and the vessel are schematic.
         </figcaption>
       </figure>
 
