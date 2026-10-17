@@ -213,7 +213,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP 3893e5c / results_reference",
+ "source": "ACT_MTP d3c10ee / results_reference",
  "stages": [
   {
    "n": 1,
@@ -239,15 +239,15 @@
  "notation": [
   [
    "δ",
-   "How much crane cycle times vary. With δ = 0.4 each cycle takes between 45 and 105 s instead of exactly 75 s."
+   "How much crane cycle times vary. Each cycle is drawn as $c_i \\sim U\\big((1-\\delta)\\,\\bar c,\\ (1+\\delta)\\,\\bar c\\big)$ with $\\bar c = 75$ s, so with $\\delta = 0.4$ each cycle takes between 45 and 105 s instead of exactly 75 s."
   ],
   [
    "±",
-   "The number after ± is a 95% confidence interval over the seeds."
+   "The number after ± is half the width of a 95% confidence interval over the $n$ seeds, $\\bar I \\pm t_{0.975,\\,n-1}\\, s/\\sqrt{n}$, where $s$ is the standard deviation over the seeds and $t = 2.045$ for 30 seeds."
   ],
   [
    "Paired seeds",
-   "Each seed fixes one instance and one draw of crane times, and every method runs on the same seeds. Differences between methods are therefore measured under identical conditions (common random numbers)."
+   "Each seed fixes one instance and one draw of crane times, and every method runs on the same seeds. The gap between two methods A and B is therefore measured seed by seed, $\\Delta = \\frac{1}{n}\\sum_{k=1}^{n}(I_{A,k}-I_{B,k})$, under identical conditions (common random numbers)."
   ],
   [
    "NV/FCFS",
@@ -282,6 +282,32 @@
      "Statistics",
      "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
     ]
+   ],
+   "maths": [
+    {
+     "step": "The work an AGV does for one container",
+     "text": "Each container needs a trip between crane and yard, the drive to the next job, and one rack visit of $r = 51$ s. Here $d$ is the driving time per container, all AGV legs added up and divided by the $n$ containers, averaged over the 30 instances and all fleet sizes.",
+     "tex": "$$\\bar W = d + r$$",
+     "calc": "$$\\bar W = 177.7 + 51 = 228.7\\ \\text{s}$$"
+    },
+    {
+     "step": "The fewest AGVs that could keep both cranes busy",
+     "text": "Each crane needs one AGV every $c = 75$ s, and one AGV can serve a container only every $\\bar W$ s. So $m = 2$ cranes need at least the number below. It is a lower bound, since it assumes AGVs never wait and are shared perfectly, which is why the cranes still wait with 6 AGVs.",
+     "tex": "$$N_{\\min} = \\frac{m\\,\\bar W}{c}$$",
+     "calc": "$$N_{\\min} = \\frac{2 \\times 228.7}{75} = 6.1\\ \\text{AGVs}$$"
+    },
+    {
+     "step": "From waiting time to crane productivity",
+     "text": "A crane completes one move every $c$ seconds plus the time $\\bar I$ it waits for AGVs, so its moves per hour are given below. With two AGVs per crane this gives about the 30.5 moves per hour reported by *Luo (2016)*.",
+     "tex": "$$P = \\frac{3600}{c + \\bar I}$$",
+     "calc": "$$P_{N=4} = \\frac{3600}{75 + 47.4} = 29.4,\\qquad P_{N=8} = \\frac{3600}{75 + 5.7} = 44.6$$"
+    },
+    {
+     "step": "How precise each point on the chart is",
+     "text": "Each point is the mean idle time over 30 instances, with a 95% confidence interval. For the Briskorn rule at 8 AGVs the standard deviation over the instances is $s$ below.",
+     "tex": "$$\\bar I \\pm t_{0.975,\\,29}\\,\\frac{s}{\\sqrt{30}}$$",
+     "calc": "$$ 5.7 \\pm 2.045 \\times \\frac{0.69}{\\sqrt{30}} = 5.7 \\pm 0.3\\ \\text{s}$$"
+    }
    ],
    "chart": {
     "xLabel": "Number of AGVs (2 cranes)",
