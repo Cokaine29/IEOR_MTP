@@ -205,6 +205,12 @@
     "text": "Four AGVs per crane is the operating fleet. The best rule then keeps each crane waiting 5.7 s per container, against 13.3 s for random dispatching, so the choice of dispatcher clearly matters.",
     "conditions": "No randomness · 2 to 16 AGVs · 30 instances",
     "ref": "E1"
+   },
+   {
+    "value": "5 jobs",
+    "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container, level with the other rules.",
+    "conditions": "No randomness · 8 AGVs · windows of 1 to 50 jobs · 30 test instances",
+    "ref": "E1b"
    }
   ],
   "references": [
@@ -219,7 +225,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP 08ce438 / legacy_slice",
+ "source": "ACT_MTP a85bf84 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -746,6 +752,421 @@
     ]
    },
    "reproduce": "python experiments/e1_agv_sweep.py"
+  },
+  {
+   "id": "E1b",
+   "stage": 2,
+   "title": "On the long yard every rule needs to see five jobs ahead",
+   "lead": "Five jobs. With 1, 2 or 3 jobs in view, every rule leaves the cranes waiting at least 13 s per container at 8 AGVs, because loads are fetched too late. From 5 jobs on, the three real rules all reach 5.4 to 5.7 s, and looking further brings no gain.",
+   "body": "NV/FCFS now uses a window of 5 and reaches 5.5 s, level with the Briskorn rule (5.7 s) and fixed groups (5.4 s). Its stall in the fleet sweep came from its window, not from the rule. The terminal still shows every method the next 10 jobs, as in Kim and Bae (2004). Random dispatching is the exception. A short window narrows its choice and makes it look better, 8.9 s with 5 jobs against 13.3 s with 10, so the random reference is always measured with the terminal's 10 jobs.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
+    ],
+    [
+     "Windows tested",
+     "1, 2, 3, 5, 10, 20, 50 jobs per crane. The terminal and the rule use the same window here."
+    ],
+    [
+     "Chosen setting",
+     "The terminal shows 10 jobs to every method (Kim and Bae, 2004). NV/FCFS releases jobs by its own window of 5. For the other rules any window from 5 up gives the same result."
+    ],
+    [
+     "Side cases",
+     "With 6 AGVs NV/FCFS is best at 3 jobs (16.7 s against 17.2 s at 5). With 10 AGVs every rule is best from 5 jobs on."
+    ],
+    [
+     "Rules",
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 5 jobs, fixed crane groups, and random dispatching."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
+    ]
+   ],
+   "label": "Experiment 2.2 · Look-ahead window",
+   "design": {
+    "question": "How many upcoming jobs of each crane must a rule see to dispatch well on this yard?",
+    "why": "A rule sees only the next few jobs of each crane, called the look-ahead window. A load has to be fetched from the yard before the crane needs it, so a rule that sees too few jobs sends its AGVs too late. In the fleet sweep, NV/FCFS with a window of three jobs stopped improving at about 12 s.",
+    "vary": "The window, 1, 2, 3, 5, 10, 20 and 50 jobs per crane, for all four rules, at 8 AGVs and at 6 and 10 as side cases.",
+    "fixed": "No randomness, with the same yard and instances as the fleet sweep. The window is chosen on 30 training instances and reported on the 30 test instances used everywhere else, so no rule is tuned on the numbers it is judged by.",
+    "measure": "Crane idle time per container on the test instances, with a 95% confidence interval.",
+    "decide": "For each rule, the window with the lowest idle time on the training instances, and the shorter window when two are equal to one decimal."
+   },
+   "chart": {
+    "xLabel": "Look-ahead window (jobs per crane)",
+    "xFmt": "int",
+    "highlight": 5,
+    "defaultVariant": 0,
+    "variants": [
+     {
+      "label": "8 AGVs",
+      "x": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         85.28,
+         30.28,
+         12.83,
+         5.71,
+         5.7,
+         5.7,
+         5.7
+        ],
+        "ci": [
+         1.37,
+         0.67,
+         0.39,
+         0.27,
+         0.26,
+         0.26,
+         0.26
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         85.28,
+         30.29,
+         12.98,
+         5.49,
+         5.79,
+         5.75,
+         5.8
+        ],
+        "ci": [
+         1.37,
+         0.67,
+         0.37,
+         0.26,
+         0.28,
+         0.29,
+         0.29
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         85.61,
+         30.35,
+         12.96,
+         5.41,
+         5.41,
+         5.41,
+         5.41
+        ],
+        "ci": [
+         1.31,
+         0.69,
+         0.4,
+         0.3,
+         0.3,
+         0.3,
+         0.3
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         85.27,
+         30.26,
+         13.0,
+         8.91,
+         13.29,
+         13.29,
+         13.29
+        ],
+        "ci": [
+         1.37,
+         0.64,
+         0.43,
+         0.36,
+         1.04,
+         1.04,
+         1.04
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "6 AGVs",
+      "x": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         88.64,
+         33.23,
+         16.97,
+         16.88,
+         16.88,
+         16.88,
+         16.88
+        ],
+        "ci": [
+         1.5,
+         0.71,
+         0.53,
+         0.49,
+         0.49,
+         0.49,
+         0.49
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         88.67,
+         33.16,
+         16.74,
+         17.24,
+         17.79,
+         18.39,
+         17.45
+        ],
+        "ci": [
+         1.53,
+         0.69,
+         0.52,
+         0.61,
+         0.52,
+         0.68,
+         0.51
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         90.16,
+         33.8,
+         17.15,
+         17.15,
+         17.15,
+         17.15,
+         17.15
+        ],
+        "ci": [
+         1.41,
+         0.72,
+         0.49,
+         0.49,
+         0.49,
+         0.49,
+         0.49
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         88.74,
+         33.63,
+         19.15,
+         23.71,
+         24.45,
+         24.45,
+         24.45
+        ],
+        "ci": [
+         1.48,
+         0.73,
+         0.54,
+         0.94,
+         1.14,
+         1.14,
+         1.14
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "10 AGVs",
+      "x": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         88.6,
+         30.4,
+         12.11,
+         1.61,
+         2.06,
+         2.06,
+         2.06
+        ],
+        "ci": [
+         1.4,
+         0.71,
+         0.37,
+         0.18,
+         0.18,
+         0.18,
+         0.18
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         88.99,
+         30.41,
+         12.18,
+         1.79,
+         1.8,
+         1.88,
+         1.96
+        ],
+        "ci": [
+         1.29,
+         0.73,
+         0.37,
+         0.15,
+         0.16,
+         0.18,
+         0.25
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         88.93,
+         30.5,
+         12.21,
+         1.91,
+         1.91,
+         1.91,
+         1.91
+        ],
+        "ci": [
+         1.31,
+         0.71,
+         0.38,
+         0.2,
+         0.2,
+         0.2,
+         0.2
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         88.6,
+         30.44,
+         12.19,
+         1.92,
+         8.14,
+         8.14,
+         8.14
+        ],
+        "ci": [
+         1.4,
+         0.72,
+         0.4,
+         0.17,
+         1.07,
+         1.07,
+         1.07
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "reproduce": "python experiments/e2_2_lookahead.py",
+   "maths": [
+    {
+     "step": "When a rule first sees a job",
+     "text": "A job becomes visible when the job $w$ places ahead of it in the crane\\'s sequence is handed over. With a crane cycle of $c = 75$ s, a job is therefore seen about $w$ cycles before the crane needs it.",
+     "tex": "$$r_j = t^{\\,\\text{handover}}_{j-w},\\qquad \\text{lead time} \\approx w\\,c$$",
+     "calc": "$$w = 3:\\ 3\\times 75 = 225\\ \\text{s},\\qquad w = 5:\\ 5\\times 75 = 375\\ \\text{s}$$"
+    },
+    {
+     "step": "Why three jobs are too few on this yard",
+     "text": "To fetch a load, an AGV must drive to the block, visit the rack and come back, which takes about the AGV work per container $\\bar W$ found in the fleet sweep. The lead time must cover it. The scene below grows the window one job at a time, and it can be paused or stepped through.",
+     "tex": "$$w\\,c > \\bar W \\quad\\Longrightarrow\\quad w > \\frac{\\bar W}{c}$$",
+     "calc": "$$w > \\frac{228.7}{75} = 3.05\\quad\\Longrightarrow\\quad w \\ge 4$$",
+     "scene": {
+      "kind": "leadtime",
+      "W": 228.7,
+      "c": 75,
+      "tested": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ]
+     }
+    },
+    {
+     "step": "Choosing a window without favouring any rule",
+     "text": "Each rule\\'s window is chosen on 30 training instances (seeds 100 to 129) and the result is reported on the 30 test instances (seeds 0 to 29) used by every other experiment. Ties at one decimal go to the shorter window.",
+     "tex": "$$w^{*} = \\arg\\min_{w}\\ \\frac{1}{30}\\sum_{k=100}^{129} I_k(w)$$",
+     "calc": "$$\\text{NV/FCFS at 8 AGVs:}\\ \\bar I_{\\text{train}}(5) = 5.5,\\ \\bar I_{\\text{train}}(10) = 5.5\\ \\Rightarrow\\ w^* = 5$$"
+    }
+   ]
   }
  ]
 }
