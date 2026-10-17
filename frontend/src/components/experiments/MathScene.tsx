@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import Md from './Md';
 
 /* Animated maths steps in the spirit of Manim: the formula is built up stage by stage next to a picture of what it
@@ -103,13 +103,24 @@ export default function MathScene({ spec }: { spec: SceneSpec }) {
   const reduce = useReducedMotion();
   const stages = leadtimeStages(spec.W, spec.c, spec.tested);
   const [k, setK] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);      // plays on a loop; the reader can pause or step
+  const [visible, setVisible] = useState(false);     // only runs while on screen
+  const box = useRef<HTMLDivElement>(null);
   const last = stages.length - 1;
 
-  const isPlaying = playing && k < last;
+  useEffect(() => {
+    const el = box.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const isPlaying = playing && visible && !reduce;
   useEffect(() => {
     if (!isPlaying) return;
-    const id = setTimeout(() => setK((x) => Math.min(last, x + 1)), 2200);
+    // hold the last stage (the general rule) a little longer, then start again
+    const id = setTimeout(() => setK((x) => (x >= last ? 0 : x + 1)), k >= last ? 4500 : k === 0 ? 3000 : 2400);
     return () => clearTimeout(id);
   }, [isPlaying, k, last]);
 
@@ -117,7 +128,7 @@ export default function MathScene({ spec }: { spec: SceneSpec }) {
   const btn = 'flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-700 hover:text-zinc-950 disabled:opacity-40';
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-3">
+    <div ref={box} className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-3">
       <div className="min-h-[64px] rounded-lg bg-zinc-50 px-3 text-zinc-900">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div key={k} initial={{ opacity: 0, y: reduce ? 0 : 8 }} animate={{ opacity: 1, y: 0 }}
@@ -137,10 +148,10 @@ export default function MathScene({ spec }: { spec: SceneSpec }) {
         <button type="button" className={btn} onClick={() => { setPlaying(false); setK(Math.max(0, k - 1)); }} disabled={k === 0} aria-label="Previous step">
           <ChevronLeft className="h-4 w-4" />
         </button>
-        <button type="button" onClick={() => { if (k >= last) { setK(0); setPlaying(true); } else setPlaying(!isPlaying); }}
+        <button type="button" onClick={() => setPlaying(!playing)}
           className="flex h-8 items-center gap-1.5 rounded-full bg-zinc-900 px-3 text-sm font-medium text-white hover:bg-zinc-700">
-          {k >= last ? <RotateCcw className="h-3.5 w-3.5" /> : isPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-          {k >= last ? 'Replay' : isPlaying ? 'Pause' : 'Play'}
+          {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+          {playing ? 'Pause' : 'Play'}
         </button>
         <button type="button" className={btn} onClick={() => { setPlaying(false); setK(Math.min(last, k + 1)); }} disabled={k === last} aria-label="Next step">
           <ChevronRight className="h-4 w-4" />
