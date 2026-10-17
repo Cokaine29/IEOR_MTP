@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, FileText } from 'lucide-react';
+import { ChevronDown, FileText, Sigma } from 'lucide-react';
 import LineChart, { ChartSpec } from './LineChart';
 import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
 import ExperimentsHeader from './ExperimentsHeader';
+import MethodsSection from './MethodsSection';
+import Md from './Md';
 import DATA from '@/data/experiments.json';
 
 type Card = {
@@ -18,6 +20,7 @@ type Card = {
   chart?: ChartSpec;
   replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
+  maths?: { step: string; text: string; tex: string; calc?: string }[];
 };
 type Stage = { n: number; question: string; why: string };
 
@@ -67,6 +70,41 @@ function Details({ c }: { c: Card }) {
   );
 }
 
+/** The calculations behind a result, step by step, each with the formula and the numbers put in. */
+function Maths({ c }: { c: Card }) {
+  const [open, setOpen] = useState(false);
+  if (!c.maths?.length) return null;
+  return (
+    <div className="border-t border-zinc-200 pt-4">
+      <button onClick={() => setOpen(!open)} aria-expanded={open}
+        className="flex items-center gap-2 text-sm font-semibold text-zinc-800 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900">
+        <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <Sigma className="h-4 w-4 text-zinc-500" />
+        The mathematics
+      </button>
+      {open && (
+        <ol className="mt-4 flex flex-col gap-4">
+          {c.maths.map((m, i) => (
+            <li key={i} className="grid gap-3 rounded-2xl border border-zinc-200 p-4 md:grid-cols-[2rem_1fr]">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">{i + 1}</span>
+              <div className="flex min-w-0 flex-col gap-2">
+                <div className="font-semibold text-zinc-900">{m.step}</div>
+                <Md className="text-sm leading-relaxed text-zinc-700">{m.text}</Md>
+                <div className="rounded-xl bg-zinc-50 px-3 text-zinc-900"><Md>{m.tex}</Md></div>
+                {m.calc && (
+                  <div className="rounded-xl border border-dashed border-zinc-300 px-3 text-zinc-800">
+                    <Md>{m.calc}</Md>
+                  </div>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+}
+
 function ResultCard({ c }: { c: Card }) {
   return (
     <article id={c.id} className="scroll-mt-24 flex flex-col gap-5 rounded-3xl border border-zinc-200 bg-white p-6 md:p-8">
@@ -75,6 +113,7 @@ function ResultCard({ c }: { c: Card }) {
       {c.chart && <LineChart spec={c.chart} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
       <p className="leading-relaxed text-zinc-600">{c.body}</p>
+      <Maths c={c} />
       <Details c={c} />
     </article>
   );
@@ -88,7 +127,7 @@ function Notation() {
         {D.notation.map(([k, v]) => (
           <div key={k} className="contents">
             <dt className="font-semibold text-zinc-900">{k}</dt>
-            <dd className="leading-relaxed text-zinc-700 md:-mt-0">{v}</dd>
+            <dd className="leading-relaxed text-zinc-700 md:-mt-0"><Md>{v}</Md></dd>
           </div>
         ))}
       </dl>
@@ -102,6 +141,7 @@ export default function ExperimentsView() {
       <ExperimentsHeader />
 
       <div className="mx-auto mt-16 flex max-w-5xl flex-col gap-10 px-4">
+        <MethodsSection />
         <div className="flex flex-col gap-3">
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">Results, stage by stage</h2>
           <p className="leading-relaxed text-zinc-700">
