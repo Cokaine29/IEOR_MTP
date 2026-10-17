@@ -213,7 +213,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP 7bb9803 / results_reference",
+ "source": "ACT_MTP 3893e5c / results_reference",
  "stages": [
   {
    "n": 1,
@@ -268,7 +268,7 @@
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
     ],
     [
      "Why 8 AGVs",

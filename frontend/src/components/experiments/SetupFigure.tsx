@@ -363,6 +363,12 @@ function YardStrip({ r, t, view, onSeek }: { r: Replay; t: number; view: [number
         <text x={W - 2} y={74} fontSize={13} textAnchor="end" fill="#71717a">block {L.blocks.length}</text>
         <text x={W / 2} y={89} fontSize={12} textAnchor="middle" fill="#a1a1aa">select a point to move the map there</text>
       </svg>
+      <p className="text-xs leading-relaxed text-zinc-600">
+        These two ranges are an assumption of this thesis. No published source says where Yangshan Phase IV stores the containers
+        of one ship, so the ranges were set so that the cranes reach the productivity of the simulation study by <i>Luo (2016)</i>, about
+        30 moves per hour with two AGVs per crane and 40 with four. The 50 blocks, about 2.1 km, fit within the 2,350 m quay
+        of <i>Liu et al. (2016)</i>.
+      </p>
     </div>
   );
 }
