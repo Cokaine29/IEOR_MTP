@@ -7,6 +7,7 @@ import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
 import ExperimentsHeader from './ExperimentsHeader';
 import MethodsSection from './MethodsSection';
 import Md from './Md';
+import MathScene, { SceneSpec } from './MathScene';
 import DATA from '@/data/experiments.json';
 
 type Card = {
@@ -20,7 +21,7 @@ type Card = {
   chart?: ChartSpec;
   replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
-  maths?: { step: string; text: string; tex: string; calc?: string }[];
+  maths?: { step: string; text: string; tex: string; calc?: string; scene?: SceneSpec }[];
   label?: string;
   checks?: { check: string; expected: string; got: string; ok: boolean }[];
   design?: { question: string; why: string; vary: string; fixed: string; measure: string; decide: string };
@@ -93,8 +94,8 @@ function Maths({ c }: { c: Card }) {
               <div className="flex min-w-0 flex-col gap-2">
                 <div className="font-semibold text-zinc-900">{m.step}</div>
                 <Md className="text-sm leading-relaxed text-zinc-700">{m.text}</Md>
-                <div className="rounded-xl bg-zinc-50 px-3 text-zinc-900"><Md>{m.tex}</Md></div>
-                {m.calc && (
+                {m.scene ? <MathScene spec={m.scene} /> : <div className="rounded-xl bg-zinc-50 px-3 text-zinc-900"><Md>{m.tex}</Md></div>}
+                {!m.scene && m.calc && (
                   <div className="rounded-xl border border-dashed border-zinc-300 px-3 text-zinc-800">
                     <Md>{m.calc}</Md>
                   </div>
