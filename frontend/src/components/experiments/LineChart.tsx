@@ -170,11 +170,11 @@ export default function LineChart({ spec, dp = 2 }: { spec: ChartSpec; dp?: numb
       <p className="min-h-[1.5em] text-sm text-zinc-600 tabular-nums">
         {hover == null
           ? 'Hover over the chart (or tab to it) to read the exact values. Shaded bands are 95% confidence intervals.'
-          : `${fmtX(xs[hover])}: ` +
+          : `At ${fmtX(xs[hover])}, ` +
             visible
               .filter((s) => s.mean[hover] != null)
               .map((s) => `${s.name} ${(s.mean[hover] as number).toFixed(dp)}${s.ci ? ` ± ${(s.ci[hover] as number).toFixed(dp)}` : ''} s`)
-              .join(' · ')}
+              .join(', ')}
       </p>
     </div>
   );
