@@ -32,7 +32,7 @@ const RULES: Rule[] = [
     words: 'Serve the job that has been waiting longest. When several AGVs are parked, the nearest one takes it.',
     formula: String.raw`$$j^{*}=\arg\min_{j}\ r_j$$ $$a^{*}=\arg\min_{a}\ \big(|x_a-x_{j^*}|+|y_a-y_{j^*}|\big)$$`,
     symbols: [
-      [String.raw`$r_j$`, 'the moment job j became visible to the rule, which is when the job three places earlier was handed over (window of 3 jobs)'],
+      [String.raw`$r_j$`, 'the moment job j became visible to the rule, which is when the job five places earlier was handed over (window of 5 jobs, Experiment 2.2)'],
       [String.raw`$(x,y)$`, 'positions in metres. The pick-up point of a job is the crane for a discharge and the block for a load'],
       ['Distance', 'measured along the lanes (rectilinear), since AGVs drive on a grid'],
     ],
