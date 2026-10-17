@@ -31,8 +31,8 @@
       "Dispatching rules",
       "Briskorn inventory rule, nearest vehicle first come first served (NV/FCFS), fixed groups",
       [
+       "done",
        "next",
-       "planned",
        "planned",
        "planned",
        "planned"
@@ -207,6 +207,12 @@
     "ref": "E1"
    },
    {
+    "value": "Any size",
+    "text": "The size of the ship does not change the comparison. What lowers the waiting is fewer switches between discharge and loading, not fewer containers.",
+    "conditions": "No randomness and ±20% · 6, 8 and 10 AGVs · 24 to 400 jobs per crane · 30 instances",
+    "ref": "E5a"
+   },
+   {
     "value": "5 jobs",
     "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container, level with the other rules.",
     "conditions": "No randomness · 8 AGVs · windows of 1 to 50 jobs · 30 test instances",
@@ -225,7 +231,7 @@
   ]
  },
  "generated": "2026-10-17",
- "source": "ACT_MTP a85bf84 / legacy_slice",
+ "source": "ACT_MTP 2db87ea / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -1165,6 +1171,404 @@
      "text": "Each rule\\'s window is chosen on 30 training instances (seeds 100 to 129) and the result is reported on the 30 test instances (seeds 0 to 29) used by every other experiment. Ties at one decimal go to the shorter window.",
      "tex": "$$w^{*} = \\arg\\min_{w}\\ \\frac{1}{30}\\sum_{k=100}^{129} I_k(w)$$",
      "calc": "$$\\text{NV/FCFS at 8 AGVs:}\\ \\bar I_{\\text{train}}(5) = 5.5,\\ \\bar I_{\\text{train}}(10) = 5.5\\ \\Rightarrow\\ w^* = 5$$"
+    }
+   ]
+  },
+  {
+   "id": "E5a",
+   "stage": 2,
+   "title": "The size of the ship does not change the comparison",
+   "lead": "It does not. From 100 to 400 jobs per crane the three real rules stay within 0.4 s of their standard result, and random dispatching stays far behind. Bigger bays do lower the waiting, to 4.4 s for the Briskorn rule, because the crane switches from discharge to loading less often.",
+   "body": "The three real rules are always within a second of each other at 8 AGVs, and random dispatching wastes about 8 s more per container at every size. The smallest ship, 24 jobs per crane, is distorted by the start of the run and is not used. With crane times varying by 20% and with 6 or 10 AGVs the picture is the same, as the full table in the method details shows. This completes stage 2, so every later experiment uses 8 AGVs, a look-ahead of 10 jobs with 5 for NV/FCFS, and the standard ship.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s."
+    ],
+    [
+     "Ships",
+     "1 × (12+12) (24 jobs per crane), 2 × (25+25) (100 jobs per crane), 4 × (25+25) (200 jobs per crane), 2 × (50+50) (200 jobs per crane), 8 × (25+25) (400 jobs per crane)."
+    ],
+    [
+     "Rules",
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 5 jobs, fixed crane groups, and random dispatching."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045)."
+    ]
+   ],
+   "label": "Experiment 2.3 · Size of the ship",
+   "design": {
+    "question": "Would a longer or shorter ship change how the methods compare?",
+    "why": "Every experiment uses one standard ship of 100 jobs per crane. If a different ship ranked the methods differently, the results would hold for this ship only.",
+    "vary": "The ship, from 1 bay of 12 discharge and 12 load containers per crane up to 8 bays of 25 and 25, and 2 bigger bays of 50 and 50. All four rules, with crane times fixed and varying by up to 20%.",
+    "fixed": "8 AGVs, with 6 and 10 as side cases, the 50-block yard, and the same 30 instances for every rule.",
+    "measure": "Crane idle time per container and the order of the rules, with 95% confidence intervals.",
+    "decide": "The standard ship is large enough if the idle time per container and the order of the rules stay the same from it upward."
+   },
+   "reproduce": "python experiments/e2_3_instance_size.py",
+   "table": {
+    "head": [
+     "AGVs",
+     "Crane times",
+     "Ship, per crane",
+     "Briskorn inventory",
+     "NV/FCFS",
+     "Fixed groups",
+     "Random"
+    ],
+    "rows": [
+     [
+      "8",
+      "±0%",
+      "1 × (12+12)",
+      "7.9 ± 0.7",
+      "7.9 ± 0.7",
+      "7.8 ± 0.8",
+      "12.2 ± 1.3"
+     ],
+     [
+      "8",
+      "±0%",
+      "2 × (25+25)",
+      "5.7 ± 0.3",
+      "5.5 ± 0.3",
+      "5.4 ± 0.3",
+      "13.3 ± 1.0"
+     ],
+     [
+      "8",
+      "±0%",
+      "4 × (25+25)",
+      "5.8 ± 0.2",
+      "5.4 ± 0.2",
+      "5.3 ± 0.2",
+      "13.7 ± 0.8"
+     ],
+     [
+      "8",
+      "±0%",
+      "2 × (50+50)",
+      "4.4 ± 0.2",
+      "3.9 ± 0.2",
+      "3.8 ± 0.2",
+      "12.6 ± 0.8"
+     ],
+     [
+      "8",
+      "±0%",
+      "8 × (25+25)",
+      "6.1 ± 0.3",
+      "5.5 ± 0.1",
+      "5.4 ± 0.1",
+      "14.3 ± 0.7"
+     ],
+     [
+      "8",
+      "±20%",
+      "1 × (12+12)",
+      "8.2 ± 0.7",
+      "7.8 ± 0.6",
+      "8.0 ± 0.9",
+      "12.7 ± 1.3"
+     ],
+     [
+      "8",
+      "±20%",
+      "2 × (25+25)",
+      "6.0 ± 0.3",
+      "5.7 ± 0.3",
+      "5.6 ± 0.3",
+      "13.4 ± 1.0"
+     ],
+     [
+      "8",
+      "±20%",
+      "4 × (25+25)",
+      "6.0 ± 0.3",
+      "5.5 ± 0.2",
+      "5.5 ± 0.2",
+      "13.8 ± 0.9"
+     ],
+     [
+      "8",
+      "±20%",
+      "2 × (50+50)",
+      "4.8 ± 0.2",
+      "4.1 ± 0.2",
+      "4.0 ± 0.2",
+      "12.9 ± 0.8"
+     ],
+     [
+      "8",
+      "±20%",
+      "8 × (25+25)",
+      "6.1 ± 0.2",
+      "5.6 ± 0.2",
+      "5.5 ± 0.1",
+      "14.4 ± 0.6"
+     ],
+     [
+      "6",
+      "±0%",
+      "1 × (12+12)",
+      "18.7 ± 0.9",
+      "19.7 ± 1.1",
+      "19.1 ± 0.9",
+      "24.5 ± 1.6"
+     ],
+     [
+      "6",
+      "±0%",
+      "2 × (25+25)",
+      "16.9 ± 0.5",
+      "17.2 ± 0.6",
+      "17.2 ± 0.5",
+      "24.5 ± 1.1"
+     ],
+     [
+      "6",
+      "±0%",
+      "4 × (25+25)",
+      "16.8 ± 0.3",
+      "17.4 ± 0.3",
+      "16.9 ± 0.3",
+      "25.2 ± 1.0"
+     ],
+     [
+      "6",
+      "±0%",
+      "2 × (50+50)",
+      "15.4 ± 0.3",
+      "16.0 ± 0.3",
+      "15.7 ± 0.3",
+      "24.0 ± 0.7"
+     ],
+     [
+      "6",
+      "±0%",
+      "8 × (25+25)",
+      "16.8 ± 0.2",
+      "17.4 ± 0.3",
+      "17.0 ± 0.3",
+      "25.8 ± 0.7"
+     ],
+     [
+      "6",
+      "±20%",
+      "1 × (12+12)",
+      "19.0 ± 1.0",
+      "20.2 ± 1.2",
+      "19.4 ± 0.9",
+      "24.8 ± 1.7"
+     ],
+     [
+      "6",
+      "±20%",
+      "2 × (25+25)",
+      "17.1 ± 0.4",
+      "17.9 ± 0.5",
+      "17.4 ± 0.5",
+      "24.8 ± 1.1"
+     ],
+     [
+      "6",
+      "±20%",
+      "4 × (25+25)",
+      "16.9 ± 0.3",
+      "17.8 ± 0.4",
+      "17.0 ± 0.3",
+      "25.1 ± 1.0"
+     ],
+     [
+      "6",
+      "±20%",
+      "2 × (50+50)",
+      "15.6 ± 0.3",
+      "16.4 ± 0.3",
+      "15.9 ± 0.3",
+      "24.2 ± 0.8"
+     ],
+     [
+      "6",
+      "±20%",
+      "8 × (25+25)",
+      "17.1 ± 0.3",
+      "17.5 ± 0.3",
+      "17.1 ± 0.2",
+      "26.0 ± 0.6"
+     ],
+     [
+      "10",
+      "±0%",
+      "1 × (12+12)",
+      "3.8 ± 0.6",
+      "3.6 ± 0.6",
+      "3.4 ± 0.6",
+      "7.0 ± 1.1"
+     ],
+     [
+      "10",
+      "±0%",
+      "2 × (25+25)",
+      "2.1 ± 0.2",
+      "1.8 ± 0.2",
+      "1.9 ± 0.2",
+      "8.1 ± 1.1"
+     ],
+     [
+      "10",
+      "±0%",
+      "4 × (25+25)",
+      "2.0 ± 0.2",
+      "1.7 ± 0.2",
+      "1.9 ± 0.2",
+      "8.7 ± 0.9"
+     ],
+     [
+      "10",
+      "±0%",
+      "2 × (50+50)",
+      "1.3 ± 0.1",
+      "0.8 ± 0.1",
+      "0.9 ± 0.1",
+      "7.8 ± 0.8"
+     ],
+     [
+      "10",
+      "±0%",
+      "8 × (25+25)",
+      "1.9 ± 0.1",
+      "1.7 ± 0.1",
+      "1.8 ± 0.1",
+      "9.1 ± 0.6"
+     ],
+     [
+      "10",
+      "±20%",
+      "1 × (12+12)",
+      "4.0 ± 0.6",
+      "3.8 ± 0.6",
+      "3.6 ± 0.6",
+      "7.0 ± 1.1"
+     ],
+     [
+      "10",
+      "±20%",
+      "2 × (25+25)",
+      "2.1 ± 0.2",
+      "2.0 ± 0.2",
+      "2.1 ± 0.2",
+      "8.2 ± 1.1"
+     ],
+     [
+      "10",
+      "±20%",
+      "4 × (25+25)",
+      "2.2 ± 0.2",
+      "1.8 ± 0.2",
+      "2.0 ± 0.2",
+      "8.8 ± 0.9"
+     ],
+     [
+      "10",
+      "±20%",
+      "2 × (50+50)",
+      "1.3 ± 0.1",
+      "0.9 ± 0.1",
+      "1.0 ± 0.1",
+      "7.9 ± 0.9"
+     ],
+     [
+      "10",
+      "±20%",
+      "8 × (25+25)",
+      "2.1 ± 0.1",
+      "1.8 ± 0.1",
+      "1.9 ± 0.1",
+      "9.1 ± 0.6"
+     ]
+    ]
+   },
+   "tableTop": {
+    "head": [
+     "Ship, per crane",
+     "Jobs per crane",
+     "Briskorn inventory",
+     "NV/FCFS",
+     "Fixed groups",
+     "Random"
+    ],
+    "rows": [
+     [
+      "1 × (12+12)",
+      "24",
+      "7.9 ± 0.7",
+      "7.9 ± 0.7",
+      "7.8 ± 0.8",
+      "12.2 ± 1.3"
+     ],
+     [
+      "2 × (25+25)",
+      "100",
+      "5.7 ± 0.3",
+      "5.5 ± 0.3",
+      "5.4 ± 0.3",
+      "13.3 ± 1.0"
+     ],
+     [
+      "4 × (25+25)",
+      "200",
+      "5.8 ± 0.2",
+      "5.4 ± 0.2",
+      "5.3 ± 0.2",
+      "13.7 ± 0.8"
+     ],
+     [
+      "2 × (50+50)",
+      "200",
+      "4.4 ± 0.2",
+      "3.9 ± 0.2",
+      "3.8 ± 0.2",
+      "12.6 ± 0.8"
+     ],
+     [
+      "8 × (25+25)",
+      "400",
+      "6.1 ± 0.3",
+      "5.5 ± 0.1",
+      "5.4 ± 0.1",
+      "14.3 ± 0.7"
+     ]
+    ],
+    "caption": "Crane idle per container in seconds, 8 AGVs, no randomness, 30 instances. Bays are worked in order, each bay its discharge containers first and then its load containers.",
+    "highlightRow": 1
+   },
+   "maths": [
+    {
+     "step": "Bay changes per container",
+     "text": "Each crane works its bays in order, first the $n_d$ discharge containers of a bay and then its $n_l$ load containers. At the switch to loading the crane needs a container that has to be fetched from far away, so it often waits there. The number of bay changes per container is $\\sigma$.",
+     "tex": "$$\\sigma = \\frac{1}{n_d + n_l}$$",
+     "calc": "$$\\sigma_{2\\times(25+25)} = \\frac{1}{50},\\qquad \\sigma_{2\\times(50+50)} = \\frac{1}{100},\\qquad \\sigma_{1\\times(12+12)} = \\frac{1}{24}$$"
+    },
+    {
+     "step": "A two-number model of the waiting",
+     "text": "Suppose each container costs a base waiting $a$, and each bay change adds $s$ seconds. The two ships with 200 jobs per crane differ only in their bay size, so fixed groups at 8 AGVs give both numbers.",
+     "tex": "$$\\bar I = a + s\\,\\sigma$$",
+     "calc": "$$s = 100\\,(5.41 - 3.81) = 160\\ \\text{s per bay change},\\qquad a = 5.41 - \\frac{160}{50} = 2.2\\ \\text{s}$$"
+    },
+    {
+     "step": "Checking the model on the other ships",
+     "text": "With 4 or 8 bays of 25 and 25 the number of bay changes per container is the same as on the standard ship, so the model predicts the same waiting, and that is what the simulator gives. Only the smallest ship, 24 jobs per crane, lies below the model, because its run is too short for the waiting to settle.",
+     "tex": "$$\\bar I_{\\text{model}} = a + \\frac{s}{n_d + n_l}$$",
+     "calc": "$$4\\times(25+25):\\ 5.4\\ \\text{vs}\\ 5.3,\\qquad 8\\times(25+25):\\ 5.4\\ \\text{vs}\\ 5.4,\\qquad 1\\times(12+12):\\ 8.9\\ \\text{vs}\\ 7.8$$"
+    },
+    {
+     "step": "Four times as many containers, same answer",
+     "text": "The gap between the largest ship and the standard one is measured instance by instance, for the Briskorn rule at 8 AGVs. It is small, so the standard ship of 100 jobs per crane is large enough.",
+     "tex": "$$\\Delta = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_k^{8\\times(25+25)} - I_k^{2\\times(25+25)}\\big)$$",
+     "calc": "$$\\Delta = +0.4 \\pm 0.4\\ \\text{s}$$"
     }
    ]
   }
