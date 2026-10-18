@@ -32,14 +32,14 @@
       "Briskorn inventory rule, nearest vehicle first come first served (NV/FCFS), fixed groups",
       [
        "done",
-       "next",
+       "done",
        "planned",
        "planned",
        "planned"
       ],
       [
        "E1",
-       "",
+       "E41",
        "",
        "",
        ""
@@ -49,15 +49,15 @@
       "Genetic algorithm, planned once",
       "Memetic search on the expected times, plan made once then followed",
       [
-       "planned",
-       "planned",
+       "done",
+       "done",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "",
-       "",
+       "E41",
+       "E41",
        "",
        "",
        ""
@@ -68,7 +68,7 @@
       "Rolling horizon, re-plans as the terminal evolves",
       [
        "planned",
-       "planned",
+       "next",
        "planned",
        "planned",
        "planned"
@@ -158,14 +158,14 @@
       "Lower reference, with no intelligence",
       [
        "done",
-       "planned",
+       "done",
        "planned",
        "planned",
        "planned"
       ],
       [
        "E1",
-       "",
+       "E41",
        "",
        "",
        ""
@@ -175,15 +175,15 @@
       "Perfect-information benchmark",
       "Best achievable, as it knows all future times",
       [
-       "planned",
-       "planned",
+       "done",
+       "done",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "",
-       "",
+       "E41",
+       "E41",
        "",
        "",
        ""
@@ -223,6 +223,12 @@
     "text": "At the operating fleet of 8 AGVs the search finds at least 99.5% of the room for improvement on ships where the exact best is known, so it can serve as the perfect-information benchmark.",
     "conditions": "Every order list tried · 12 and 16 jobs · 4 and 8 AGVs · ±0% and ±30%",
     "ref": "E3a"
+   },
+   {
+    "value": "45%",
+    "text": "Even with crane times varying by ±40%, a dispatcher that knew the future would remove 45% of the best rule's waiting, while a plan made in advance keeps only 0.1 s of its 2.3 s lead. A real-time dispatcher has room to win.",
+    "conditions": "±0 to ±40% crane times · 8 AGVs · standard ship · 30 instances",
+    "ref": "E41"
    }
   ],
   "references": [
@@ -237,7 +243,7 @@
   ]
  },
  "generated": "2026-10-18",
- "source": "ACT_MTP b8f6c13 / legacy_slice",
+ "source": "ACT_MTP 968d108 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -1719,6 +1725,302 @@
      "step": "Reading the benchmark later",
      "text": "The search can miss the best but never beat it, so the idle time of the benchmark is never below the true best. A rule that is $\\Delta$ seconds above the benchmark is therefore at least $\\Delta$ seconds above the true best.",
      "tex": "$$\\bar I^{*} \\le \\bar I_{\\text{search}} \\quad\\Longrightarrow\\quad \\bar I_{\\text{rule}} - \\bar I^{*} \\ge \\bar I_{\\text{rule}} - \\bar I_{\\text{search}}$$"
+    }
+   ]
+  },
+  {
+   "id": "E41",
+   "stage": 4,
+   "title": "A plan made in advance loses its lead once crane times vary, yet much room remains",
+   "lead": "With fixed crane times the plan made in advance beats the best rule clearly, 3.1 s of idle per container against 5.4 s. At ±40% its lead is gone, 0.1 ± 0.3 s. A dispatcher that knew every crane time in advance would still need only 3.3 s, so about 2.7 s per container, 45% of the rules' waiting, is left to win.",
+   "body": "The rules suffer only mildly, since they react to what actually happens. Fixed groups and NV/FCFS rise from about 5.4 to 6.3 s, and the Briskorn rule a little more, to 6.9 s. A plan whose AGVs keep their planned routes is worse than every real rule as soon as the crane times vary by 10%, reaching 9.2 s at ±40%. Keeping only the planned order of jobs, and letting any free AGV take the next one, holds up better. The benchmark stays near 3 s at every level. Random dispatching is far behind and is hidden in the chart. So a plan made in advance is not the answer under randomness, and the rules leave a large gap. Closing that gap in real time is the job of the learning dispatcher.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. 8 AGVs."
+    ],
+    [
+     "Randomness",
+     "Each crane cycle is drawn uniformly between 75(1 − δ) and 75(1 + δ) s, once per container, with the same draws for every method. δ takes the values 0, 0.1, 0.2, 0.3 and 0.4."
+    ],
+    [
+     "Rules",
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 5 jobs, fixed crane groups, and random dispatching."
+    ],
+    [
+     "Plan made once",
+     "One memetic search per instance on the planned crane times, 10,000 simulator runs, seed 0. Carried out in two ways. With the job order kept, the planned order in which jobs get an AGV is fixed and whichever AGV is free takes the next job. With the AGV routes kept, each AGV follows its own planned list of cranes."
+    ],
+    [
+     "Benchmark",
+     "Best of 3 memetic searches, seeds 0, 1 and 2, with 10,000 simulator runs each, told the realised crane times in advance. The 3 runs differ by 0.54 s per container on average at ±40%, and 358 of the 390 searches were still improving in the last 30% of their budget. So the benchmark is the best plan known, not a proven best, and the room for improvement is a lower bound. Experiment 3.1 found the search essentially exact at 8 AGVs on small ships."
+    ],
+    [
+     "Run time",
+     "The 390 searches took 77 minutes on 64 cores (server log in results_reference). Every search is saved, so the table is regenerated from them in about a minute on any computer."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045). Leads and gaps are measured instance by instance."
+    ]
+   ],
+   "label": "Experiment 4.1 · Crane-time randomness",
+   "design": {
+    "question": "How do the rules, a plan made in advance and a dispatcher that knows the future cope when crane times vary?",
+    "why": "Real crane cycles are not exactly 75 s. Studies that optimise a schedule beforehand, with a GA or a MIP, assume they are. This experiment shows what that assumption costs, and how much better a dispatcher could still do.",
+    "vary": "How much each crane cycle varies, from fixed (±0%) to ±40%. The methods are the four rules, a plan made once on the planned crane times and carried out in two ways, and the perfect-information benchmark.",
+    "fixed": "8 AGVs, the standard ship of 100 jobs per crane, a look-ahead of 10 jobs with 5 for NV/FCFS, and the same 30 instances and crane-time draws for every method.",
+    "measure": "Crane idle time per container with 95% confidence intervals, the lead of the plan over the best rule, and the gap of each method to the benchmark.",
+    "decide": "A method copes with randomness if its idle time stays low as δ grows. The gap to the benchmark shows how much a better real-time dispatcher could still gain."
+   },
+   "chart": {
+    "xLabel": "Variation in crane cycle time (δ)",
+    "xFmt": "pct",
+    "variants": [
+     {
+      "label": "all",
+      "x": [
+       0.0,
+       0.1,
+       0.2,
+       0.3,
+       0.4
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         5.7,
+         5.75,
+         5.97,
+         6.58,
+         6.93
+        ],
+        "ci": [
+         0.26,
+         0.32,
+         0.29,
+         0.39,
+         0.35
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         5.49,
+         5.48,
+         5.67,
+         5.91,
+         6.27
+        ],
+        "ci": [
+         0.26,
+         0.26,
+         0.27,
+         0.27,
+         0.34
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         5.41,
+         5.45,
+         5.58,
+         5.88,
+         6.26
+        ],
+        "ci": [
+         0.3,
+         0.29,
+         0.29,
+         0.31,
+         0.34
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         13.29,
+         13.31,
+         13.37,
+         13.56,
+         13.88
+        ],
+        "ci": [
+         1.04,
+         1.02,
+         0.97,
+         1.01,
+         1.06
+        ],
+        "dash": false,
+        "hidden": true
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "mean": [
+         3.09,
+         4.08,
+         4.7,
+         5.45,
+         6.16
+        ],
+        "ci": [
+         0.19,
+         0.27,
+         0.26,
+         0.29,
+         0.35
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Plan, AGV routes",
+        "color": "#be123c",
+        "mean": [
+         3.09,
+         6.81,
+         8.0,
+         8.77,
+         9.21
+        ],
+        "ci": [
+         0.19,
+         0.52,
+         0.6,
+         0.62,
+         0.56
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         3.09,
+         2.94,
+         2.97,
+         3.1,
+         3.29
+        ],
+        "ci": [
+         0.19,
+         0.18,
+         0.16,
+         0.22,
+         0.21
+        ],
+        "dash": true,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "reproduce": "python experiments/e4_1_crane_noise.py   (on a server, about 75 minutes on 64 cores)",
+   "tableTop": {
+    "head": [
+     "Crane times",
+     "Briskorn",
+     "NV/FCFS",
+     "Fixed groups",
+     "Random",
+     "Plan, job order",
+     "Plan, AGV routes",
+     "Benchmark"
+    ],
+    "rows": [
+     [
+      "±0%",
+      "5.7 ± 0.3",
+      "5.5 ± 0.3",
+      "5.4 ± 0.3",
+      "13.3 ± 1.0",
+      "3.1 ± 0.2",
+      "3.1 ± 0.2",
+      "3.1 ± 0.2"
+     ],
+     [
+      "±10%",
+      "5.8 ± 0.3",
+      "5.5 ± 0.3",
+      "5.4 ± 0.3",
+      "13.3 ± 1.0",
+      "4.1 ± 0.3",
+      "6.8 ± 0.5",
+      "2.9 ± 0.2"
+     ],
+     [
+      "±20%",
+      "6.0 ± 0.3",
+      "5.7 ± 0.3",
+      "5.6 ± 0.3",
+      "13.4 ± 1.0",
+      "4.7 ± 0.3",
+      "8.0 ± 0.6",
+      "3.0 ± 0.2"
+     ],
+     [
+      "±30%",
+      "6.6 ± 0.4",
+      "5.9 ± 0.3",
+      "5.9 ± 0.3",
+      "13.6 ± 1.0",
+      "5.4 ± 0.3",
+      "8.8 ± 0.6",
+      "3.1 ± 0.2"
+     ],
+     [
+      "±40%",
+      "6.9 ± 0.3",
+      "6.3 ± 0.3",
+      "6.3 ± 0.3",
+      "13.9 ± 1.1",
+      "6.2 ± 0.3",
+      "9.2 ± 0.6",
+      "3.3 ± 0.2"
+     ]
+    ],
+    "caption": "Crane idle per container in seconds, 8 AGVs, standard ship, the same 30 instances and crane-time draws for every method. \"Plan\" is the plan made once on the planned crane times, carried out keeping either its order of jobs or each AGV's route. The benchmark is the perfect-information search. At ±0% it is the same plan."
+   },
+   "maths": [
+    {
+     "step": "How the crane times vary",
+     "text": "Each crane cycle is drawn once per container, uniformly around the planned $\\bar c = 75$ s, as in *Kim and Bae (2004)*. The draw is fixed by the seed, so every method meets exactly the same crane times.",
+     "tex": "$$c_i \\sim U\\big((1-\\delta)\\,\\bar c,\\ (1+\\delta)\\,\\bar c\\big)$$",
+     "calc": "$$\\delta = 0.4:\\quad c_i \\in [\\,0.6 \\times 75,\\ 1.4 \\times 75\\,] = [\\,45,\\ 105\\,]\\ \\text{s}$$"
+    },
+    {
+     "step": "The lead of a plan made in advance",
+     "text": "The plan is optimised once on the planned crane times, then followed while the real times vary. Its lead $L$ is how much less the cranes wait than with fixed groups, the strongest rule here, measured instance by instance.",
+     "tex": "$$L(\\delta) = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{\\text{fixed},k} - I_{\\text{plan},k}\\big)$$",
+     "calc": "$$L(0) = 2.32 \\pm 0.27\\ \\text{s},\\qquad L(0.2) = 0.88 \\pm 0.28\\ \\text{s},\\qquad L(0.4) = 0.10 \\pm 0.28\\ \\text{s}$$"
+    },
+    {
+     "step": "Room left for a better dispatcher",
+     "text": "For each instance, $I_{\\text{rule}}$ is the best of the three real rules and $I_{\\text{PI}}$ the perfect-information benchmark. Their average gap $R$ is the room for improvement, and $R / \\bar I_{\\text{rule}}$ is the share of the rules\\' waiting that a perfect dispatcher would remove.",
+     "tex": "$$R = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{\\text{rule},k} - I_{\\text{PI},k}\\big),\\qquad \\text{share} = \\frac{R}{\\bar I_{\\text{rule}}}$$",
+     "calc": "$$\\delta = 0.4:\\quad R = 2.70 \\pm 0.25\\ \\text{s},\\qquad \\frac{2.70}{5.99} = 45\\%$$"
+    },
+    {
+     "step": "Reading the benchmark",
+     "text": "The benchmark is the best of 3 search runs, and the search can miss the true best but never beat it. So a rule that is $R$ seconds above the benchmark is at least $R$ seconds above the true best. At ±0% only one run was made, since the plan made once is the same problem. Compared one run against one run, the benchmark rises gently with $\\delta$.",
+     "tex": "$$\\bar I^{*} \\le \\bar I_{\\text{search}} \\quad\\Longrightarrow\\quad \\bar I_{\\text{rule}} - \\bar I^{*} \\ge R$$",
+     "calc": "$$\\text{one run:}\\quad 3.09,\\ 3.16,\\ 3.13,\\ 3.39,\\ 3.53\\ \\text{s for } \\delta = 0, 0.1, \\dots, 0.4$$"
     }
    ]
   }
