@@ -65,17 +65,17 @@
      ],
      [
       "Genetic algorithm with re-planning",
-      "Rolling horizon, re-plans as the terminal evolves",
+      "Re-plans every 10 crane handovers, keeping the decisions taken",
       [
-       "planned",
-       "next",
+       "done",
+       "done",
        "planned",
        "planned",
        "planned"
       ],
       [
-       "",
-       "",
+       "E42",
+       "E42",
        "",
        "",
        ""
@@ -229,6 +229,12 @@
     "text": "Even with crane times varying by ±40%, a dispatcher that knew the future would remove 45% of the best rule's waiting, while a plan made in advance keeps only 0.1 s of its 2.3 s lead. A real-time dispatcher has room to win.",
     "conditions": "±0 to ±40% crane times · 8 AGVs · standard ship · 30 instances",
     "ref": "E41"
+   },
+   {
+    "value": "Re-planning",
+    "text": "Re-planning makes the GA the strongest traditional method, 0.6 s per container better than the best rule at ±40%. Yet it stays 2.1 s above the benchmark, because it cannot see future crane times.",
+    "conditions": "Re-plan every 10 handovers · ±0 to ±40% crane times · 8 AGVs · 30 instances",
+    "ref": "E42"
    }
   ],
   "references": [
@@ -243,7 +249,7 @@
   ]
  },
  "generated": "2026-10-18",
- "source": "ACT_MTP 968d108 / legacy_slice",
+ "source": "ACT_MTP 3247102 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -2021,6 +2027,275 @@
      "text": "The benchmark is the best of 3 search runs, and the search can miss the true best but never beat it. So a rule that is $R$ seconds above the benchmark is at least $R$ seconds above the true best. At ±0% only one run was made, since the plan made once is the same problem. Compared one run against one run, the benchmark rises gently with $\\delta$.",
      "tex": "$$\\bar I^{*} \\le \\bar I_{\\text{search}} \\quad\\Longrightarrow\\quad \\bar I_{\\text{rule}} - \\bar I^{*} \\ge R$$",
      "calc": "$$\\text{one run:}\\quad 3.09,\\ 3.16,\\ 3.13,\\ 3.39,\\ 3.53\\ \\text{s for } \\delta = 0, 0.1, \\dots, 0.4$$"
+    }
+   ]
+  },
+  {
+   "id": "E42",
+   "stage": 4,
+   "title": "Re-planning makes the GA the strongest traditional method, but it cannot see the future",
+   "lead": "Re-planning works. It beats the plan made once at every level of randomness, by 0.7 s per container at ±40%, and the best rule by 0.6 ± 0.2 s. But its gap to the benchmark grows from 0.7 s at ±10% to 2.1 s at ±40%, because it plans with crane times it cannot know.",
+   "body": "So the GA with re-planning is the strongest traditional method, and the one a learning dispatcher has to beat. Its weakness shows in its own numbers. At ±40% its re-plans together expected to save 4.1 s per container, yet only 0.7 s survived the real crane times. With fixed crane times it even ends below the benchmark, 2.92 s against 3.09 s, since re-planning is then just more search on the same problem. This confirms that the benchmark is the best plan known, not a proven best. A re-plan took 23 to 35 s on average on one core, well within one crane cycle, so the method could run in real time.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. 8 AGVs."
+    ],
+    [
+     "Randomness",
+     "As in Experiment 4.1, the same draws."
+    ],
+    [
+     "Re-planning",
+     "Starts from the plan made once in Experiment 4.1 (10,000 simulator runs, before the ship arrives). After every 10 crane handovers the rest of the order list is re-optimised by a memetic search of 500 simulator runs, started from the remaining old plan and from the three rules continued from the present. The decisions already taken are kept, and replaying them reproduces the present exactly, since the simulator is deterministic. Re-planning when events happen follows *Günther, Grunow and Lehmann (2005)*."
+    ],
+    [
+     "Information",
+     "Real crane times of the containers handed over so far, the planned 75 s for the rest. The future draws are never used."
+    ],
+    [
+     "Checks",
+     "Two automatic tests: the replay reproduces the present state exactly, and with fixed crane times re-planning never makes the plan worse."
+    ],
+    [
+     "Run time",
+     "150 ships with 19 re-plans each, 35 minutes on 64 cores (server log in results_reference)."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045). Gains and gaps are measured instance by instance."
+    ]
+   ],
+   "label": "Experiment 4.2 · GA with re-planning",
+   "design": {
+    "question": "If the GA re-plans while the ship is worked, does it keep its lead when crane times vary?",
+    "why": "Experiment 4.1 showed that a plan made in advance loses its lead under randomness. The obvious answer is to re-plan as the terminal evolves, as dispatching systems do in practice. Only if re-planning also falls short is a learning dispatcher needed.",
+    "vary": "How much crane cycles vary, from ±0% to ±40%. The GA starts from the plan of Experiment 4.1 and re-plans after every 10 crane handovers, keeping the decisions already taken.",
+    "fixed": "8 AGVs, the standard ship, and the same 30 instances and crane-time draws as Experiment 4.1, so every method is compared instance by instance. Each re-plan is a memetic search of 500 simulator runs.",
+    "measure": "Crane idle time per container, the gain over the plan made once and over the best rule, the gap to the benchmark, and the computing time of one re-plan.",
+    "decide": "Re-planning is the stronger traditional method if it beats both the plan made once and the rules. What is left between it and the benchmark is what a dispatcher that anticipates better could still win."
+   },
+   "chart": {
+    "xLabel": "Variation in crane cycle time (δ)",
+    "xFmt": "pct",
+    "variants": [
+     {
+      "label": "all",
+      "x": [
+       0.0,
+       0.1,
+       0.2,
+       0.3,
+       0.4
+      ],
+      "series": [
+       {
+        "name": "GA, re-planned",
+        "color": "#7c3aed",
+        "mean": [
+         2.92,
+         3.62,
+         4.2,
+         4.9,
+         5.43
+        ],
+        "ci": [
+         0.19,
+         0.23,
+         0.21,
+         0.32,
+         0.31
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "mean": [
+         3.09,
+         4.08,
+         4.7,
+         5.45,
+         6.16
+        ],
+        "ci": [
+         0.19,
+         0.27,
+         0.26,
+         0.29,
+         0.35
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         5.41,
+         5.45,
+         5.58,
+         5.88,
+         6.26
+        ],
+        "ci": [
+         0.3,
+         0.29,
+         0.29,
+         0.31,
+         0.34
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         5.49,
+         5.48,
+         5.67,
+         5.91,
+         6.27
+        ],
+        "ci": [
+         0.26,
+         0.26,
+         0.27,
+         0.27,
+         0.34
+        ],
+        "dash": false,
+        "hidden": true
+       },
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         5.7,
+         5.75,
+         5.97,
+         6.58,
+         6.93
+        ],
+        "ci": [
+         0.26,
+         0.32,
+         0.29,
+         0.39,
+         0.35
+        ],
+        "dash": false,
+        "hidden": true
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         3.09,
+         2.94,
+         2.97,
+         3.1,
+         3.29
+        ],
+        "ci": [
+         0.19,
+         0.18,
+         0.16,
+         0.22,
+         0.21
+        ],
+        "dash": true,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "reproduce": "python experiments/e4_2_replanning.py   (on a server, about 35 minutes on 64 cores)",
+   "tableTop": {
+    "head": [
+     "Crane times",
+     "GA, re-planned",
+     "Plan made once",
+     "Fixed groups",
+     "Benchmark",
+     "vs plan",
+     "vs best rule"
+    ],
+    "rows": [
+     [
+      "±0%",
+      "2.9 ± 0.2",
+      "3.1",
+      "5.4",
+      "3.1",
+      "−0.17 ± 0.06",
+      "−2.24 ± 0.23"
+     ],
+     [
+      "±10%",
+      "3.6 ± 0.2",
+      "4.1",
+      "5.4",
+      "2.9",
+      "−0.47 ± 0.23",
+      "−1.53 ± 0.28"
+     ],
+     [
+      "±20%",
+      "4.2 ± 0.2",
+      "4.7",
+      "5.6",
+      "3.0",
+      "−0.50 ± 0.18",
+      "−1.16 ± 0.18"
+     ],
+     [
+      "±30%",
+      "4.9 ± 0.3",
+      "5.4",
+      "5.9",
+      "3.1",
+      "−0.55 ± 0.22",
+      "−0.72 ± 0.24"
+     ],
+     [
+      "±40%",
+      "5.4 ± 0.3",
+      "6.2",
+      "6.3",
+      "3.3",
+      "−0.73 ± 0.38",
+      "−0.56 ± 0.24"
+     ]
+    ],
+    "caption": "Crane idle per container in seconds, 8 AGVs, the same 30 instances and crane-time draws as Experiment 4.1. The last two columns are re-planned minus the plan made once and minus the best rule, measured instance by instance, so a negative value means re-planning waits less. \"Best rule\" is the best of the three real rules on each instance."
+   },
+   "maths": [
+    {
+     "step": "When the GA re-plans",
+     "text": "The plan is re-made after every $k = 10$ crane handovers. A ship of $n = 200$ containers therefore gets the number of re-plans below, the last handovers being too few to re-order.",
+     "tex": "$$\\text{re-plans} = \\frac{n}{k} - 1$$",
+     "calc": "$$\\frac{200}{10} - 1 = 19$$"
+    },
+    {
+     "step": "What the GA knows at a re-plan",
+     "text": "At time $t$ the GA uses the real crane time $c_i$ of every container already handed over, and of a crane\\'s current container if the crane is already waiting for it. For every other container it assumes the planned $\\bar c = 75$ s, or the time already elapsed if that is longer. This is the same information the rules have.",
+     "tex": "$$\\tilde c_i(t) = \\begin{cases} c_i & \\text{container } i \\text{ handed over, or its crane ready, by } t\\\\[2pt] \\max(\\bar c,\\ t - h_{i-1}) & \\text{otherwise}\\end{cases}$$"
+    },
+    {
+     "step": "What re-planning thinks it gains, and what it gains",
+     "text": "Each re-plan compares the old plan with the new one under its own assumptions. Adding these believed gains over the 19 re-plans and comparing with the real gain over the plan made once shows how much of each improvement survives the crane times that actually happen. With fixed crane times the two must agree, and they do.",
+     "tex": "$$G_{\\text{believed}} = \\sum_{r=1}^{19} \\frac{F_r^{\\text{old}} - F_r^{\\text{new}}}{n},\\qquad G_{\\text{real}} = \\bar I_{\\text{plan}} - \\bar I_{\\text{re-planned}}$$",
+     "calc": "$$\\delta = 0:\\ 0.17\\ \\text{vs}\\ 0.17\\ \\text{s},\\qquad \\delta = 0.4:\\ 4.12\\ \\text{vs}\\ 0.73\\ \\text{s}$$"
+    },
+    {
+     "step": "Fast enough for real time",
+     "text": "A re-plan must finish before it is needed. One re-plan of 500 simulator runs took on average the time below on one core of the server, depending on the level of randomness, less than one crane cycle.",
+     "tex": "$$t_{\\text{re-plan}} < \\bar c = 75\\ \\text{s}$$",
+     "calc": "$$t_{\\text{re-plan}} = 23\\ \\text{to}\\ 35\\ \\text{s}$$"
     }
    ]
   }
