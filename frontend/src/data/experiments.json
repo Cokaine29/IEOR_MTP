@@ -207,16 +207,22 @@
     "ref": "E1"
    },
    {
+    "value": "5 jobs",
+    "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container, level with the other rules.",
+    "conditions": "No randomness · 8 AGVs · windows of 1 to 50 jobs · 30 test instances",
+    "ref": "E1b"
+   },
+   {
     "value": "Any size",
     "text": "The size of the ship does not change the comparison. What lowers the waiting is fewer switches between discharge and loading, not fewer containers.",
     "conditions": "No randomness and ±20% · 6, 8 and 10 AGVs · 24 to 400 jobs per crane · 30 instances",
     "ref": "E5a"
    },
    {
-    "value": "5 jobs",
-    "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container, level with the other rules.",
-    "conditions": "No randomness · 8 AGVs · windows of 1 to 50 jobs · 30 test instances",
-    "ref": "E1b"
+    "value": "99.5%",
+    "text": "At the operating fleet of 8 AGVs the search finds at least 99.5% of the room for improvement on ships where the exact best is known, so it can serve as the perfect-information benchmark.",
+    "conditions": "Every order list tried · 12 and 16 jobs · 4 and 8 AGVs · ±0% and ±30%",
+    "ref": "E3a"
    }
   ],
   "references": [
@@ -230,8 +236,8 @@
    "Zheng, X., Liang, C., Wang, Y., Shi, J., & Lim, G. (2022). Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach. Mathematics, 10, 4575. https://doi.org/10.3390/math10234575"
   ]
  },
- "generated": "2026-10-17",
- "source": "ACT_MTP 2db87ea / legacy_slice",
+ "generated": "2026-10-18",
+ "source": "ACT_MTP b8f6c13 / legacy_slice",
  "stages": [
   {
    "n": 1,
@@ -1569,6 +1575,150 @@
      "text": "The gap between the largest ship and the standard one is measured instance by instance, for the Briskorn rule at 8 AGVs. It is small, so the standard ship of 100 jobs per crane is large enough.",
      "tex": "$$\\Delta = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_k^{8\\times(25+25)} - I_k^{2\\times(25+25)}\\big)$$",
      "calc": "$$\\Delta = +0.4 \\pm 0.4\\ \\text{s}$$"
+    }
+   ]
+  },
+  {
+   "id": "E3a",
+   "stage": 3,
+   "title": "The search finds the best dispatching at the operating fleet",
+   "lead": "At 8 AGVs the search recovers at least 99.5% of the room for improvement and finds the exact best in almost every instance. With only 4 AGVs, where the best plans are harder to find, it recovers 76 to 95%.",
+   "body": "So at the operating fleet the benchmark is essentially the true best. In the scarce case it is a conservative benchmark, and any gap between a rule and it understates the true gap a little. On these tiny ships random dispatching is sometimes close to the rules, because a run of 6 or 8 jobs per crane is dominated by its start, as Experiment 2.3 showed. That is why the rules themselves are compared on the standard ship.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s."
+    ],
+    [
+     "Ships",
+     "2 cranes with 3 discharge and 3 load containers each (924 order lists, 20 instances), and with 4 and 4 (12,870 order lists, 10 instances)."
+    ],
+    [
+     "Search",
+     "Memetic search on order lists (a genetic algorithm combined with local search), started from the rules' own orders. Budgets of 150 and 300 simulator runs on the small ship and 1,000 on the medium one, which is 8% of all its order lists. Best of 3 runs with seeds 0, 1 and 2."
+    ],
+    [
+     "Run time",
+     "30.5 minutes on 2 cores."
+    ],
+    [
+     "Statistics",
+     "Means over the instances. Every number is regenerated exactly by the script, since every random choice uses a fixed seed."
+    ]
+   ],
+   "label": "Experiment 3.1 · Search check",
+   "design": {
+    "question": "How close does our search come to the best possible dispatching, on ships small enough to know the best exactly?",
+    "why": "Later experiments compare each rule with a perfect-information benchmark, a dispatcher that knows every crane time in advance. That benchmark comes from a search, the memetic algorithm, and not from an exact solver, so it may miss the true best. Before it is used, we measure how much it misses.",
+    "vary": "Two small ships, 12 and 16 jobs, on 20 and 10 instances. Fleets of 8 AGVs (operating) and 4 (scarce). Crane times fixed and varying by ±30%.",
+    "fixed": "The current yard and rules. On these ships every one of the 924 or 12,870 order lists is simulated, which gives the exact best. The search runs three times per case with fixed seeds.",
+    "measure": "How far the search ends above the exact best, how often it finds it, and the share of the rules' room for improvement it recovers.",
+    "decide": "The search is fit to serve as the benchmark if it recovers nearly all of the room at the operating fleet. Wherever it misses, the benchmark is read as \"at least this much better than the rules\"."
+   },
+   "reproduce": "python experiments/e3_1_search_check.py",
+   "tableTop": {
+    "head": [
+     "Ship",
+     "AGVs",
+     "Crane times",
+     "Best rule above exact",
+     "Search above exact",
+     "Room recovered",
+     "Exact found"
+    ],
+    "rows": [
+     [
+      "2 × (3+3)",
+      "8",
+      "±0%",
+      "5.1 s",
+      "0.0 s",
+      "100%",
+      "20 of 20"
+     ],
+     [
+      "2 × (3+3)",
+      "8",
+      "±30%",
+      "5.0 s",
+      "0.0 s",
+      "100%",
+      "19 of 20"
+     ],
+     [
+      "2 × (3+3)",
+      "4",
+      "±0%",
+      "13.6 s",
+      "2.9 s",
+      "76%",
+      "8 of 20"
+     ],
+     [
+      "2 × (3+3)",
+      "4",
+      "±30%",
+      "13.9 s",
+      "2.8 s",
+      "84%",
+      "8 of 20"
+     ],
+     [
+      "2 × (4+4)",
+      "8",
+      "±0%",
+      "6.3 s",
+      "0.0 s",
+      "100%",
+      "8 of 10"
+     ],
+     [
+      "2 × (4+4)",
+      "8",
+      "±30%",
+      "6.8 s",
+      "0.0 s",
+      "100%",
+      "10 of 10"
+     ],
+     [
+      "2 × (4+4)",
+      "4",
+      "±0%",
+      "16.5 s",
+      "0.8 s",
+      "95%",
+      "7 of 10"
+     ],
+     [
+      "2 × (4+4)",
+      "4",
+      "±30%",
+      "15.6 s",
+      "2.6 s",
+      "85%",
+      "6 of 10"
+     ]
+    ],
+    "caption": "Seconds of crane idle per container, averaged over the instances. \"Best rule above exact\" is the room for improvement, how far the best of the three rules is above the exact best. The search is the best of 3 independent runs, with 300 simulator runs each on the small ship and 1,000 on the medium one."
+   },
+   "maths": [
+    {
+     "step": "Why the best cannot simply be computed for a real ship",
+     "text": "A dispatching plan here is an order list. It says, for each of the $m$ jobs in turn, which crane the next free AGV serves. Half the jobs belong to each crane, so the number of different order lists is a binomial coefficient.",
+     "tex": "$$\\text{order lists} = \\binom{m}{m/2}$$",
+     "calc": "$$\\binom{12}{6} = 924,\\qquad \\binom{16}{8} = 12{,}870,\\qquad \\binom{200}{100} \\approx 9 \\times 10^{58}$$"
+    },
+    {
+     "step": "Room for improvement, and how much of it the search finds",
+     "text": "For each instance, $\\bar I^{*}$ is the exact best over all order lists, $\\bar I_{\\text{rule}}$ the best of the three rules and $\\bar I_{\\text{search}}$ the best of three search runs. The room is the distance from the rule to the best, and $\\rho$ is the share of it the search recovers. The example below uses the averages of one case. The table averages $\\rho$ instance by instance, which gives a slightly different figure.",
+     "tex": "$$\\rho = \\frac{\\bar I_{\\text{rule}} - \\bar I_{\\text{search}}}{\\bar I_{\\text{rule}} - \\bar I^{*}}$$",
+     "calc": "$$\\text{Medium ship, 4 AGVs, }\\pm 30\\%:\\quad \\rho \\approx 1 - \\frac{2.58}{15.63} = 83\\%$$"
+    },
+    {
+     "step": "Reading the benchmark later",
+     "text": "The search can miss the best but never beat it, so the idle time of the benchmark is never below the true best. A rule that is $\\Delta$ seconds above the benchmark is therefore at least $\\Delta$ seconds above the true best.",
+     "tex": "$$\\bar I^{*} \\le \\bar I_{\\text{search}} \\quad\\Longrightarrow\\quad \\bar I_{\\text{rule}} - \\bar I^{*} \\ge \\bar I_{\\text{rule}} - \\bar I_{\\text{search}}$$"
     }
    ]
   }
