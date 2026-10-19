@@ -7,7 +7,7 @@ import { Replay, TerminalMap, fmtTime, prepare, stats } from '../experiments/Rep
 /* One real simulation run of the current model (v3), recorded by ACT_MTP webapp/export_replays.py home. */
 const FILE = '/replays/v3/n10_d0_nvfcfs.json';
 const SPEED = 20;     // simulated seconds per real second
-const START = 1500;   // inside the run, when all ten AGVs are busy
+const START = 2150;   // inside the run, all ten AGVs busy and the cranes about to wait
 const WINDOW = 640;   // metres of quay shown, centred on the two cranes
 
 export default function HeroReplay({ dark = false }: { dark?: boolean }) {

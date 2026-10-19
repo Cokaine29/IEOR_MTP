@@ -13,9 +13,9 @@ const x = (d: number) => L + (d / 0.4) * (W - L - R);
 const y = (v: number) => T + (1 - v / YMAX) * (H - T - B);
 
 const SERIES = [
-  { key: 'best' as const, name: 'Best rule (NV/FCFS)', color: '#18181b', dash: '' },
-  { key: 'plan' as const, name: 'Plan made in advance (GA)', color: '#0f766e', dash: '' },
-  { key: 'benchmark' as const, name: 'Perfect dispatcher', color: '#2563eb', dash: '6 4' },
+  { key: 'best' as const, name: 'Best Rule (NV/FCFS)', color: '#18181b', dash: '' },
+  { key: 'plan' as const, name: 'Plan Made in Advance (GA)', color: '#0f766e', dash: '' },
+  { key: 'benchmark' as const, name: 'Perfect Dispatcher', color: '#2563eb', dash: '6 4' },
 ];
 
 export default function NoiseChart() {
