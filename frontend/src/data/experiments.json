@@ -248,8 +248,8 @@
    "Zheng, X., Liang, C., Wang, Y., Shi, J., & Lim, G. (2022). Multi-AGV dynamic scheduling in an automated container terminal: A deep reinforcement learning approach. Mathematics, 10, 4575. https://doi.org/10.3390/math10234575"
   ]
  },
- "generated": "2026-10-18",
- "source": "ACT_MTP 3247102 / legacy_slice",
+ "generated": "2026-10-19",
+ "source": "ACT_MTP a2b870c / v1_slice",
  "stages": [
   {
    "n": 1,
@@ -409,7 +409,7 @@
      "calc": "$$\\max_e |\\Delta t_e| = 5.0\\times 10^{-7}\\ \\text{s}$$"
     }
    ],
-   "reproduce": "python experiments/e0_checks.py"
+   "reproduce": "python experiments/exp1_1_simulator_check.py"
   },
   {
    "id": "E1",
@@ -775,7 +775,7 @@
      ]
     ]
    },
-   "reproduce": "python experiments/e1_agv_sweep.py"
+   "reproduce": "python experiments/exp2_1_fleet_sweep.py"
   },
   {
    "id": "E1b",
@@ -1156,7 +1156,7 @@
      }
     ]
    },
-   "reproduce": "python experiments/e2_2_lookahead.py",
+   "reproduce": "python experiments/exp2_2_lookahead.py",
    "maths": [
     {
      "step": "When a rule first sees a job",
@@ -1225,7 +1225,7 @@
     "measure": "Crane idle time per container and the order of the rules, with 95% confidence intervals.",
     "decide": "The standard ship is large enough if the idle time per container and the order of the rules stay the same from it upward."
    },
-   "reproduce": "python experiments/e2_3_instance_size.py",
+   "reproduce": "python experiments/exp2_3_ship_size.py",
    "table": {
     "head": [
      "AGVs",
@@ -1627,7 +1627,7 @@
     "measure": "How far the search ends above the exact best, how often it finds it, and the share of the rules' room for improvement it recovers.",
     "decide": "The search is fit to serve as the benchmark if it recovers nearly all of the room at the operating fleet. Wherever it misses, the benchmark is read as \"at least this much better than the rules\"."
    },
-   "reproduce": "python experiments/e3_1_search_check.py",
+   "reproduce": "python experiments/exp3_1_search_check.py",
    "tableTop": {
     "head": [
      "Ship",
@@ -1937,7 +1937,7 @@
      }
     ]
    },
-   "reproduce": "python experiments/e4_1_crane_noise.py   (on a server, about 75 minutes on 64 cores)",
+   "reproduce": "python experiments/exp4_1_crane_noise.py   (on a server, about 75 minutes on 64 cores)",
    "tableTop": {
     "head": [
      "Crane times",
@@ -2213,7 +2213,7 @@
      }
     ]
    },
-   "reproduce": "python experiments/e4_2_replanning.py   (on a server, about 35 minutes on 64 cores)",
+   "reproduce": "python experiments/exp4_2_replanning.py   (on a server, about 35 minutes on 64 cores)",
    "tableTop": {
     "head": [
      "Crane times",
