@@ -7,7 +7,7 @@ export default function Footer() {
             <span>AGV Dispatching - M.Tech Thesis Project</span>
           </div>
           <p className="text-sm text-zinc-700 font-medium">
-            Niraj Kamble &middot; IEOR &middot; IIT Bombay &middot; 2025-26
+            Niraj Kamble &middot; IEOR &middot; IIT Bombay &middot; 2025–27
           </p>
         </div>
       </div>

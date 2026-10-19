@@ -1,348 +1,372 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { SiPython, SiNextdotjs, SiFastapi, SiPytorch } from 'react-icons/si';
-import { Building2, Bot, BarChart3, ArrowRight, ArrowUpRight, Globe2, Ship, Hourglass, FileSearch, XCircle, CheckCircle2, Box, BrainCircuit, Dna, Terminal, Triangle, Users, Zap, BarChart2 } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CheckCircle2, Circle, CircleDot, Globe2, Gauge, Truck, FileSearch, Repeat, Shuffle, Timer } from 'lucide-react';
+import HeroReplay from '@/components/home/HeroReplay';
+import CraneWait from '@/components/home/CraneWait';
+import NoiseChart from '@/components/home/NoiseChart';
+import TerminalExplorer from '@/components/home/TerminalExplorer';
+import Md from '@/components/experiments/Md';
+import home from '@/data/home.json';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: 'easeOut' as const },
-  }),
+/* Real photographs: put the file in frontend/public/home/ and fill in src and credit.
+   A photo is shown only once its src is set. Use photos you may reuse (press kit, Wikimedia Commons). */
+const PHOTOS: Record<'terminal' | 'quay', { src: string | null; alt: string; credit: string }> = {
+  terminal: { src: null, alt: 'An automated container terminal with AGVs under the quay cranes', credit: '' },
+  quay: { src: null, alt: 'An AGV waiting under a quay crane', credit: '' },
 };
 
-const stakes = [
+const REPO = 'https://github.com/Cokaine29/ACT_MTP';
+const UPDATED = '19 Oct 2026';
+
+const fade = {
+  initial: { opacity: 0, y: 16 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.5 },
+};
+
+const STAKES = [
   {
-    icon: <Globe2 className="w-6 h-6 text-zinc-700" />,
-    stat: '700M+ TEU',
-    title: 'Global Scale',
-    desc: 'Handled globally per year, requiring massive operational coordination at ports.',
-    citation: 'World Bank (2018) via Gharehgozli et al. (2020)',
+    icon: Globe2, stat: '849 million TEU',
+    title: 'Containers Handled at the World’s Ports',
+    desc: 'World container port traffic in 2021. Every one of these boxes passes under a quay crane.',
+    source: 'Notteboom, Pallis and Rodrigue (2022), Port Economics, Management and Policy, data of Drewry and UNCTAD',
   },
   {
-    icon: <Ship className="w-6 h-6 text-zinc-700" />,
-    stat: 'Up to $100k/day',
-    title: 'Cost of Delay',
-    desc: 'The capital cost (demurrage) for a delayed containership stuck at berth.',
-    citation: 'Haralambides (2019)',
+    icon: Gauge, stat: '30.5 moves/h',
+    title: 'The AGVs Set the Crane’s Pace',
+    desc: 'Quay crane productivity in a simulation of an automated terminal with 2 AGVs per crane. The same study reports higher crane rates only with more vehicles per crane.',
+    source: 'Luo (2016), Sec. 2.3, Fig. 3',
   },
   {
-    icon: <Hourglass className="w-6 h-6 text-zinc-700" />,
-    stat: '38–50% More AGVs',
-    title: 'The Dispatch Bottleneck',
-    desc: 'Extra fleet size needed compared to self-lifting vehicles due to mandatory crane wait times.',
-    citation: 'Vis & Harika (2004) via Carlo et al. (2014)',
+    icon: Truck, stat: '38% to 50%+',
+    title: 'More Vehicles Because AGVs Cannot Lift',
+    desc: 'Extra vehicles an AGV fleet needs compared with self-lifting vehicles, because an AGV must wait for a crane at every handover.',
+    source: 'Vis and Harika (2004) and Yang et al. (2004), as reported by Carlo et al. (2014)',
   },
   {
-    icon: <FileSearch className="w-6 h-6 text-zinc-700" />,
-    stat: '0 out of 56',
-    title: 'The Literature Gap',
-    desc: 'AGV dispatching papers successfully combine stochastic disruptions with real-time optimization.',
-    citation: 'Carlo et al. (2014), Table A1',
+    icon: FileSearch, stat: '2 of 56',
+    title: 'Studies That Optimise Under Uncertainty',
+    desc: 'Papers on container terminal transport up to 2012 that use stochastic optimisation. Most dispatching studies assume known, fixed operation times.',
+    source: 'Carlo et al. (2014), Table A1, column 22 (counted for this thesis)',
   },
 ];
 
-const architecture = [
-  {
-    icon: <Building2 className="w-8 h-8 text-zinc-700" />,
-    title: 'Simulation Environment',
-    desc: 'Single-berth operational zone (498×572m) with a perpendicular layout, 5 QCs, 25 AGVs, 8 Yard Blocks. Event-driven, 203-feature state space. Calibrated via multiple empirical sources.',
-  },
-  {
-    icon: <Bot className="w-8 h-8 text-zinc-700" />,
-    title: 'DRL Agent',
-    desc: 'Centralized PPO dispatcher (Baseline) evolving into a MAPPO (CTDE) architecture for highly scalable multi-agent fleet coordination.',
-  },
-  {
-    icon: <BarChart3 className="w-8 h-8 text-zinc-700" />,
-    title: 'Rigorous Evaluation',
-    desc: '560 runs (7 methods × 4 intensities × 20 seeds). IQM + 95% stratified bootstrap CI via rliable (Agarwal et al., 2021).',
-  },
+const SPECS = [
+  { value: '2 Quay Cranes', detail: 'Over blocks 24 and 26, 82 m apart, 75 s per container', source: 'Zhao et al. (2025); Liu, Jula and Ioannou (2001)' },
+  { value: '10 AGVs', detail: 'Five per crane, the operating fleet chosen in Experiment 2.1', source: 'Luo (2016), usually 5 to 8 AGVs per crane' },
+  { value: '6.0 / 3.5 m/s', detail: 'Top speed of an empty and a loaded AGV, 3 m/s in turns', source: 'Luo (2016); Zhao et al. (2025), Table 1' },
+  { value: '50 Yard Blocks', detail: 'About 2.1 km of yard, 5 transfer racks per block', source: 'Liu et al. (2016); Wu et al. (2016)' },
+  { value: '200 Containers', detail: '100 discharge and 100 load per ship, 2 bays per crane', source: 'Kim and Bae (2004); Zhao et al. (2025)' },
+  { value: '±0% to ±40%', detail: 'Random crane handling times, the same draws for every method', source: 'Kim and Bae (2004)' },
 ];
 
-const techStack = [
-  { name: 'Python 3.10+', icon: SiPython, color: 'text-blue-500' },
-  { name: 'Gymnasium', icon: Box, color: 'text-zinc-500' },
-  { name: 'PettingZoo', icon: Users, color: 'text-zinc-500' },
-  { name: 'Stable Baselines3', icon: SiPytorch, color: 'text-orange-500' },
-  { name: 'DEAP', icon: Dna, color: 'text-zinc-500' },
-  { name: 'rliable', icon: BarChart2, color: 'text-zinc-500' },
-  { name: 'Next.js', icon: SiNextdotjs, color: 'text-zinc-900' },
-  { name: 'FastAPI', icon: SiFastapi, color: 'text-teal-500' }
+const CHAIN = [
+  { title: 'Crane Is Ready', text: 'The crane has the container over the AGV lane, or is ready to take one.' },
+  { title: 'No AGV Underneath', text: 'The AGV that should be there is still driving, or was sent somewhere else.' },
+  { title: 'Crane Stands Idle', text: 'Every second until the AGV arrives is lost crane time, and the ship waits with it.' },
 ];
+
+const HARD = [
+  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'The choice repeats about 200 times per ship here, and each one changes where every AGV will be later.' },
+  { icon: Shuffle, title: 'Random Times', text: 'Real crane handling times and AGV travel times vary, so a plan made on the planned times goes stale.' },
+  { icon: Timer, title: 'No Time to Re-plan', text: 'Searching for a new plan takes time the terminal does not have, so the decision must be made in real time.' },
+];
+
+type Status = 'done' | 'partly' | 'next';
+const PATH: { n: string; title: string; detail: string; status: Status }[] = [
+  { n: '1', title: 'Simulator Check', detail: 'The simulator matches a hand-built answer key to within 1e-6 s.', status: 'done' },
+  { n: '2', title: 'Where Decisions Matter', detail: 'Fleet size, look-ahead and ship size. 10 AGVs chosen as the operating fleet.', status: 'done' },
+  { n: '3', title: 'Search Check', detail: 'The memetic search recovers 82% to 100% of the room for improvement at 10 AGVs, in small cases solved exactly.', status: 'done' },
+  { n: '4', title: 'Crane-Time Randomness', detail: 'Rules, a plan made in advance and the perfect dispatcher are done. The re-planning GA and its thinking time are being re-run.', status: 'partly' },
+  { n: '5', title: 'Travel-Time Randomness', detail: 'AGV speeds and delays become random.', status: 'next' },
+  { n: '6', title: 'MDP Design', detail: 'What the dispatcher sees and what it can choose, with an imitation-learning baseline.', status: 'next' },
+  { n: '7', title: 'DQN', detail: 'A value-based learning dispatcher.', status: 'next' },
+  { n: '8', title: 'PPO, then MAPPO', detail: 'One central learned dispatcher, then one cooperating agent per AGV.', status: 'next' },
+];
+
+const TABS = [
+  { href: '/background', label: 'Background', desc: 'How an automated terminal works' },
+  { href: '/problem', label: 'Problem', desc: 'The dispatching decision in detail' },
+  { href: '/literature', label: 'Literature', desc: 'What earlier studies did and left open' },
+  { href: '/experiments', label: 'Experiments', desc: 'Every experiment with its maths and results' },
+];
+
+function Photo({ p }: { p: (typeof PHOTOS)['terminal'] }) {
+  if (!p.src) return null;
+  return (
+    <figure className="flex flex-col gap-1.5">
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-zinc-200">
+        <Image src={p.src} alt={p.alt} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+      </div>
+      {p.credit && <figcaption className="text-xs text-zinc-500">Photo: {p.credit}</figcaption>}
+    </figure>
+  );
+}
+
+function SectionHead({ kicker, title, children }: { kicker: string; title: string; children?: React.ReactNode }) {
+  return (
+    <div className="mb-10 flex max-w-3xl flex-col gap-3">
+      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">{kicker}</span>
+      <h2 className="text-3xl font-bold tracking-tight text-zinc-900">{title}</h2>
+      {children && <div className="text-base leading-relaxed text-zinc-700">{children}</div>}
+    </div>
+  );
+}
 
 export default function HomePage() {
+  const n = home.crane_noise;
+  const f = home.fleet10 as Record<string, number[]>;
+  const first = n[0], last = n[n.length - 1];
+  const roomLo = Math.min(...n.map((r) => r.room[0])), roomHi = Math.max(...n.map((r) => r.room[0]));
+  const roomCiLo = Math.min(...n.map((r) => r.room[1])), roomCiHi = Math.max(...n.map((r) => r.room[1]));
+  const benchLo = Math.min(...n.map((r) => r.benchmark[0])), benchHi = Math.max(...n.map((r) => r.benchmark[0]));
+
   return (
-    <div className="relative bg-zinc-50 min-h-screen pt-16 selection:bg-zinc-200">
-      {/* --- Hero Section --- */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Soft background accents */}
-        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-zinc-200/40 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-zinc-200/40 rounded-full blur-[120px]" />
-
-        <div className="relative max-w-5xl mx-auto px-4 text-center z-10">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.15 } },
-            }}
-          >
-            {/* Badge */}
-            <motion.div variants={fadeUp} custom={0} className="mb-8">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-zinc-200 text-xs font-semibold text-zinc-700 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-zinc-400" />
-                M.Tech Thesis · IIT Bombay IEOR · 2025–26
-              </span>
-            </motion.div>
-
-            {/* Title */}
-            <motion.h1
-              variants={fadeUp}
-              custom={1}
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-zinc-900 mb-6"
-            >
-              AGV Dispatching in Automated Port Terminal
-              <br />
-              <span className="text-zinc-500 text-4xl sm:text-5xl lg:text-6xl mt-2 block">Under Stochastic Conditions</span>
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              variants={fadeUp}
-              custom={2}
-              className="text-lg sm:text-xl text-zinc-700 mb-6 max-w-3xl mx-auto font-medium leading-relaxed"
-            >
-              A Deep Reinforcement Learning approach to minimise Quay Crane idle time under real-world stochastic disruptions.
-            </motion.p>
-
-            {/* Author */}
-            <motion.p
-              variants={fadeUp}
-              custom={3}
-              className="text-sm text-zinc-500 mb-12 font-medium uppercase tracking-wider"
-            >
-              Niraj Kamble <span className="mx-2">|</span> Guide: Prof. Jayendran Venkateswaran
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              variants={fadeUp}
-              custom={4}
-              className="flex flex-wrap items-center justify-center gap-4"
-            >
-              <Link
-                href="/problem"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-zinc-900 text-white font-semibold text-sm hover:bg-zinc-800 transition-colors shadow-md"
-              >
-                Explore Problem
-                <ArrowRight className="w-4 h-4" />
+    <div className="min-h-screen bg-white text-zinc-900">
+      {/* ------------------------------------------------ hero */}
+      <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            className="flex flex-col items-start gap-6">
+            <span className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800 px-3.5 py-1.5 text-xs font-semibold text-zinc-200">
+              <span className="h-2 w-2 rounded-full bg-teal-400" />
+              M.Tech Thesis · IEOR · IIT Bombay · 2025–27
+            </span>
+            <h1 className="max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+              Real-Time AGV Dispatching in an Automated Container Terminal
+              <span className="mt-2 block text-zinc-400">under Stochastic Conditions</span>
+            </h1>
+            <p className="max-w-3xl text-lg leading-relaxed text-zinc-300">
+              Every time an AGV becomes free, a dispatcher decides which quay crane and which container it serves next. This thesis
+              builds a learned dispatcher (deep reinforcement learning, PPO and then MAPPO) that makes this decision in real time,
+              to cut <b className="text-white">Quay Crane Idle Time</b> when crane handling times and AGV travel times are random.
+            </p>
+            <p className="text-sm font-medium uppercase tracking-wider text-zinc-400">
+              Niraj Kamble <span className="mx-2 text-zinc-600">|</span> Guided by Prof. Jayendran Venkateswaran
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/experiments" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-200">
+                See the Experiments <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/methodology"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-zinc-900 font-semibold text-sm hover:bg-zinc-100 border border-zinc-200 transition-colors shadow-sm"
-              >
-                View Methodology
-                <ArrowUpRight className="w-4 h-4 text-zinc-500" />
+              <Link href="/problem" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+                The Problem in Detail <ArrowUpRight className="h-4 w-4 text-zinc-400" />
               </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* --- The Stakes Section --- */}
-      <section className="relative py-24 px-4 bg-white border-t border-zinc-200">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 mb-6 text-center">Why This Matters</h2>
-            <div className="max-w-3xl mx-auto text-zinc-700 text-lg leading-relaxed text-justify font-medium">
-              <p>
-                At the operational core of every Automated Container Terminal, Automated Guided Vehicles (AGVs) act as the connective tissue between the ship and the storage yard. Because AGVs are non-self-lifting, a Quay Crane cannot drop its container until an assigned AGV is parked directly underneath it. Every poor dispatch decision causes the crane to pause mid-cycle and hold a container in the air, directly translating to <strong>Quay Crane idle time</strong>, and idle Quay Cranes mean ships stay docked longer. Yet many of the underlying routing algorithms in literature and practice are still strictly deterministic - a rigid assumption that Carlo et al. (2014) notes can significantly limit their reliability in real-world operations.
-              </p>
+              <a href={REPO} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+                Code and Results on GitHub <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+              </a>
             </div>
           </motion.div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
+            <HeroReplay dark />
+          </motion.div>
+          <Photo p={PHOTOS.terminal} />
+        </div>
+      </section>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stakes.map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-zinc-50 rounded-2xl p-6 border border-zinc-200 flex flex-col h-full"
-              >
-                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-5 shadow-sm border border-zinc-200">
-                  {item.icon}
-                </div>
-                <div className="text-2xl font-bold text-zinc-900 mb-1">{item.stat}</div>
-                <h3 className="text-sm font-bold text-zinc-700 mb-3 uppercase tracking-wider">{item.title}</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed mb-6 flex-grow">
-                  {item.desc}
-                </p>
-                <div className="pt-4 border-t border-zinc-200 mt-auto">
-                  <p className="text-xs text-zinc-400 font-medium italic">
-                    {item.citation}
-                  </p>
-                </div>
+      {/* ------------------------------------------------ the problem */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="The Problem" title="A Crane Cannot Let Go Until an AGV Is Under It">
+              <p>
+                AGVs cannot lift a container by themselves <i>(Carlo et al., 2014)</i>. The quay crane must set each container straight
+                onto an AGV, or lift it straight off one. Every second the crane waits for an AGV is <b>Crane Idle Time</b>, and idle
+                cranes keep the ship longer at the berth.
+              </p>
+            </SectionHead>
+          </motion.div>
+          <motion.ol {...fade} className="mb-10 grid gap-3 sm:grid-cols-3">
+            {CHAIN.map((c, i) => (
+              <li key={c.title} className={`relative flex items-start gap-3 rounded-2xl border p-4 ${i === 2 ? 'border-red-200 bg-red-50' : 'border-zinc-200 bg-white'}`}>
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${i === 2 ? 'bg-red-600 text-white' : 'bg-zinc-900 text-white'}`}>{i + 1}</span>
+                <span className="flex flex-col gap-0.5">
+                  <span className={`font-semibold ${i === 2 ? 'text-red-700' : 'text-zinc-900'}`}>{c.title}</span>
+                  <span className="text-sm leading-snug text-zinc-600">{c.text}</span>
+                </span>
+              </li>
+            ))}
+          </motion.ol>
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+            <motion.div {...fade}><CraneWait /></motion.div>
+            <motion.div {...fade} className="flex flex-col gap-5">
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">What the Dispatcher Minimises</h3>
+                <Md className="text-zinc-800">{String.raw`$$\bar I \;=\; \frac{1}{N}\sum_{j=1}^{N}\bigl(h_j - r_j\bigr)$$`}</Md>
+                <Md className="mt-3 text-sm leading-relaxed text-zinc-700">{String.raw`$\bar I$ is the crane idle time per container in seconds. $N$ is the number of containers of the ship (200 in every run here). $r_j$ is the time the crane is ready to hand over container $j$, and $h_j$ is the time the handover really happens. The dispatcher cannot change $r_j$, it can only bring $h_j$ closer to it.`}</Md>
+              </div>
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">Why It Is Hard</h3>
+                <ul className="flex flex-col gap-4">
+                  {HARD.map((h) => (
+                    <li key={h.title} className="flex gap-3">
+                      <h.icon className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" />
+                      <span className="text-sm leading-relaxed text-zinc-600"><b className="text-zinc-900">{h.title}.</b> {h.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Photo p={PHOTOS.quay} />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ why it matters */}
+      <section className="border-y border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}><SectionHead kicker="Why It Matters" title="Small Waits, at a Very Large Scale" /></motion.div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {STAKES.map((s, i) => (
+              <motion.div key={s.title} {...fade} transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="flex flex-col rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+                <s.icon className="mb-5 h-7 w-7 text-teal-700" />
+                <div className="text-2xl font-bold tracking-tight tabular-nums">{s.stat}</div>
+                <h3 className="mb-3 mt-1 text-sm font-semibold text-zinc-800">{s.title}</h3>
+                <p className="mb-5 flex-grow text-sm leading-relaxed text-zinc-600">{s.desc}</p>
+                <p className="border-t border-zinc-200 pt-3 text-xs italic leading-relaxed text-zinc-500">{s.source}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* --- The Research Gap Section --- */}
-      <section className="relative py-24 px-4 bg-zinc-900 text-zinc-100">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-4">The Research Gap</h2>
-            <p className="text-zinc-400 max-w-2xl mx-auto font-medium">
-              Bridging the divide between classical mathematical optimization and chaotic real-world operations.
+      {/* ------------------------------------------------ the simulated terminal */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="The Simulated Terminal" title="Built from Published Data of a Real Automated Terminal">
+              <p>
+                The layout follows the automated terminal at <b>Yangshan Phase IV</b> in Shanghai, as described by <i>Liu et al. (2016)</i>
+                {' '}and <i>Wu et al. (2016)</i>. Hover over the yard below, or tap a block, to see what it holds.
+              </p>
+            </SectionHead>
+            <div className="-mt-4 mb-8 flex flex-wrap gap-2">
+              {['Event-Driven Python Simulator', 'AGVs Accelerate, Brake and Turn on Real Lanes', 'Every Value Has a Published Source', 'Same Random Draws for Every Method'].map((c) => (
+                <span key={c} className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-800">{c}</span>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div {...fade} className="mb-8">
+            <TerminalExplorer />
+            <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+              Discharge containers go to blocks within 10 of the five blocks behind the cranes, and load containers come from blocks
+              within 15. These ranges are set so that crane productivity comes close to the simulation of <i>Luo (2016)</i>.
             </p>
           </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5 }}
-              className="bg-zinc-800/50 rounded-3xl p-8 border border-zinc-700"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <XCircle className="w-6 h-6 text-red-400" />
-                <h3 className="text-xl font-bold text-white">Limitations of Existing Literature</h3>
+          <div className="grid overflow-hidden rounded-2xl border border-zinc-200 bg-white sm:grid-cols-2 lg:grid-cols-3">
+            {SPECS.map((s) => (
+              <div key={s.value} className="flex flex-col gap-1.5 border-b border-zinc-200 p-5 sm:[&:nth-child(odd)]:border-r lg:[&:nth-child(odd)]:border-r-0 lg:[&:not(:nth-child(3n))]:border-r">
+                <div className="text-xl font-semibold tracking-tight tabular-nums">{s.value}</div>
+                <div className="text-sm leading-snug text-zinc-600">{s.detail}</div>
+                <div className="mt-auto pt-1 text-xs italic text-zinc-500">{s.source}</div>
               </div>
-              <ul className="space-y-4">
-                {[
-                  'Classical MIP and GA models assume a deterministic world, they break under real disruptions (Carlo 2014).',
-                  'Basic Q-Learning failed to converge in this exact problem domain due to state space explosion (Choe 2016).',
-                  'Recent DRL approaches (Zheng 2022) use proprietary commercial simulators with no public physical calibration.'
-                ].map((text, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 mt-2 flex-shrink-0" />
-                    <span className="text-zinc-300 text-sm leading-relaxed text-justify">{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5 }}
-              className="bg-zinc-800/50 rounded-3xl p-8 border border-zinc-700"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <CheckCircle2 className="w-6 h-6 text-emerald-400" />
-                <h3 className="text-xl font-bold text-white">What This Thesis Contributes</h3>
-              </div>
-              <ul className="space-y-4">
-                {[
-                  'Open Python/Gymnasium simulator explicitly calibrated to empirical terminal physics (Liu 2001, Yang 2025, Zhao 2023).',
-                  'Robust testing across 4 stochastic disruption types and 4 intensity levels (σ = 0 to 3).',
-                  'Centralized PPO dispatcher evaluated against Greedy, GA, and DQN baselines, with a roadmap to MAPPO for multi-agent scaling.',
-                  'Statistically rigorous evaluation using Interquartile Mean (IQM) via rliable (Agarwal 2021).'
-                ].map((text, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 mt-2 flex-shrink-0" />
-                    <span className="text-zinc-300 text-sm leading-relaxed text-justify">{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* --- Project Architecture --- */}
-      <section className="relative py-24 px-4 bg-white border-b border-zinc-200">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900 mb-4">Project Architecture</h2>
-            <p className="text-zinc-600 max-w-2xl mx-auto font-medium">
-              A comprehensive system designed from the ground up to tackle the AGV dispatching problem.
-            </p>
+      {/* ------------------------------------------------ baseline results */}
+      <section className="border-y border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Baseline Results · Model v3" title="What Traditional Methods Achieve, and What They Leave">
+              <p>
+                Before any learning, the thesis measures the methods a terminal could use today. These are the baselines the learned
+                dispatcher has to beat. All numbers are means over {home.seeds} paired ships with 95% intervals.
+              </p>
+            </SectionHead>
           </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {architecture.map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
-                className="bg-zinc-50 rounded-3xl p-8 border border-zinc-200 group"
-              >
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-zinc-200 group-hover:scale-105 transition-transform duration-300">
-                  {item.icon}
-                </div>
-                <h3 className="text-xl font-bold text-zinc-900 mb-3 tracking-tight">{item.title}</h3>
-                <p className="text-zinc-600 text-sm leading-relaxed font-medium text-justify">
-                  {item.desc}
-                </p>
+          <div className="mb-10 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                head: 'Dispatching Matters',
+                big: `${f['NV/FCFS'][0].toFixed(1)} s vs ${f['Random'][0].toFixed(1)} s`,
+                text: `Crane idle per container with 10 AGVs, the best rule (NV/FCFS, ±${f['NV/FCFS'][1].toFixed(1)}) against random dispatching (±${f['Random'][1].toFixed(1)}). Same AGVs, same ship, only the decisions differ.`,
+                exp: 'Experiment 2.1',
+              },
+              {
+                head: 'Plans Made in Advance Break',
+                big: `${first.lead_of_plan[0].toFixed(1)} s → ${last.lead_of_plan[0].toFixed(1)} s`,
+                text: `Lead of a plan made in advance over the best rule, with exact crane times (±${first.lead_of_plan[1].toFixed(2)}) and with ±40% randomness (±${last.lead_of_plan[1].toFixed(2)}). The plan was right for the planned times only.`,
+                exp: 'Experiment 4.1',
+              },
+              {
+                head: 'Room Left for Real-Time Decisions',
+                big: `${roomLo.toFixed(1)} to ${roomHi.toFixed(1)} s`,
+                text: `Extra crane idle per container of the best rule over a perfect dispatcher that knew the real crane times (±${roomCiLo.toFixed(2)} to ±${roomCiHi.toFixed(2)}). The perfect dispatcher waits only ${benchLo.toFixed(1)} to ${benchHi.toFixed(1)} s, so about half of the best rule's waiting could be avoided.`,
+                exp: 'Experiment 4.1',
+              },
+            ].map((c) => (
+              <motion.div key={c.head} {...fade} className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+                <span className="text-sm font-semibold text-teal-700">{c.head}</span>
+                <span className="text-3xl font-bold tracking-tight tabular-nums">{c.big}</span>
+                <p className="flex-grow text-sm leading-relaxed text-zinc-600">{c.text}</p>
+                <span className="text-xs text-zinc-500">{c.exp}</span>
               </motion.div>
             ))}
           </div>
+          <motion.div {...fade} className="rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+            <h3 className="mb-4 text-lg font-semibold tracking-tight">Crane Idle as Crane Times Become Random</h3>
+            <NoiseChart />
+          </motion.div>
+          <p className="mt-6 text-sm leading-relaxed text-zinc-600">
+            Still to come on this model are the GA that re-plans during the ship (Experiment 4.2) and the cost of its thinking time
+            (Experiment 4.3). Every experiment, with its set-up, maths and full results, is on the{' '}
+            <Link href="/experiments" className="font-medium text-teal-700 underline underline-offset-2">Experiments tab</Link>.
+          </p>
         </div>
       </section>
 
-      {/* --- Tech Stack --- */}
-      <section className="relative py-24 px-4 bg-zinc-50">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 mb-3">Tech Stack</h2>
-            <p className="text-zinc-500 font-medium">
-              The tools powering this research
-            </p>
+      {/* ------------------------------------------------ research path */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Research Path" title="From Traditional Methods to a Learned Dispatcher">
+              <p>
+                Stages 1 to 5 measure traditional methods and show why a real-time learner is needed. Stages 6 to 8 build that learner.
+              </p>
+            </SectionHead>
           </motion.div>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {techStack.map((tech, i) => (
-              <motion.span
-                key={tech.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-zinc-200 text-sm font-semibold text-zinc-700 shadow-sm hover:border-zinc-300 transition-colors"
-              >
-                <tech.icon className={`w-4 h-4 ${tech.color}`} />
-                {tech.name}
-              </motion.span>
-            ))}
-          </div>
+          <ol className="relative grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {PATH.map((s) => {
+              const Icon = s.status === 'done' ? CheckCircle2 : s.status === 'partly' ? CircleDot : Circle;
+              const tone = s.status === 'done' ? 'border-teal-200 bg-teal-50/60' : s.status === 'partly' ? 'border-amber-200 bg-amber-50/70' : 'border-zinc-200 bg-white';
+              const ic = s.status === 'done' ? 'text-teal-700' : s.status === 'partly' ? 'text-amber-600' : 'text-zinc-400';
+              const tag = s.status === 'done' ? 'Done' : s.status === 'partly' ? 'In progress' : 'Next';
+              return (
+                <motion.li key={s.n} {...fade} className={`flex flex-col gap-2 rounded-2xl border p-5 ${tone}`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-zinc-500">Stage {s.n}</span>
+                    <span className={`inline-flex items-center gap-1 text-xs font-semibold ${ic}`}><Icon className="h-4 w-4" />{tag}</span>
+                  </div>
+                  <h3 className="text-base font-semibold tracking-tight">{s.title}</h3>
+                  <p className="text-sm leading-relaxed text-zinc-600">{s.detail}</p>
+                </motion.li>
+              );
+            })}
+          </ol>
         </div>
+      </section>
+
+      {/* ------------------------------------------------ explore */}
+      <section className="border-t border-zinc-200 bg-white px-4 py-16">
+        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {TABS.map((t) => (
+            <Link key={t.href} href={t.href} className="group flex flex-col gap-1 rounded-2xl border border-zinc-200 p-5 hover:border-zinc-400">
+              <span className="inline-flex items-center gap-1.5 font-semibold">{t.label}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></span>
+              <span className="text-sm text-zinc-600">{t.desc}</span>
+            </Link>
+          ))}
+          <a href={REPO} target="_blank" rel="noreferrer" className="group flex flex-col gap-1 rounded-2xl border border-zinc-900 bg-zinc-900 p-5 text-white hover:bg-zinc-800">
+            <span className="inline-flex items-center gap-1.5 font-semibold">GitHub<ArrowUpRight className="h-4 w-4" /></span>
+            <span className="text-sm text-zinc-300">Simulator, experiments and saved results, reproducible with fixed seeds</span>
+          </a>
+        </div>
+        <p className="mx-auto mt-8 max-w-6xl text-xs text-zinc-500">Last updated {UPDATED}. Results from model {home.model}.</p>
       </section>
     </div>
   );
