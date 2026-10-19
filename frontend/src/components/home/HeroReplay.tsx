@@ -10,7 +10,7 @@ const SPEED = 20;     // simulated seconds per real second
 const START = 1500;   // inside the run, when all ten AGVs are busy
 const WINDOW = 640;   // metres of quay shown, centred on the two cranes
 
-export default function HeroReplay() {
+export default function HeroReplay({ dark = false }: { dark?: boolean }) {
   const [r, setR] = useState<Replay | null>(null);
   const [t, setT] = useState(START);
   const [playing, setPlaying] = useState(true);
@@ -82,7 +82,7 @@ export default function HeroReplay() {
           </div>
         )}
       </div>
-      <figcaption className="text-xs leading-relaxed text-zinc-500">
+      <figcaption className={`text-xs leading-relaxed ${dark ? 'text-zinc-400' : 'text-zinc-500'}`}>
         A recording of one run of the simulator, model v3, played at {SPEED}× real time. Two quay cranes work a vessel, and ten AGVs
         are dispatched by the NV/FCFS rule. Each AGV has its own colour, filled when it carries a container. Only the 640 m of quay
         around the cranes is shown here. The whole yard is 2.1 km long.

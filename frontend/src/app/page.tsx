@@ -113,42 +113,42 @@ export default function HomePage() {
   const benchLo = Math.min(...n.map((r) => r.benchmark[0])), benchHi = Math.max(...n.map((r) => r.benchmark[0]));
 
   return (
-    <div className="min-h-screen bg-white pt-16 text-zinc-900">
+    <div className="min-h-screen bg-white text-zinc-900">
       {/* ------------------------------------------------ hero */}
-      <section className="border-b border-zinc-200 bg-white px-4 pb-14 pt-10 sm:pt-16">
+      <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
         <div className="mx-auto flex max-w-6xl flex-col gap-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
             className="flex flex-col items-start gap-6">
-            <span className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 text-xs font-semibold text-zinc-700">
-              <span className="h-2 w-2 rounded-full bg-teal-600" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800 px-3.5 py-1.5 text-xs font-semibold text-zinc-200">
+              <span className="h-2 w-2 rounded-full bg-teal-400" />
               M.Tech Thesis · IEOR · IIT Bombay · 2025–27
             </span>
             <h1 className="max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
               Real-Time AGV Dispatching in an Automated Container Terminal
-              <span className="mt-2 block text-zinc-500">under Stochastic Conditions</span>
+              <span className="mt-2 block text-zinc-400">under Stochastic Conditions</span>
             </h1>
-            <p className="max-w-3xl text-lg leading-relaxed text-zinc-700">
+            <p className="max-w-3xl text-lg leading-relaxed text-zinc-300">
               Every time an AGV becomes free, a dispatcher decides which quay crane and which container it serves next. This thesis
               builds a learned dispatcher (deep reinforcement learning, PPO and then MAPPO) that makes this decision in real time,
-              to cut <b>Quay Crane Idle Time</b> when crane handling times and AGV travel times are random.
+              to cut <b className="text-white">Quay Crane Idle Time</b> when crane handling times and AGV travel times are random.
             </p>
-            <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
-              Niraj Kamble <span className="mx-2 text-zinc-300">|</span> Guided by Prof. Jayendran Venkateswaran
+            <p className="text-sm font-medium uppercase tracking-wider text-zinc-400">
+              Niraj Kamble <span className="mx-2 text-zinc-600">|</span> Guided by Prof. Jayendran Venkateswaran
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/experiments" className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700">
+              <Link href="/experiments" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-200">
                 See the experiments <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/problem" className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold hover:bg-zinc-100">
-                The problem in detail <ArrowUpRight className="h-4 w-4 text-zinc-500" />
+              <Link href="/problem" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+                The problem in detail <ArrowUpRight className="h-4 w-4 text-zinc-400" />
               </Link>
-              <a href={REPO} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-zinc-300 bg-white px-6 py-3 text-sm font-semibold hover:bg-zinc-100">
-                Code and results on GitHub <ArrowUpRight className="h-4 w-4 text-zinc-500" />
+              <a href={REPO} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+                Code and results on GitHub <ArrowUpRight className="h-4 w-4 text-zinc-400" />
               </a>
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
-            <HeroReplay />
+            <HeroReplay dark />
           </motion.div>
           <Photo p={PHOTOS.terminal} />
         </div>
