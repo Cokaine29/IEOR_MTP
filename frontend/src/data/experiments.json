@@ -65,7 +65,7 @@
      ],
      [
       "Genetic algorithm with re-planning",
-      "Re-plans every 10 crane handovers, keeping the decisions taken",
+      "Re-plans every 10 crane handovers, keeping the decisions taken, with and without thinking time",
       [
        "done",
        "done",
@@ -75,7 +75,7 @@
       ],
       [
        "E42",
-       "E42",
+       "E43",
        "",
        "",
        ""
@@ -197,44 +197,50 @@
    {
     "value": "Exact",
     "text": "The simulator reproduces hand-worked cases to within a millionth of a second, and its rack rules give the hand-worked answer in every check.",
-    "conditions": "5 hand-built cases · 96 random runs · 756 automatic tests",
+    "conditions": "5 hand-built cases · 96 random runs · 764 automatic tests",
     "ref": "E0"
    },
    {
-    "value": "8 AGVs",
-    "text": "Four AGVs per crane is the operating fleet. The best rule then keeps each crane waiting 5.7 s per container, against 13.3 s for random dispatching, so the choice of dispatcher clearly matters.",
+    "value": "10 AGVs",
+    "text": "Five AGVs per crane is the operating fleet. The best rule then keeps each crane waiting 5.5 s per container, against 11.6 s for random dispatching, so the choice of dispatcher clearly matters.",
     "conditions": "No randomness · 2 to 16 AGVs · 30 instances",
     "ref": "E1"
    },
    {
     "value": "5 jobs",
-    "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container, level with the other rules.",
-    "conditions": "No randomness · 8 AGVs · windows of 1 to 50 jobs · 30 test instances",
+    "text": "Every rule must see at least five jobs ahead of each crane on the long yard. With that, NV/FCFS reaches 5.5 s per container. The terminal still shows every method 10 jobs.",
+    "conditions": "No randomness · 10 AGVs · windows of 1 to 50 jobs · 30 test instances",
     "ref": "E1b"
    },
    {
     "value": "Any size",
     "text": "The size of the ship does not change the comparison. What lowers the waiting is fewer switches between discharge and loading, not fewer containers.",
-    "conditions": "No randomness and ±20% · 6, 8 and 10 AGVs · 24 to 400 jobs per crane · 30 instances",
+    "conditions": "No randomness and ±20% · 8, 10 and 12 AGVs · 24 to 400 jobs per crane · 30 instances",
     "ref": "E5a"
    },
    {
-    "value": "99.5%",
-    "text": "At the operating fleet of 8 AGVs the search finds at least 99.5% of the room for improvement on ships where the exact best is known, so it can serve as the perfect-information benchmark.",
-    "conditions": "Every order list tried · 12 and 16 jobs · 4 and 8 AGVs · ±0% and ±30%",
+    "value": "82 to 100%",
+    "text": "At the operating fleet of 10 AGVs the search finds 82 to 100% of the room for improvement on ships where the exact best is known. It serves as the perfect-information benchmark, read as the best plan known.",
+    "conditions": "Every order list tried · 12 and 16 jobs · 5 and 10 AGVs · ±0% and ±30%",
     "ref": "E3a"
    },
    {
-    "value": "45%",
-    "text": "Even with crane times varying by ±40%, a dispatcher that knew the future would remove 45% of the best rule's waiting, while a plan made in advance keeps only 0.1 s of its 2.3 s lead. A real-time dispatcher has room to win.",
-    "conditions": "±0 to ±40% crane times · 8 AGVs · standard ship · 30 instances",
+    "value": "49%",
+    "text": "Even with crane times varying by ±40%, a dispatcher that knew the future would remove 49% of the best rule's waiting, while a plan made in advance keeps only 0.7 s of its 2.6 s lead. A real-time dispatcher has room to win.",
+    "conditions": "±0 to ±40% crane times · 10 AGVs · standard ship · 30 instances",
     "ref": "E41"
    },
    {
     "value": "Re-planning",
-    "text": "Re-planning makes the GA the strongest traditional method, 0.6 s per container better than the best rule at ±40%. Yet it stays 2.1 s above the benchmark, because it cannot see future crane times.",
-    "conditions": "Re-plan every 10 handovers · ±0 to ±40% crane times · 8 AGVs · 30 instances",
+    "text": "Re-planning makes the GA the strongest traditional method, 1.1 s per container better than the best rule at ±40%. Yet it stays 1.7 s above the benchmark, because it cannot see future crane times.",
+    "conditions": "Re-plan every 10 handovers · ±0 to ±40% crane times · 10 AGVs · 30 instances",
     "ref": "E42"
+   },
+   {
+    "value": "1.1 to 4.9 s",
+    "text": "A re-plan fast enough for real time, 1.1 to 4.9 s, waits only 0.11 to 0.19 s less per container than the plan made in advance at ±40%, and stays over 2 s above the benchmark. No traditional method closes the gap in real time.",
+    "conditions": "Thinking time 1.1 to 119 s · ±0 to ±40% crane times · 10 AGVs · 30 instances",
+    "ref": "E43"
    }
   ],
   "references": [
@@ -249,7 +255,7 @@
   ]
  },
  "generated": "2026-10-19",
- "source": "ACT_MTP a2b870c / v1_slice",
+ "source": "ACT_MTP b33f4f7 / v1_slice",
  "stages": [
   {
    "n": 1,
@@ -300,7 +306,7 @@
    "stage": 1,
    "title": "The simulator reproduces hand-worked cases exactly",
    "lead": "Yes. In five hand-built cases with 190 event times and 308 path segments, the largest gap is 5 × 10⁻⁷ s, below the required millionth of a second. The rack rules give the hand-worked answer in every check, and in 96 random runs on the full yard no two AGVs ever used one rack at the same time.",
-   "body": "The five cases were built on the earlier 5-block section of the yard, where every path can be traced on paper. The rack rules of the current yard are checked on separate small cases. A suite of 756 automatic tests repeats all of these checks after every change to the code.",
+   "body": "The five cases were built on the earlier 5-block section of the yard, where every path can be traced on paper. The rack rules of the current yard are checked on separate small cases. A suite of 764 automatic tests repeats all of these checks after every change to the code.",
    "details": [
     [
      "Cases",
@@ -308,7 +314,7 @@
     ],
     [
      "Vehicle motion",
-     "AGVs drive at 6 m/s on straights and 3 m/s in turns, with 0.5 m/s² acceleration and braking (Luo, 2016)."
+     "AGVs drive at 6 m/s on straights and 3 m/s in turns, with 0.5 m/s² acceleration and braking (Luo, 2016). A loaded AGV is limited to 3.5 m/s (Zhao et al., 2025). The hand-built cases run at one speed, and the loaded limit is checked by separate automatic tests."
     ],
     [
      "Rack visit",
@@ -414,21 +420,21 @@
   {
    "id": "E1",
    "stage": 2,
-   "title": "Four AGVs per crane keep the cranes nearly always busy",
-   "lead": "The cranes wait less with every AGV added and almost never wait from 12 AGVs on. With 8 AGVs, four per crane, the best rule keeps each crane waiting 5.7 s per container while random dispatching wastes 13.3 s, so the later experiments use 8 AGVs.",
-   "body": "The yard is long, and each container needs 229 s of AGV work, about 3 crane cycles. Two cranes therefore need at least 6 AGVs even with perfect sharing. With two AGVs per crane the cranes manage 29.4 moves per hour, close to the 30.5 reported by Luo (2016). NV/FCFS stops improving and stays between 12 and 13 s from 8 AGVs on, all of it while load containers are fetched. Its window of three jobs was tuned on the earlier, shorter yard and is tuned again in the next experiment.",
+   "title": "Five AGVs per crane keep the cranes nearly always busy",
+   "lead": "The cranes wait less with every AGV added and almost never wait from 15 AGVs on. With 10 AGVs, five per crane, the best rule (NV/FCFS) keeps each crane waiting 5.5 s per container while random dispatching wastes 11.6 s, so the later experiments use 10 AGVs.",
+   "body": "The yard is long and a loaded AGV drives at only 3.5 m/s, so each container needs 261 s of AGV work, about 3.5 crane cycles. Two cranes therefore need at least 7.0 AGVs even with perfect sharing. With two AGVs per crane the cranes manage 25.7 moves per hour, about 16% below the 30.5 reported by Luo (2016), whose simulation uses its own tool and assumptions. From 12 AGVs on, NV/FCFS stops improving at 2.9 to 4.2 s, because its window of 5 jobs lets each crane have at most five AGVs.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025). No randomness."
     ],
     [
-     "Why 8 AGVs",
-     "It is the smallest even fleet at which the good rules leave little waiting while random dispatching still wastes more than twice as much. It also matches Luo (2016), who reports that at least four lift-AGVs per crane are needed for 40 moves per hour. Fleets of 6 and 10 are kept as a scarce and a comfortable case."
+     "Why 10 AGVs",
+     "It is the smallest even fleet at which the good rules leave little waiting while random dispatching still wastes about twice as much. Luo (2016) reports that terminals usually run 5 to 8 AGVs per crane. Fleets of 8 and 12 are kept as a scarce and a comfortable case."
     ],
     [
      "Rules",
-     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 3 jobs, fixed crane groups, and random dispatching."
+     "The Briskorn inventory rule with phase factor 1.6 (Briskorn et al., 2006), nearest vehicle first come first served (NV/FCFS) with a window of 5 jobs, fixed crane groups, and random dispatching."
     ],
     [
      "Statistics",
@@ -442,38 +448,38 @@
     "vary": "The fleet, from 2 to 16 AGVs (1 to 8 per crane), and the dispatching rule, all four rules.",
     "fixed": "No randomness, so every crane move takes exactly 75 s. Each run has 200 containers on the 50-block yard. Each fleet and rule is run on the same 30 instances.",
     "measure": "Crane idle time per container, the mean over the 30 instances with its 95% confidence interval.",
-    "decide": "The smallest fleet at which the good rules leave little waiting while random dispatching still wastes clearly more. Checked against the crane productivity reported by Luo (2016)."
+    "decide": "The smallest even fleet at which the good rules leave little waiting while random dispatching still wastes clearly more. Checked against the crane productivity reported by Luo (2016)."
    },
    "maths": [
     {
      "step": "The work an AGV does for one container",
      "text": "Each container needs a trip between crane and yard, the drive to the next job, and one rack visit of $r = 51$ s. Here $d$ is the driving time per container, all AGV legs added up and divided by the $n$ containers, averaged over the 30 instances and all fleet sizes.",
      "tex": "$$\\bar W = d + r$$",
-     "calc": "$$\\bar W = 177.7 + 51 = 228.7\\ \\text{s}$$"
+     "calc": "$$\\bar W = 210.2 + 51 = 261.2\\ \\text{s}$$"
     },
     {
      "step": "The fewest AGVs that could keep both cranes busy",
-     "text": "Each crane needs one AGV every $c = 75$ s, and one AGV can serve a container only every $\\bar W$ s. So $m = 2$ cranes need at least the number below. It is a lower bound, since it assumes AGVs never wait and are shared perfectly, which is why the cranes still wait with 6 AGVs.",
+     "text": "Each crane needs one AGV every $c = 75$ s, and one AGV can serve a container only every $\\bar W$ s. So $m = 2$ cranes need at least the number below. It is a lower bound, since it assumes AGVs never wait and are shared perfectly, which is why the cranes still wait with 8 AGVs.",
      "tex": "$$N_{\\min} = \\frac{m\\,\\bar W}{c}$$",
-     "calc": "$$N_{\\min} = \\frac{2 \\times 228.7}{75} = 6.1\\ \\text{AGVs}$$"
+     "calc": "$$N_{\\min} = \\frac{2 \\times 261.2}{75} = 7.0\\ \\text{AGVs}$$"
     },
     {
      "step": "From waiting time to crane productivity",
-     "text": "A crane completes one move every $c$ seconds plus the time $\\bar I$ it waits for AGVs, so its moves per hour are given below. With two AGVs per crane this gives about the 30.5 moves per hour reported by *Luo (2016)*.",
+     "text": "A crane completes one move every $c$ seconds plus the time $\\bar I$ it waits for AGVs, so its moves per hour are given below. With two AGVs per crane this is about 16% below the 30.5 moves per hour reported by *Luo (2016)*, because loaded AGVs drive at only 3.5 m/s here. Luo used a different simulation tool with its own assumptions.",
      "tex": "$$P = \\frac{3600}{c + \\bar I}$$",
-     "calc": "$$P_{N=4} = \\frac{3600}{75 + 47.4} = 29.4,\\qquad P_{N=8} = \\frac{3600}{75 + 5.7} = 44.6$$"
+     "calc": "$$P_{N=4} = \\frac{3600}{75 + 65.1} = 25.7,\\qquad P_{N=10} = \\frac{3600}{75 + 6.0} = 44.5$$"
     },
     {
      "step": "How precise each point on the chart is",
-     "text": "Each point is the mean idle time over 30 instances, with a 95% confidence interval. For the Briskorn rule at 8 AGVs the standard deviation over the instances is $s$ below.",
+     "text": "Each point is the mean idle time over 30 instances, with a 95% confidence interval. For the Briskorn rule at 10 AGVs the standard deviation over the instances is $s$ below.",
      "tex": "$$\\bar I \\pm t_{0.975,\\,29}\\,\\frac{s}{\\sqrt{30}}$$",
-     "calc": "$$ 5.7 \\pm 2.045 \\times \\frac{0.69}{\\sqrt{30}} = 5.7 \\pm 0.3\\ \\text{s}$$"
+     "calc": "$$ 6.0 \\pm 2.045 \\times \\frac{0.78}{\\sqrt{30}} = 6.0 \\pm 0.3\\ \\text{s}$$"
     }
    ],
    "chart": {
     "xLabel": "Number of AGVs (2 cranes)",
     "xFmt": "int",
-    "highlight": 8,
+    "highlight": 10,
     "variants": [
      {
       "label": "all",
@@ -499,38 +505,38 @@
         "name": "Briskorn inventory",
         "color": "#0f766e",
         "mean": [
-         149.49,
-         81.23,
-         47.44,
-         28.5,
-         16.88,
-         10.42,
-         5.7,
-         3.49,
-         2.06,
-         1.18,
-         0.68,
-         0.31,
-         0.12,
-         0.03,
-         0.01
+         181.37,
+         104.04,
+         65.11,
+         42.86,
+         28.05,
+         19.2,
+         12.84,
+         8.95,
+         5.96,
+         3.85,
+         2.52,
+         1.72,
+         1.0,
+         0.57,
+         0.27
         ],
         "ci": [
-         1.95,
-         1.15,
-         0.86,
-         0.63,
-         0.49,
-         0.34,
+         2.63,
+         1.69,
+         1.29,
+         0.91,
+         0.68,
+         0.61,
+         0.48,
+         0.37,
+         0.29,
+         0.29,
          0.26,
-         0.24,
-         0.18,
-         0.2,
-         0.13,
-         0.11,
-         0.05,
-         0.03,
-         0.02
+         0.22,
+         0.17,
+         0.16,
+         0.09
         ],
         "dash": false,
         "hidden": false
@@ -539,38 +545,38 @@
         "name": "NV/FCFS",
         "color": "#2563eb",
         "mean": [
-         157.07,
-         84.88,
-         50.01,
-         29.4,
-         16.74,
-         14.06,
-         12.98,
-         12.37,
-         12.18,
-         12.07,
-         12.08,
-         12.27,
-         12.42,
-         12.54,
-         12.73
+         191.45,
+         109.99,
+         68.64,
+         44.46,
+         29.26,
+         19.28,
+         12.59,
+         8.42,
+         5.54,
+         4.72,
+         4.19,
+         3.58,
+         3.14,
+         3.04,
+         2.9
         ],
         "ci": [
-         2.24,
-         1.33,
-         0.9,
-         0.8,
-         0.52,
-         0.38,
+         2.68,
+         1.92,
+         1.31,
+         0.89,
+         0.72,
+         0.59,
+         0.48,
          0.37,
-         0.34,
-         0.37,
-         0.42,
-         0.41,
-         0.41,
-         0.43,
-         0.43,
-         0.41
+         0.26,
+         0.28,
+         0.33,
+         0.24,
+         0.24,
+         0.22,
+         0.19
         ],
         "dash": false,
         "hidden": false
@@ -579,38 +585,38 @@
         "name": "Fixed groups",
         "color": "#a16207",
         "mean": [
-         150.59,
-         99.92,
-         48.61,
-         33.26,
-         17.15,
-         11.42,
-         5.41,
-         3.76,
-         1.91,
-         1.3,
-         0.66,
-         0.41,
-         0.12,
-         0.07,
-         0.0
+         182.97,
+         125.19,
+         66.61,
+         48.35,
+         29.3,
+         21.34,
+         12.9,
+         9.36,
+         5.66,
+         4.07,
+         2.34,
+         1.74,
+         1.13,
+         0.77,
+         0.37
         ],
         "ci": [
-         1.76,
-         1.3,
-         0.84,
-         0.69,
-         0.49,
-         0.41,
+         2.41,
+         1.77,
+         1.11,
+         0.99,
+         0.74,
+         0.63,
+         0.45,
+         0.35,
+         0.27,
          0.3,
-         0.22,
-         0.2,
+         0.3,
+         0.23,
          0.21,
          0.19,
-         0.13,
-         0.05,
-         0.04,
-         0.0
+         0.11
         ],
         "dash": false,
         "hidden": false
@@ -619,38 +625,38 @@
         "name": "Random",
         "color": "#a1a1aa",
         "mean": [
-         152.82,
-         86.01,
-         53.53,
-         35.35,
-         24.45,
-         17.77,
-         13.29,
-         10.12,
-         8.14,
-         6.42,
-         4.6,
-         2.82,
-         1.36,
-         0.73,
-         0.44
+         185.63,
+         108.35,
+         70.26,
+         47.62,
+         34.21,
+         25.37,
+         19.27,
+         14.62,
+         11.55,
+         9.02,
+         6.93,
+         4.81,
+         3.02,
+         1.77,
+         1.06
         ],
         "ci": [
-         2.6,
-         1.94,
+         3.19,
+         2.33,
+         1.72,
          1.4,
-         1.17,
-         1.14,
-         1.11,
-         1.04,
-         1.04,
-         1.07,
-         0.93,
-         0.7,
-         0.48,
+         1.25,
+         1.18,
+         1.09,
+         0.99,
+         1.06,
+         0.95,
+         0.78,
+         0.61,
+         0.45,
          0.28,
-         0.2,
-         0.17
+         0.23
         ],
         "dash": false,
         "hidden": false
@@ -670,108 +676,108 @@
     "rows": [
      [
       "2",
-      "149.5 ± 1.9",
-      "157.1 ± 2.2",
-      "150.6 ± 1.8",
-      "152.8 ± 2.6"
+      "181.4 ± 2.6",
+      "191.5 ± 2.7",
+      "183.0 ± 2.4",
+      "185.6 ± 3.2"
      ],
      [
       "3",
-      "81.2 ± 1.1",
-      "84.9 ± 1.3",
-      "99.9 ± 1.3",
-      "86.0 ± 1.9"
+      "104.0 ± 1.7",
+      "110.0 ± 1.9",
+      "125.2 ± 1.8",
+      "108.3 ± 2.3"
      ],
      [
       "4",
-      "47.4 ± 0.9",
-      "50.0 ± 0.9",
-      "48.6 ± 0.8",
-      "53.5 ± 1.4"
+      "65.1 ± 1.3",
+      "68.6 ± 1.3",
+      "66.6 ± 1.1",
+      "70.3 ± 1.7"
      ],
      [
       "5",
-      "28.5 ± 0.6",
-      "29.4 ± 0.8",
-      "33.3 ± 0.7",
-      "35.3 ± 1.2"
+      "42.9 ± 0.9",
+      "44.5 ± 0.9",
+      "48.4 ± 1.0",
+      "47.6 ± 1.4"
      ],
      [
       "6",
-      "16.9 ± 0.5",
-      "16.7 ± 0.5",
-      "17.2 ± 0.5",
-      "24.5 ± 1.1"
+      "28.0 ± 0.7",
+      "29.3 ± 0.7",
+      "29.3 ± 0.7",
+      "34.2 ± 1.2"
      ],
      [
       "7",
-      "10.4 ± 0.3",
-      "14.1 ± 0.4",
-      "11.4 ± 0.4",
-      "17.8 ± 1.1"
+      "19.2 ± 0.6",
+      "19.3 ± 0.6",
+      "21.3 ± 0.6",
+      "25.4 ± 1.2"
      ],
      [
       "8",
-      "5.7 ± 0.3",
-      "13.0 ± 0.4",
-      "5.4 ± 0.3",
-      "13.3 ± 1.0"
+      "12.8 ± 0.5",
+      "12.6 ± 0.5",
+      "12.9 ± 0.5",
+      "19.3 ± 1.1"
      ],
      [
       "9",
-      "3.5 ± 0.2",
-      "12.4 ± 0.3",
-      "3.8 ± 0.2",
-      "10.1 ± 1.0"
+      "9.0 ± 0.4",
+      "8.4 ± 0.4",
+      "9.4 ± 0.4",
+      "14.6 ± 1.0"
      ],
      [
       "10",
-      "2.1 ± 0.2",
-      "12.2 ± 0.4",
-      "1.9 ± 0.2",
-      "8.1 ± 1.1"
+      "6.0 ± 0.3",
+      "5.5 ± 0.3",
+      "5.7 ± 0.3",
+      "11.6 ± 1.1"
      ],
      [
       "11",
-      "1.2 ± 0.2",
-      "12.1 ± 0.4",
-      "1.3 ± 0.2",
-      "6.4 ± 0.9"
+      "3.8 ± 0.3",
+      "4.7 ± 0.3",
+      "4.1 ± 0.3",
+      "9.0 ± 0.9"
      ],
      [
       "12",
-      "0.7 ± 0.1",
-      "12.1 ± 0.4",
-      "0.7 ± 0.2",
-      "4.6 ± 0.7"
+      "2.5 ± 0.3",
+      "4.2 ± 0.3",
+      "2.3 ± 0.3",
+      "6.9 ± 0.8"
      ],
      [
       "13",
-      "0.3 ± 0.1",
-      "12.3 ± 0.4",
-      "0.4 ± 0.1",
-      "2.8 ± 0.5"
+      "1.7 ± 0.2",
+      "3.6 ± 0.2",
+      "1.7 ± 0.2",
+      "4.8 ± 0.6"
      ],
      [
       "14",
-      "0.1 ± 0.0",
-      "12.4 ± 0.4",
-      "0.1 ± 0.1",
-      "1.4 ± 0.3"
+      "1.0 ± 0.2",
+      "3.1 ± 0.2",
+      "1.1 ± 0.2",
+      "3.0 ± 0.4"
      ],
      [
       "15",
-      "0.0 ± 0.0",
-      "12.5 ± 0.4",
-      "0.1 ± 0.0",
-      "0.7 ± 0.2"
+      "0.6 ± 0.2",
+      "3.0 ± 0.2",
+      "0.8 ± 0.2",
+      "1.8 ± 0.3"
      ],
      [
       "16",
-      "0.0 ± 0.0",
-      "12.7 ± 0.4",
-      "0.0 ± 0.0",
-      "0.4 ± 0.2"
+      "0.3 ± 0.1",
+      "2.9 ± 0.2",
+      "0.4 ± 0.1",
+      "1.1 ± 0.2"
      ]
     ]
    },
@@ -781,12 +787,12 @@
    "id": "E1b",
    "stage": 2,
    "title": "On the long yard every rule needs to see five jobs ahead",
-   "lead": "Five jobs. With 1, 2 or 3 jobs in view, every rule leaves the cranes waiting at least 13 s per container at 8 AGVs, because loads are fetched too late. From 5 jobs on, the three real rules all reach 5.4 to 5.7 s, and looking further brings no gain.",
-   "body": "NV/FCFS now uses a window of 5 and reaches 5.5 s, level with the Briskorn rule (5.7 s) and fixed groups (5.4 s). Its stall in the fleet sweep came from its window, not from the rule. The terminal still shows every method the next 10 jobs, as in Kim and Bae (2004). Random dispatching is the exception. A short window narrows its choice and makes it look better, 8.9 s with 5 jobs against 13.3 s with 10, so the random reference is always measured with the terminal's 10 jobs.",
+   "lead": "Five jobs. With 1, 2 or 3 jobs in view, every rule leaves the cranes waiting at least 21 s per container at 10 AGVs, because loads are fetched too late. With 5 jobs the three real rules reach 5.4 to 5.7 s, and every rule does best at 5 on the training instances.",
+   "body": "NV/FCFS uses its own window of 5 and reaches 5.5 s. The terminal itself still shows every method the next 10 jobs, as in Kim and Bae (2004). With all 10 jobs the Briskorn rule waits a little longer, 6.0 s against 5.4 s, and random dispatching much longer, 11.6 s against 5.9 s. A window of 5 lets each crane hold at most five AGVs, the fair share of ten AGVs over two cranes, so the window itself does part of the dispatching. The terminal keeps 10 jobs, since the look-ahead is a property of the terminal and not a setting to tune, and the random reference is always measured with it.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. No randomness."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025). No randomness."
     ],
     [
      "Windows tested",
@@ -794,11 +800,11 @@
     ],
     [
      "Chosen setting",
-     "The terminal shows 10 jobs to every method (Kim and Bae, 2004). NV/FCFS releases jobs by its own window of 5. For the other rules any window from 5 up gives the same result."
+     "The terminal shows 10 jobs to every method (Kim and Bae, 2004). NV/FCFS releases jobs by its own window of 5."
     ],
     [
      "Side cases",
-     "With 6 AGVs NV/FCFS is best at 3 jobs (16.7 s against 17.2 s at 5). With 10 AGVs every rule is best from 5 jobs on."
+     "With 8 AGVs every rule is again best at 5 jobs. With 12 AGVs the real rules are best at 10 jobs, fixed groups 2.3 s against 4.3 s at 5, since a window of 5 would cap a crane at five of its six AGVs."
     ],
     [
      "Rules",
@@ -812,8 +818,8 @@
    "label": "Experiment 2.2 · Look-ahead window",
    "design": {
     "question": "How many upcoming jobs of each crane must a rule see to dispatch well on this yard?",
-    "why": "A rule sees only the next few jobs of each crane, called the look-ahead window. A load has to be fetched from the yard before the crane needs it, so a rule that sees too few jobs sends its AGVs too late. In the fleet sweep, NV/FCFS with a window of three jobs stopped improving at about 12 s.",
-    "vary": "The window, 1, 2, 3, 5, 10, 20 and 50 jobs per crane, for all four rules, at 8 AGVs and at 6 and 10 as side cases.",
+    "why": "A rule sees only the next few jobs of each crane, called the look-ahead window. A load has to be fetched from the yard before the crane needs it, so a rule that sees too few jobs sends its AGVs too late.",
+    "vary": "The window, 1, 2, 3, 5, 10, 20 and 50 jobs per crane, for all four rules, at 10 AGVs and at 8 and 12 as side cases.",
     "fixed": "No randomness, with the same yard and instances as the fleet sweep. The window is chosen on 30 training instances and reported on the 30 test instances used everywhere else, so no rule is tuned on the numbers it is judged by.",
     "measure": "Crane idle time per container on the test instances, with a 95% confidence interval.",
     "decide": "For each rule, the window with the lowest idle time on the training instances, and the shorter window when two are equal to one decimal."
@@ -824,226 +830,6 @@
     "highlight": 5,
     "defaultVariant": 0,
     "variants": [
-     {
-      "label": "8 AGVs",
-      "x": [
-       1,
-       2,
-       3,
-       5,
-       10,
-       20,
-       50
-      ],
-      "series": [
-       {
-        "name": "Briskorn inventory",
-        "color": "#0f766e",
-        "mean": [
-         85.28,
-         30.28,
-         12.83,
-         5.71,
-         5.7,
-         5.7,
-         5.7
-        ],
-        "ci": [
-         1.37,
-         0.67,
-         0.39,
-         0.27,
-         0.26,
-         0.26,
-         0.26
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "NV/FCFS",
-        "color": "#2563eb",
-        "mean": [
-         85.28,
-         30.29,
-         12.98,
-         5.49,
-         5.79,
-         5.75,
-         5.8
-        ],
-        "ci": [
-         1.37,
-         0.67,
-         0.37,
-         0.26,
-         0.28,
-         0.29,
-         0.29
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Fixed groups",
-        "color": "#a16207",
-        "mean": [
-         85.61,
-         30.35,
-         12.96,
-         5.41,
-         5.41,
-         5.41,
-         5.41
-        ],
-        "ci": [
-         1.31,
-         0.69,
-         0.4,
-         0.3,
-         0.3,
-         0.3,
-         0.3
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Random",
-        "color": "#a1a1aa",
-        "mean": [
-         85.27,
-         30.26,
-         13.0,
-         8.91,
-         13.29,
-         13.29,
-         13.29
-        ],
-        "ci": [
-         1.37,
-         0.64,
-         0.43,
-         0.36,
-         1.04,
-         1.04,
-         1.04
-        ],
-        "dash": false,
-        "hidden": false
-       }
-      ]
-     },
-     {
-      "label": "6 AGVs",
-      "x": [
-       1,
-       2,
-       3,
-       5,
-       10,
-       20,
-       50
-      ],
-      "series": [
-       {
-        "name": "Briskorn inventory",
-        "color": "#0f766e",
-        "mean": [
-         88.64,
-         33.23,
-         16.97,
-         16.88,
-         16.88,
-         16.88,
-         16.88
-        ],
-        "ci": [
-         1.5,
-         0.71,
-         0.53,
-         0.49,
-         0.49,
-         0.49,
-         0.49
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "NV/FCFS",
-        "color": "#2563eb",
-        "mean": [
-         88.67,
-         33.16,
-         16.74,
-         17.24,
-         17.79,
-         18.39,
-         17.45
-        ],
-        "ci": [
-         1.53,
-         0.69,
-         0.52,
-         0.61,
-         0.52,
-         0.68,
-         0.51
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Fixed groups",
-        "color": "#a16207",
-        "mean": [
-         90.16,
-         33.8,
-         17.15,
-         17.15,
-         17.15,
-         17.15,
-         17.15
-        ],
-        "ci": [
-         1.41,
-         0.72,
-         0.49,
-         0.49,
-         0.49,
-         0.49,
-         0.49
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Random",
-        "color": "#a1a1aa",
-        "mean": [
-         88.74,
-         33.63,
-         19.15,
-         23.71,
-         24.45,
-         24.45,
-         24.45
-        ],
-        "ci": [
-         1.48,
-         0.73,
-         0.54,
-         0.94,
-         1.14,
-         1.14,
-         1.14
-        ],
-        "dash": false,
-        "hidden": false
-       }
-      ]
-     },
      {
       "label": "10 AGVs",
       "x": [
@@ -1060,22 +846,22 @@
         "name": "Briskorn inventory",
         "color": "#0f766e",
         "mean": [
-         88.6,
-         30.4,
-         12.11,
-         1.61,
-         2.06,
-         2.06,
-         2.06
+         109.52,
+         42.59,
+         20.98,
+         5.39,
+         5.96,
+         5.96,
+         5.96
         ],
         "ci": [
-         1.4,
-         0.71,
-         0.37,
-         0.18,
-         0.18,
-         0.18,
-         0.18
+         1.8,
+         0.96,
+         0.61,
+         0.28,
+         0.29,
+         0.29,
+         0.29
         ],
         "dash": false,
         "hidden": false
@@ -1084,22 +870,22 @@
         "name": "NV/FCFS",
         "color": "#2563eb",
         "mean": [
-         88.99,
-         30.41,
-         12.18,
-         1.79,
-         1.8,
-         1.88,
-         1.96
+         109.23,
+         42.65,
+         20.97,
+         5.54,
+         5.75,
+         5.89,
+         5.74
         ],
         "ci": [
-         1.29,
-         0.73,
-         0.37,
-         0.15,
-         0.16,
-         0.18,
-         0.25
+         1.83,
+         0.96,
+         0.62,
+         0.26,
+         0.32,
+         0.31,
+         0.31
         ],
         "dash": false,
         "hidden": false
@@ -1108,22 +894,22 @@
         "name": "Fixed groups",
         "color": "#a16207",
         "mean": [
-         88.93,
-         30.5,
-         12.21,
-         1.91,
-         1.91,
-         1.91,
-         1.91
+         109.54,
+         42.9,
+         21.21,
+         5.66,
+         5.66,
+         5.66,
+         5.66
         ],
         "ci": [
-         1.31,
-         0.71,
-         0.38,
-         0.2,
-         0.2,
-         0.2,
-         0.2
+         1.85,
+         0.93,
+         0.57,
+         0.27,
+         0.27,
+         0.27,
+         0.27
         ],
         "dash": false,
         "hidden": false
@@ -1132,22 +918,242 @@
         "name": "Random",
         "color": "#a1a1aa",
         "mean": [
-         88.6,
-         30.44,
-         12.19,
-         1.92,
-         8.14,
-         8.14,
-         8.14
+         109.52,
+         42.73,
+         21.02,
+         5.91,
+         11.55,
+         11.55,
+         11.55
         ],
         "ci": [
-         1.4,
-         0.72,
-         0.4,
-         0.17,
-         1.07,
-         1.07,
-         1.07
+         1.8,
+         0.95,
+         0.61,
+         0.3,
+         1.06,
+         1.06,
+         1.06
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "8 AGVs",
+      "x": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         105.77,
+         42.72,
+         22.4,
+         12.9,
+         12.84,
+         12.84,
+         12.84
+        ],
+        "ci": [
+         1.84,
+         0.9,
+         0.58,
+         0.48,
+         0.48,
+         0.48,
+         0.48
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         105.76,
+         42.74,
+         22.35,
+         12.59,
+         12.93,
+         13.19,
+         12.87
+        ],
+        "ci": [
+         1.85,
+         0.91,
+         0.61,
+         0.48,
+         0.38,
+         0.49,
+         0.43
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         106.84,
+         43.2,
+         22.71,
+         12.9,
+         12.9,
+         12.9,
+         12.9
+        ],
+        "ci": [
+         1.81,
+         0.95,
+         0.58,
+         0.45,
+         0.45,
+         0.45,
+         0.45
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         105.89,
+         42.7,
+         22.78,
+         16.2,
+         19.27,
+         19.27,
+         19.27
+        ],
+        "ci": [
+         1.85,
+         0.94,
+         0.64,
+         0.59,
+         1.09,
+         1.09,
+         1.09
+        ],
+        "dash": false,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "12 AGVs",
+      "x": [
+       1,
+       2,
+       3,
+       5,
+       10,
+       20,
+       50
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "mean": [
+         110.49,
+         43.54,
+         20.9,
+         4.14,
+         2.52,
+         2.52,
+         2.52
+        ],
+        "ci": [
+         1.8,
+         0.89,
+         0.59,
+         0.31,
+         0.26,
+         0.26,
+         0.26
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "mean": [
+         111.78,
+         43.54,
+         20.86,
+         4.19,
+         2.44,
+         2.5,
+         2.45
+        ],
+        "ci": [
+         1.74,
+         0.9,
+         0.61,
+         0.33,
+         0.29,
+         0.29,
+         0.31
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         111.24,
+         43.53,
+         21.01,
+         4.26,
+         2.34,
+         2.34,
+         2.34
+        ],
+        "ci": [
+         1.74,
+         0.91,
+         0.64,
+         0.35,
+         0.3,
+         0.3,
+         0.3
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "mean": [
+         110.49,
+         43.52,
+         20.9,
+         4.21,
+         6.93,
+         7.58,
+         7.58
+        ],
+        "ci": [
+         1.8,
+         0.87,
+         0.61,
+         0.31,
+         0.78,
+         1.1,
+         1.1
         ],
         "dash": false,
         "hidden": false
@@ -1168,10 +1174,10 @@
      "step": "Why three jobs are too few on this yard",
      "text": "To fetch a load, an AGV must drive to the block, visit the rack and come back, which takes about the AGV work per container $\\bar W$ found in the fleet sweep. The lead time must cover it. The scene below grows the window one job at a time, and it can be paused or stepped through.",
      "tex": "$$w\\,c > \\bar W \\quad\\Longrightarrow\\quad w > \\frac{\\bar W}{c}$$",
-     "calc": "$$w > \\frac{228.7}{75} = 3.05\\quad\\Longrightarrow\\quad w \\ge 4$$",
+     "calc": "$$w > \\frac{261.2}{75} = 3.48\\quad\\Longrightarrow\\quad w \\ge 4$$",
      "scene": {
       "kind": "leadtime",
-      "W": 228.7,
+      "W": 261.2,
       "c": 75,
       "tested": [
        1,
@@ -1188,7 +1194,7 @@
      "step": "Choosing a window without favouring any rule",
      "text": "Each rule\\'s window is chosen on 30 training instances (seeds 100 to 129) and the result is reported on the 30 test instances (seeds 0 to 29) used by every other experiment. Ties at one decimal go to the shorter window.",
      "tex": "$$w^{*} = \\arg\\min_{w}\\ \\frac{1}{30}\\sum_{k=100}^{129} I_k(w)$$",
-     "calc": "$$\\text{NV/FCFS at 8 AGVs:}\\ \\bar I_{\\text{train}}(5) = 5.5,\\ \\bar I_{\\text{train}}(10) = 5.5\\ \\Rightarrow\\ w^* = 5$$"
+     "calc": "$$\\text{NV/FCFS at 10 AGVs:}\\ \\bar I_{\\text{train}}(5) = 5.6,\\ \\bar I_{\\text{train}}(10) = 5.7\\ \\Rightarrow\\ w^* = 5$$"
     }
    ]
   },
@@ -1196,12 +1202,12 @@
    "id": "E5a",
    "stage": 2,
    "title": "The size of the ship does not change the comparison",
-   "lead": "It does not. From 100 to 400 jobs per crane the three real rules stay within 0.4 s of their standard result, and random dispatching stays far behind. Bigger bays do lower the waiting, to 4.4 s for the Briskorn rule, because the crane switches from discharge to loading less often.",
-   "body": "The three real rules are always within a second of each other at 8 AGVs, and random dispatching wastes about 8 s more per container at every size. The smallest ship, 24 jobs per crane, is distorted by the start of the run and is not used. With crane times varying by 20% and with 6 or 10 AGVs the picture is the same, as the full table in the method details shows. This completes stage 2, so every later experiment uses 8 AGVs, a look-ahead of 10 jobs with 5 for NV/FCFS, and the standard ship.",
+   "lead": "It does not. From 100 to 400 jobs per crane the three real rules stay within 0.2 s of their standard result, and random dispatching stays far behind. Bigger bays do lower the waiting, to 3.8 s for NV/FCFS, because the crane switches from discharge to loading less often.",
+   "body": "The three real rules are always within a second of each other at 10 AGVs, and random dispatching wastes about 7 s more per container at every size. The smallest ship, 24 jobs per crane, is distorted by the start of the run and is not used. With crane times varying by 20% and with 8 AGVs the picture is the same. With 12 AGVs NV/FCFS falls behind the other two rules, again because its window of 5 caps each crane at five AGVs. The full table is in the method details. This completes stage 2, so every later experiment uses 10 AGVs, a look-ahead of 10 jobs with 5 for NV/FCFS, and the standard ship.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025)."
     ],
     [
      "Ships",
@@ -1221,7 +1227,7 @@
     "question": "Would a longer or shorter ship change how the methods compare?",
     "why": "Every experiment uses one standard ship of 100 jobs per crane. If a different ship ranked the methods differently, the results would hold for this ship only.",
     "vary": "The ship, from 1 bay of 12 discharge and 12 load containers per crane up to 8 bays of 25 and 25, and 2 bigger bays of 50 and 50. All four rules, with crane times fixed and varying by up to 20%.",
-    "fixed": "8 AGVs, with 6 and 10 as side cases, the 50-block yard, and the same 30 instances for every rule.",
+    "fixed": "10 AGVs, with 8 and 12 as side cases, the 50-block yard, and the same 30 instances for every rule.",
     "measure": "Crane idle time per container and the order of the rules, with 95% confidence intervals.",
     "decide": "The standard ship is large enough if the idle time per container and the order of the rules stay the same from it upward."
    },
@@ -1238,274 +1244,274 @@
     ],
     "rows": [
      [
-      "8",
+      "10",
       "±0%",
       "1 × (12+12)",
-      "7.9 ± 0.7",
-      "7.9 ± 0.7",
-      "7.8 ± 0.8",
-      "12.2 ± 1.3"
+      "9.1 ± 0.9",
+      "8.6 ± 0.8",
+      "8.7 ± 0.8",
+      "11.8 ± 1.1"
      ],
      [
-      "8",
+      "10",
       "±0%",
       "2 × (25+25)",
+      "6.0 ± 0.3",
+      "5.5 ± 0.3",
+      "5.7 ± 0.3",
+      "11.6 ± 1.1"
+     ],
+     [
+      "10",
+      "±0%",
+      "4 × (25+25)",
       "5.7 ± 0.3",
       "5.5 ± 0.3",
-      "5.4 ± 0.3",
-      "13.3 ± 1.0"
-     ],
-     [
-      "8",
-      "±0%",
-      "4 × (25+25)",
-      "5.8 ± 0.2",
-      "5.4 ± 0.2",
-      "5.3 ± 0.2",
-      "13.7 ± 0.8"
-     ],
-     [
-      "8",
-      "±0%",
-      "2 × (50+50)",
-      "4.4 ± 0.2",
-      "3.9 ± 0.2",
-      "3.8 ± 0.2",
-      "12.6 ± 0.8"
-     ],
-     [
-      "8",
-      "±0%",
-      "8 × (25+25)",
-      "6.1 ± 0.3",
-      "5.5 ± 0.1",
-      "5.4 ± 0.1",
-      "14.3 ± 0.7"
-     ],
-     [
-      "8",
-      "±20%",
-      "1 × (12+12)",
-      "8.2 ± 0.7",
-      "7.8 ± 0.6",
-      "8.0 ± 0.9",
-      "12.7 ± 1.3"
-     ],
-     [
-      "8",
-      "±20%",
-      "2 × (25+25)",
-      "6.0 ± 0.3",
-      "5.7 ± 0.3",
-      "5.6 ± 0.3",
-      "13.4 ± 1.0"
-     ],
-     [
-      "8",
-      "±20%",
-      "4 × (25+25)",
-      "6.0 ± 0.3",
-      "5.5 ± 0.2",
-      "5.5 ± 0.2",
-      "13.8 ± 0.9"
-     ],
-     [
-      "8",
-      "±20%",
-      "2 × (50+50)",
-      "4.8 ± 0.2",
-      "4.1 ± 0.2",
-      "4.0 ± 0.2",
-      "12.9 ± 0.8"
-     ],
-     [
-      "8",
-      "±20%",
-      "8 × (25+25)",
-      "6.1 ± 0.2",
       "5.6 ± 0.2",
-      "5.5 ± 0.1",
-      "14.4 ± 0.6"
-     ],
-     [
-      "6",
-      "±0%",
-      "1 × (12+12)",
-      "18.7 ± 0.9",
-      "19.7 ± 1.1",
-      "19.1 ± 0.9",
-      "24.5 ± 1.6"
-     ],
-     [
-      "6",
-      "±0%",
-      "2 × (25+25)",
-      "16.9 ± 0.5",
-      "17.2 ± 0.6",
-      "17.2 ± 0.5",
-      "24.5 ± 1.1"
-     ],
-     [
-      "6",
-      "±0%",
-      "4 × (25+25)",
-      "16.8 ± 0.3",
-      "17.4 ± 0.3",
-      "16.9 ± 0.3",
-      "25.2 ± 1.0"
-     ],
-     [
-      "6",
-      "±0%",
-      "2 × (50+50)",
-      "15.4 ± 0.3",
-      "16.0 ± 0.3",
-      "15.7 ± 0.3",
-      "24.0 ± 0.7"
-     ],
-     [
-      "6",
-      "±0%",
-      "8 × (25+25)",
-      "16.8 ± 0.2",
-      "17.4 ± 0.3",
-      "17.0 ± 0.3",
-      "25.8 ± 0.7"
-     ],
-     [
-      "6",
-      "±20%",
-      "1 × (12+12)",
-      "19.0 ± 1.0",
-      "20.2 ± 1.2",
-      "19.4 ± 0.9",
-      "24.8 ± 1.7"
-     ],
-     [
-      "6",
-      "±20%",
-      "2 × (25+25)",
-      "17.1 ± 0.4",
-      "17.9 ± 0.5",
-      "17.4 ± 0.5",
-      "24.8 ± 1.1"
-     ],
-     [
-      "6",
-      "±20%",
-      "4 × (25+25)",
-      "16.9 ± 0.3",
-      "17.8 ± 0.4",
-      "17.0 ± 0.3",
-      "25.1 ± 1.0"
-     ],
-     [
-      "6",
-      "±20%",
-      "2 × (50+50)",
-      "15.6 ± 0.3",
-      "16.4 ± 0.3",
-      "15.9 ± 0.3",
-      "24.2 ± 0.8"
-     ],
-     [
-      "6",
-      "±20%",
-      "8 × (25+25)",
-      "17.1 ± 0.3",
-      "17.5 ± 0.3",
-      "17.1 ± 0.2",
-      "26.0 ± 0.6"
-     ],
-     [
-      "10",
-      "±0%",
-      "1 × (12+12)",
-      "3.8 ± 0.6",
-      "3.6 ± 0.6",
-      "3.4 ± 0.6",
-      "7.0 ± 1.1"
-     ],
-     [
-      "10",
-      "±0%",
-      "2 × (25+25)",
-      "2.1 ± 0.2",
-      "1.8 ± 0.2",
-      "1.9 ± 0.2",
-      "8.1 ± 1.1"
-     ],
-     [
-      "10",
-      "±0%",
-      "4 × (25+25)",
-      "2.0 ± 0.2",
-      "1.7 ± 0.2",
-      "1.9 ± 0.2",
-      "8.7 ± 0.9"
+      "12.2 ± 0.8"
      ],
      [
       "10",
       "±0%",
       "2 × (50+50)",
-      "1.3 ± 0.1",
-      "0.8 ± 0.1",
-      "0.9 ± 0.1",
-      "7.8 ± 0.8"
+      "4.2 ± 0.2",
+      "3.8 ± 0.2",
+      "3.9 ± 0.2",
+      "10.8 ± 0.8"
      ],
      [
       "10",
       "±0%",
       "8 × (25+25)",
-      "1.9 ± 0.1",
-      "1.7 ± 0.1",
-      "1.8 ± 0.1",
-      "9.1 ± 0.6"
+      "5.7 ± 0.2",
+      "5.4 ± 0.2",
+      "5.6 ± 0.2",
+      "12.8 ± 0.6"
      ],
      [
       "10",
       "±20%",
       "1 × (12+12)",
-      "4.0 ± 0.6",
-      "3.8 ± 0.6",
-      "3.6 ± 0.6",
-      "7.0 ± 1.1"
+      "8.8 ± 1.0",
+      "8.9 ± 0.9",
+      "8.8 ± 0.8",
+      "12.0 ± 1.1"
      ],
      [
       "10",
       "±20%",
       "2 × (25+25)",
-      "2.1 ± 0.2",
-      "2.0 ± 0.2",
-      "2.1 ± 0.2",
-      "8.2 ± 1.1"
+      "5.9 ± 0.3",
+      "5.7 ± 0.3",
+      "5.8 ± 0.3",
+      "11.9 ± 1.0"
      ],
      [
       "10",
       "±20%",
       "4 × (25+25)",
+      "5.9 ± 0.3",
+      "5.6 ± 0.3",
+      "5.7 ± 0.2",
+      "12.3 ± 0.9"
+     ],
+     [
+      "10",
+      "±20%",
+      "2 × (50+50)",
+      "4.5 ± 0.3",
+      "4.0 ± 0.2",
+      "4.0 ± 0.2",
+      "10.9 ± 0.8"
+     ],
+     [
+      "10",
+      "±20%",
+      "8 × (25+25)",
+      "5.8 ± 0.2",
+      "5.5 ± 0.2",
+      "5.6 ± 0.2",
+      "12.9 ± 0.6"
+     ],
+     [
+      "8",
+      "±0%",
+      "1 × (12+12)",
+      "15.5 ± 1.1",
+      "16.1 ± 1.0",
+      "16.0 ± 1.1",
+      "19.3 ± 1.2"
+     ],
+     [
+      "8",
+      "±0%",
+      "2 × (25+25)",
+      "12.8 ± 0.5",
+      "12.6 ± 0.5",
+      "12.9 ± 0.5",
+      "19.3 ± 1.1"
+     ],
+     [
+      "8",
+      "±0%",
+      "4 × (25+25)",
+      "12.8 ± 0.3",
+      "12.5 ± 0.3",
+      "12.6 ± 0.3",
+      "19.7 ± 1.0"
+     ],
+     [
+      "8",
+      "±0%",
+      "2 × (50+50)",
+      "11.0 ± 0.3",
+      "10.7 ± 0.3",
+      "10.7 ± 0.3",
+      "18.1 ± 0.7"
+     ],
+     [
+      "8",
+      "±0%",
+      "8 × (25+25)",
+      "13.0 ± 0.3",
+      "12.5 ± 0.3",
+      "12.6 ± 0.2",
+      "20.6 ± 0.7"
+     ],
+     [
+      "8",
+      "±20%",
+      "1 × (12+12)",
+      "15.9 ± 1.3",
+      "16.3 ± 1.0",
+      "15.9 ± 1.2",
+      "19.3 ± 1.3"
+     ],
+     [
+      "8",
+      "±20%",
+      "2 × (25+25)",
+      "13.0 ± 0.4",
+      "12.9 ± 0.5",
+      "13.1 ± 0.5",
+      "19.5 ± 1.1"
+     ],
+     [
+      "8",
+      "±20%",
+      "4 × (25+25)",
+      "12.8 ± 0.3",
+      "12.8 ± 0.3",
+      "12.7 ± 0.4",
+      "19.9 ± 1.0"
+     ],
+     [
+      "8",
+      "±20%",
+      "2 × (50+50)",
+      "11.1 ± 0.3",
+      "10.9 ± 0.4",
+      "10.9 ± 0.3",
+      "18.2 ± 0.7"
+     ],
+     [
+      "8",
+      "±20%",
+      "8 × (25+25)",
+      "13.4 ± 0.3",
+      "12.6 ± 0.2",
+      "12.7 ± 0.2",
+      "20.6 ± 0.6"
+     ],
+     [
+      "12",
+      "±0%",
+      "1 × (12+12)",
+      "4.6 ± 0.8",
+      "5.8 ± 0.8",
+      "4.7 ± 0.8",
+      "6.8 ± 1.0"
+     ],
+     [
+      "12",
+      "±0%",
+      "2 × (25+25)",
+      "2.5 ± 0.3",
+      "4.2 ± 0.3",
+      "2.3 ± 0.3",
+      "6.9 ± 0.8"
+     ],
+     [
+      "12",
+      "±0%",
+      "4 × (25+25)",
+      "2.5 ± 0.2",
+      "3.9 ± 0.2",
       "2.2 ± 0.2",
-      "1.8 ± 0.2",
-      "2.0 ± 0.2",
-      "8.8 ± 0.9"
+      "7.3 ± 0.6"
      ],
      [
-      "10",
+      "12",
+      "±0%",
+      "2 × (50+50)",
+      "1.5 ± 0.1",
+      "3.2 ± 0.1",
+      "1.1 ± 0.1",
+      "6.4 ± 0.6"
+     ],
+     [
+      "12",
+      "±0%",
+      "8 × (25+25)",
+      "2.5 ± 0.2",
+      "3.9 ± 0.2",
+      "2.3 ± 0.2",
+      "7.7 ± 0.5"
+     ],
+     [
+      "12",
+      "±20%",
+      "1 × (12+12)",
+      "4.6 ± 0.8",
+      "6.2 ± 0.9",
+      "5.0 ± 0.8",
+      "7.0 ± 1.0"
+     ],
+     [
+      "12",
+      "±20%",
+      "2 × (25+25)",
+      "2.6 ± 0.3",
+      "4.4 ± 0.3",
+      "2.5 ± 0.3",
+      "6.8 ± 0.7"
+     ],
+     [
+      "12",
+      "±20%",
+      "4 × (25+25)",
+      "2.6 ± 0.2",
+      "4.1 ± 0.2",
+      "2.3 ± 0.2",
+      "7.4 ± 0.7"
+     ],
+     [
+      "12",
       "±20%",
       "2 × (50+50)",
+      "1.6 ± 0.2",
+      "3.2 ± 0.2",
       "1.3 ± 0.1",
-      "0.9 ± 0.1",
-      "1.0 ± 0.1",
-      "7.9 ± 0.9"
+      "6.5 ± 0.7"
      ],
      [
-      "10",
+      "12",
       "±20%",
       "8 × (25+25)",
-      "2.1 ± 0.1",
-      "1.8 ± 0.1",
-      "1.9 ± 0.1",
-      "9.1 ± 0.6"
+      "2.6 ± 0.1",
+      "4.1 ± 0.1",
+      "2.4 ± 0.2",
+      "7.7 ± 0.5"
      ]
     ]
    },
@@ -1522,45 +1528,45 @@
      [
       "1 × (12+12)",
       "24",
-      "7.9 ± 0.7",
-      "7.9 ± 0.7",
-      "7.8 ± 0.8",
-      "12.2 ± 1.3"
+      "9.1 ± 0.9",
+      "8.6 ± 0.8",
+      "8.7 ± 0.8",
+      "11.8 ± 1.1"
      ],
      [
       "2 × (25+25)",
       "100",
-      "5.7 ± 0.3",
+      "6.0 ± 0.3",
       "5.5 ± 0.3",
-      "5.4 ± 0.3",
-      "13.3 ± 1.0"
+      "5.7 ± 0.3",
+      "11.6 ± 1.1"
      ],
      [
       "4 × (25+25)",
       "200",
-      "5.8 ± 0.2",
-      "5.4 ± 0.2",
-      "5.3 ± 0.2",
-      "13.7 ± 0.8"
+      "5.7 ± 0.3",
+      "5.5 ± 0.3",
+      "5.6 ± 0.2",
+      "12.2 ± 0.8"
      ],
      [
       "2 × (50+50)",
       "200",
-      "4.4 ± 0.2",
-      "3.9 ± 0.2",
+      "4.2 ± 0.2",
       "3.8 ± 0.2",
-      "12.6 ± 0.8"
+      "3.9 ± 0.2",
+      "10.8 ± 0.8"
      ],
      [
       "8 × (25+25)",
       "400",
-      "6.1 ± 0.3",
-      "5.5 ± 0.1",
-      "5.4 ± 0.1",
-      "14.3 ± 0.7"
+      "5.7 ± 0.2",
+      "5.4 ± 0.2",
+      "5.6 ± 0.2",
+      "12.8 ± 0.6"
      ]
     ],
-    "caption": "Crane idle per container in seconds, 8 AGVs, no randomness, 30 instances. Bays are worked in order, each bay its discharge containers first and then its load containers.",
+    "caption": "Crane idle per container in seconds, 10 AGVs, no randomness, 30 instances. Bays are worked in order, each bay its discharge containers first and then its load containers.",
     "highlightRow": 1
    },
    "maths": [
@@ -1572,34 +1578,34 @@
     },
     {
      "step": "A two-number model of the waiting",
-     "text": "Suppose each container costs a base waiting $a$, and each bay change adds $s$ seconds. The two ships with 200 jobs per crane differ only in their bay size, so fixed groups at 8 AGVs give both numbers.",
+     "text": "Suppose each container costs a base waiting $a$, and each bay change adds $s$ seconds. The two ships with 200 jobs per crane differ only in their bay size, so fixed groups at the operating fleet give both numbers.",
      "tex": "$$\\bar I = a + s\\,\\sigma$$",
-     "calc": "$$s = 100\\,(5.41 - 3.81) = 160\\ \\text{s per bay change},\\qquad a = 5.41 - \\frac{160}{50} = 2.2\\ \\text{s}$$"
+     "calc": "$$s = 100\\,(5.66 - 3.85) = 181\\ \\text{s per bay change},\\qquad a = 5.66 - \\frac{181}{50} = 2.0\\ \\text{s}$$"
     },
     {
      "step": "Checking the model on the other ships",
      "text": "With 4 or 8 bays of 25 and 25 the number of bay changes per container is the same as on the standard ship, so the model predicts the same waiting, and that is what the simulator gives. Only the smallest ship, 24 jobs per crane, lies below the model, because its run is too short for the waiting to settle.",
      "tex": "$$\\bar I_{\\text{model}} = a + \\frac{s}{n_d + n_l}$$",
-     "calc": "$$4\\times(25+25):\\ 5.4\\ \\text{vs}\\ 5.3,\\qquad 8\\times(25+25):\\ 5.4\\ \\text{vs}\\ 5.4,\\qquad 1\\times(12+12):\\ 8.9\\ \\text{vs}\\ 7.8$$"
+     "calc": "$$4\\times(25+25):\\ 5.7\\ \\text{vs}\\ 5.6,\\qquad 8\\times(25+25):\\ 5.7\\ \\text{vs}\\ 5.6,\\qquad 1\\times(12+12):\\ 9.6\\ \\text{vs}\\ 8.7$$"
     },
     {
      "step": "Four times as many containers, same answer",
-     "text": "The gap between the largest ship and the standard one is measured instance by instance, for the Briskorn rule at 8 AGVs. It is small, so the standard ship of 100 jobs per crane is large enough.",
+     "text": "The gap between the largest ship and the standard one is measured instance by instance, for the Briskorn rule at the operating fleet. It is small, so the standard ship of 100 jobs per crane is large enough.",
      "tex": "$$\\Delta = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_k^{8\\times(25+25)} - I_k^{2\\times(25+25)}\\big)$$",
-     "calc": "$$\\Delta = +0.4 \\pm 0.4\\ \\text{s}$$"
+     "calc": "$$\\Delta = -0.2 \\pm 0.3\\ \\text{s}$$"
     }
    ]
   },
   {
    "id": "E3a",
    "stage": 3,
-   "title": "The search finds the best dispatching at the operating fleet",
-   "lead": "At 8 AGVs the search recovers at least 99.5% of the room for improvement and finds the exact best in almost every instance. With only 4 AGVs, where the best plans are harder to find, it recovers 76 to 95%.",
-   "body": "So at the operating fleet the benchmark is essentially the true best. In the scarce case it is a conservative benchmark, and any gap between a rule and it understates the true gap a little. On these tiny ships random dispatching is sometimes close to the rules, because a run of 6 or 8 jobs per crane is dominated by its start, as Experiment 2.3 showed. That is why the rules themselves are compared on the standard ship.",
+   "title": "The search comes close to the best dispatching at the operating fleet",
+   "lead": "At 10 AGVs the search recovers 82 to 100% of the room for improvement and finds the exact best in most instances. With only 5 AGVs, where the best plans are harder to find, it recovers 83 to 91%.",
+   "body": "The weakest case at the operating fleet is the medium ship with crane times varying by ±30%, where the search ends 0.30 s per container above the exact best on average. So the benchmark is close to the true best but not always equal to it, and any gap between a rule and the benchmark understates the true gap a little. On these tiny ships random dispatching is sometimes close to the rules, because a run of 6 or 8 jobs per crane is dominated by its start, as Experiment 2.3 showed. That is why the rules themselves are compared on the standard ship.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025)."
     ],
     [
      "Ships",
@@ -1611,7 +1617,7 @@
     ],
     [
      "Run time",
-     "30.5 minutes on 2 cores."
+     "2.2 minutes on 64 cores."
     ],
     [
      "Statistics",
@@ -1622,7 +1628,7 @@
    "design": {
     "question": "How close does our search come to the best possible dispatching, on ships small enough to know the best exactly?",
     "why": "Later experiments compare each rule with a perfect-information benchmark, a dispatcher that knows every crane time in advance. That benchmark comes from a search, the memetic algorithm, and not from an exact solver, so it may miss the true best. Before it is used, we measure how much it misses.",
-    "vary": "Two small ships, 12 and 16 jobs, on 20 and 10 instances. Fleets of 8 AGVs (operating) and 4 (scarce). Crane times fixed and varying by ±30%.",
+    "vary": "Two small ships, 12 and 16 jobs, on 20 and 10 instances. Fleets of 10 AGVs (operating) and 5 (scarce). Crane times fixed and varying by ±30%.",
     "fixed": "The current yard and rules. On these ships every one of the 924 or 12,870 order lists is simulated, which gives the exact best. The search runs three times per case with fixed seeds.",
     "measure": "How far the search ends above the exact best, how often it finds it, and the share of the rules' room for improvement it recovers.",
     "decide": "The search is fit to serve as the benchmark if it recovers nearly all of the room at the operating fleet. Wherever it misses, the benchmark is read as \"at least this much better than the rules\"."
@@ -1641,75 +1647,75 @@
     "rows": [
      [
       "2 × (3+3)",
-      "8",
+      "10",
       "±0%",
-      "5.1 s",
+      "3.3 s",
+      "0.0 s",
+      "99%",
+      "19 of 20"
+     ],
+     [
+      "2 × (3+3)",
+      "10",
+      "±30%",
+      "3.3 s",
       "0.0 s",
       "100%",
       "20 of 20"
      ],
      [
       "2 × (3+3)",
-      "8",
-      "±30%",
-      "5.0 s",
-      "0.0 s",
-      "100%",
-      "19 of 20"
-     ],
-     [
-      "2 × (3+3)",
-      "4",
-      "±0%",
-      "13.6 s",
-      "2.9 s",
-      "76%",
-      "8 of 20"
-     ],
-     [
-      "2 × (3+3)",
-      "4",
-      "±30%",
-      "13.9 s",
-      "2.8 s",
-      "84%",
-      "8 of 20"
-     ],
-     [
-      "2 × (4+4)",
-      "8",
-      "±0%",
-      "6.3 s",
-      "0.0 s",
-      "100%",
-      "8 of 10"
-     ],
-     [
-      "2 × (4+4)",
-      "8",
-      "±30%",
-      "6.8 s",
-      "0.0 s",
-      "100%",
-      "10 of 10"
-     ],
-     [
-      "2 × (4+4)",
-      "4",
+      "5",
       "±0%",
       "16.5 s",
-      "0.8 s",
+      "1.7 s",
+      "83%",
+      "12 of 20"
+     ],
+     [
+      "2 × (3+3)",
+      "5",
+      "±30%",
+      "16.6 s",
+      "1.7 s",
+      "90%",
+      "13 of 20"
+     ],
+     [
+      "2 × (4+4)",
+      "10",
+      "±0%",
+      "7.9 s",
+      "0.1 s",
       "95%",
+      "9 of 10"
+     ],
+     [
+      "2 × (4+4)",
+      "10",
+      "±30%",
+      "10.2 s",
+      "0.3 s",
+      "82%",
       "7 of 10"
      ],
      [
       "2 × (4+4)",
-      "4",
-      "±30%",
-      "15.6 s",
-      "2.6 s",
+      "5",
+      "±0%",
+      "10.5 s",
+      "0.9 s",
       "85%",
       "6 of 10"
+     ],
+     [
+      "2 × (4+4)",
+      "5",
+      "±30%",
+      "11.1 s",
+      "0.7 s",
+      "91%",
+      "5 of 10"
      ]
     ],
     "caption": "Seconds of crane idle per container, averaged over the instances. \"Best rule above exact\" is the room for improvement, how far the best of the three rules is above the exact best. The search is the best of 3 independent runs, with 300 simulator runs each on the small ship and 1,000 on the medium one."
@@ -1725,7 +1731,7 @@
      "step": "Room for improvement, and how much of it the search finds",
      "text": "For each instance, $\\bar I^{*}$ is the exact best over all order lists, $\\bar I_{\\text{rule}}$ the best of the three rules and $\\bar I_{\\text{search}}$ the best of three search runs. The room is the distance from the rule to the best, and $\\rho$ is the share of it the search recovers. The example below uses the averages of one case. The table averages $\\rho$ instance by instance, which gives a slightly different figure.",
      "tex": "$$\\rho = \\frac{\\bar I_{\\text{rule}} - \\bar I_{\\text{search}}}{\\bar I_{\\text{rule}} - \\bar I^{*}}$$",
-     "calc": "$$\\text{Medium ship, 4 AGVs, }\\pm 30\\%:\\quad \\rho \\approx 1 - \\frac{2.58}{15.63} = 83\\%$$"
+     "calc": "$$\\text{Medium ship, 5 AGVs, }\\pm 30\\%:\\quad \\rho \\approx 1 - \\frac{0.70}{11.05} = 94\\%$$"
     },
     {
      "step": "Reading the benchmark later",
@@ -1737,13 +1743,13 @@
   {
    "id": "E41",
    "stage": 4,
-   "title": "A plan made in advance loses its lead once crane times vary, yet much room remains",
-   "lead": "With fixed crane times the plan made in advance beats the best rule clearly, 3.1 s of idle per container against 5.4 s. At ±40% its lead is gone, 0.1 ± 0.3 s. A dispatcher that knew every crane time in advance would still need only 3.3 s, so about 2.7 s per container, 45% of the rules' waiting, is left to win.",
-   "body": "The rules suffer only mildly, since they react to what actually happens. Fixed groups and NV/FCFS rise from about 5.4 to 6.3 s, and the Briskorn rule a little more, to 6.9 s. A plan whose AGVs keep their planned routes is worse than every real rule as soon as the crane times vary by 10%, reaching 9.2 s at ±40%. Keeping only the planned order of jobs, and letting any free AGV take the next one, holds up better. The benchmark stays near 3 s at every level. Random dispatching is far behind and is hidden in the chart. So a plan made in advance is not the answer under randomness, and the rules leave a large gap. Closing that gap in real time is the job of the learning dispatcher.",
+   "title": "A plan made in advance loses most of its lead once crane times vary, and much room remains",
+   "lead": "With fixed crane times the plan made in advance beats the best rule (NV/FCFS) clearly, 3.0 s of idle per container against 5.5 s. At ±40% its lead shrinks to 0.7 ± 0.3 s, and it is ahead on 25 of the 30 instances. A dispatcher that knew every crane time in advance would still need only 3.1 s, so about 2.9 s per container, 49% of the rules' waiting, is left to win.",
+   "body": "The rules suffer only mildly, since they react to what actually happens. NV/FCFS rises from 5.5 to 6.2 s, fixed groups from 5.7 to 6.3 s, and the Briskorn rule to 6.6 s. A plan whose AGVs keep their planned routes is worse than every real rule as soon as the crane times vary by 10%, reaching 8.2 s at ±40%. Keeping only the planned order of jobs, and letting any free AGV take the next one, holds up better. The benchmark stays near 3 s at every level. Random dispatching is far behind and is hidden in the chart. So a plan made in advance fades under randomness, and the rules leave a large gap. Closing that gap in real time is the job of the learning dispatcher.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. 8 AGVs."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025). 10 AGVs."
     ],
     [
      "Randomness",
@@ -1759,11 +1765,11 @@
     ],
     [
      "Benchmark",
-     "Best of 3 memetic searches, seeds 0, 1 and 2, with 10,000 simulator runs each, told the realised crane times in advance. The 3 runs differ by 0.54 s per container on average at ±40%, and 358 of the 390 searches were still improving in the last 30% of their budget. So the benchmark is the best plan known, not a proven best, and the room for improvement is a lower bound. Experiment 3.1 found the search essentially exact at 8 AGVs on small ships."
+     "Best of 3 memetic searches, seeds 0, 1 and 2, with 10,000 simulator runs each, told the realised crane times in advance. The 3 runs differ by 0.62 s per container on average at ±40%, and 343 of the 390 searches were still improving in the last 30% of their budget. So the benchmark is the best plan known, not a proven best, and the room for improvement is a lower bound. Experiment 3.1 found that the search recovers 82 to 100% of the room at 10 AGVs on small ships."
     ],
     [
      "Run time",
-     "The 390 searches took 77 minutes on 64 cores (server log in results_reference). Every search is saved, so the table is regenerated from them in about a minute on any computer."
+     "The 390 searches took 82 minutes on 64 cores (server log in results_reference). Every search is saved, so the table is regenerated from them in about a minute on any computer."
     ],
     [
      "Statistics",
@@ -1775,7 +1781,7 @@
     "question": "How do the rules, a plan made in advance and a dispatcher that knows the future cope when crane times vary?",
     "why": "Real crane cycles are not exactly 75 s. Studies that optimise a schedule beforehand, with a GA or a MIP, assume they are. This experiment shows what that assumption costs, and how much better a dispatcher could still do.",
     "vary": "How much each crane cycle varies, from fixed (±0%) to ±40%. The methods are the four rules, a plan made once on the planned crane times and carried out in two ways, and the perfect-information benchmark.",
-    "fixed": "8 AGVs, the standard ship of 100 jobs per crane, a look-ahead of 10 jobs with 5 for NV/FCFS, and the same 30 instances and crane-time draws for every method.",
+    "fixed": "10 AGVs, the standard ship of 100 jobs per crane, a look-ahead of 10 jobs with 5 for NV/FCFS, and the same 30 instances and crane-time draws for every method.",
     "measure": "Crane idle time per container with 95% confidence intervals, the lead of the plan over the best rule, and the gap of each method to the benchmark.",
     "decide": "A method copes with randomness if its idle time stays low as δ grows. The gap to the benchmark shows how much a better real-time dispatcher could still gain."
    },
@@ -1797,17 +1803,17 @@
         "name": "Briskorn inventory",
         "color": "#0f766e",
         "mean": [
-         5.7,
-         5.75,
-         5.97,
-         6.58,
-         6.93
+         5.96,
+         5.99,
+         5.92,
+         6.26,
+         6.62
         ],
         "ci": [
-         0.26,
-         0.32,
          0.29,
-         0.39,
+         0.28,
+         0.33,
+         0.27,
          0.35
         ],
         "dash": false,
@@ -1817,18 +1823,18 @@
         "name": "NV/FCFS",
         "color": "#2563eb",
         "mean": [
-         5.49,
-         5.48,
-         5.67,
-         5.91,
-         6.27
+         5.54,
+         5.7,
+         5.73,
+         5.98,
+         6.16
         ],
         "ci": [
          0.26,
-         0.26,
-         0.27,
-         0.27,
-         0.34
+         0.3,
+         0.29,
+         0.28,
+         0.31
         ],
         "dash": false,
         "hidden": false
@@ -1837,18 +1843,18 @@
         "name": "Fixed groups",
         "color": "#a16207",
         "mean": [
-         5.41,
-         5.45,
-         5.58,
-         5.88,
-         6.26
+         5.66,
+         5.7,
+         5.84,
+         6.06,
+         6.32
         ],
         "ci": [
-         0.3,
-         0.29,
-         0.29,
-         0.31,
-         0.34
+         0.27,
+         0.27,
+         0.27,
+         0.27,
+         0.28
         ],
         "dash": false,
         "hidden": false
@@ -1857,18 +1863,18 @@
         "name": "Random",
         "color": "#a1a1aa",
         "mean": [
-         13.29,
-         13.31,
-         13.37,
-         13.56,
-         13.88
+         11.55,
+         11.72,
+         11.93,
+         11.98,
+         12.18
         ],
         "ci": [
+         1.06,
+         1.06,
          1.04,
-         1.02,
-         0.97,
-         1.01,
-         1.06
+         1.05,
+         1.05
         ],
         "dash": false,
         "hidden": true
@@ -1877,18 +1883,18 @@
         "name": "Plan, job order",
         "color": "#ea580c",
         "mean": [
-         3.09,
-         4.08,
-         4.7,
-         5.45,
-         6.16
+         2.95,
+         3.8,
+         4.52,
+         5.04,
+         5.48
         ],
         "ci": [
-         0.19,
+         0.21,
+         0.24,
+         0.25,
          0.27,
-         0.26,
-         0.29,
-         0.35
+         0.29
         ],
         "dash": false,
         "hidden": false
@@ -1897,18 +1903,18 @@
         "name": "Plan, AGV routes",
         "color": "#be123c",
         "mean": [
-         3.09,
-         6.81,
-         8.0,
-         8.77,
-         9.21
+         2.95,
+         6.68,
+         7.23,
+         7.74,
+         8.24
         ],
         "ci": [
-         0.19,
-         0.52,
-         0.6,
-         0.62,
-         0.56
+         0.21,
+         0.55,
+         0.44,
+         0.58,
+         0.42
         ],
         "dash": false,
         "hidden": false
@@ -1917,18 +1923,18 @@
         "name": "Perfect information",
         "color": "#18181b",
         "mean": [
-         3.09,
-         2.94,
-         2.97,
+         2.95,
+         2.84,
+         2.96,
          3.1,
-         3.29
+         3.05
         ],
         "ci": [
-         0.19,
-         0.18,
-         0.16,
+         0.21,
+         0.21,
          0.22,
-         0.21
+         0.21,
+         0.2
         ],
         "dash": true,
         "hidden": false
@@ -1937,7 +1943,7 @@
      }
     ]
    },
-   "reproduce": "python experiments/exp4_1_crane_noise.py   (on a server, about 75 minutes on 64 cores)",
+   "reproduce": "python experiments/exp4_1_crane_noise.py   (on a server, about 82 minutes on 64 cores)",
    "tableTop": {
     "head": [
      "Crane times",
@@ -1952,56 +1958,56 @@
     "rows": [
      [
       "±0%",
-      "5.7 ± 0.3",
+      "6.0 ± 0.3",
       "5.5 ± 0.3",
-      "5.4 ± 0.3",
-      "13.3 ± 1.0",
-      "3.1 ± 0.2",
-      "3.1 ± 0.2",
-      "3.1 ± 0.2"
+      "5.7 ± 0.3",
+      "11.6 ± 1.1",
+      "3.0 ± 0.2",
+      "3.0 ± 0.2",
+      "3.0 ± 0.2"
      ],
      [
       "±10%",
-      "5.8 ± 0.3",
-      "5.5 ± 0.3",
-      "5.4 ± 0.3",
-      "13.3 ± 1.0",
-      "4.1 ± 0.3",
-      "6.8 ± 0.5",
-      "2.9 ± 0.2"
+      "6.0 ± 0.3",
+      "5.7 ± 0.3",
+      "5.7 ± 0.3",
+      "11.7 ± 1.1",
+      "3.8 ± 0.2",
+      "6.7 ± 0.6",
+      "2.8 ± 0.2"
      ],
      [
       "±20%",
-      "6.0 ± 0.3",
+      "5.9 ± 0.3",
       "5.7 ± 0.3",
-      "5.6 ± 0.3",
-      "13.4 ± 1.0",
-      "4.7 ± 0.3",
-      "8.0 ± 0.6",
+      "5.8 ± 0.3",
+      "11.9 ± 1.0",
+      "4.5 ± 0.2",
+      "7.2 ± 0.4",
       "3.0 ± 0.2"
      ],
      [
       "±30%",
-      "6.6 ± 0.4",
-      "5.9 ± 0.3",
-      "5.9 ± 0.3",
-      "13.6 ± 1.0",
-      "5.4 ± 0.3",
-      "8.8 ± 0.6",
+      "6.3 ± 0.3",
+      "6.0 ± 0.3",
+      "6.1 ± 0.3",
+      "12.0 ± 1.0",
+      "5.0 ± 0.3",
+      "7.7 ± 0.6",
       "3.1 ± 0.2"
      ],
      [
       "±40%",
-      "6.9 ± 0.3",
-      "6.3 ± 0.3",
-      "6.3 ± 0.3",
-      "13.9 ± 1.1",
+      "6.6 ± 0.3",
       "6.2 ± 0.3",
-      "9.2 ± 0.6",
-      "3.3 ± 0.2"
+      "6.3 ± 0.3",
+      "12.2 ± 1.0",
+      "5.5 ± 0.3",
+      "8.2 ± 0.4",
+      "3.1 ± 0.2"
      ]
     ],
-    "caption": "Crane idle per container in seconds, 8 AGVs, standard ship, the same 30 instances and crane-time draws for every method. \"Plan\" is the plan made once on the planned crane times, carried out keeping either its order of jobs or each AGV's route. The benchmark is the perfect-information search. At ±0% it is the same plan."
+    "caption": "Crane idle per container in seconds, 10 AGVs, standard ship, the same 30 instances and crane-time draws for every method. \"Plan\" is the plan made once on the planned crane times, carried out keeping either its order of jobs or each AGV's route. The benchmark is the perfect-information search. At ±0% it is the same plan."
    },
    "maths": [
     {
@@ -2012,21 +2018,21 @@
     },
     {
      "step": "The lead of a plan made in advance",
-     "text": "The plan is optimised once on the planned crane times, then followed while the real times vary. Its lead $L$ is how much less the cranes wait than with fixed groups, the strongest rule here, measured instance by instance.",
-     "tex": "$$L(\\delta) = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{\\text{fixed},k} - I_{\\text{plan},k}\\big)$$",
-     "calc": "$$L(0) = 2.32 \\pm 0.27\\ \\text{s},\\qquad L(0.2) = 0.88 \\pm 0.28\\ \\text{s},\\qquad L(0.4) = 0.10 \\pm 0.28\\ \\text{s}$$"
+     "text": "The plan is optimised once on the planned crane times, then followed while the real times vary. Its lead $L$ is how much less the cranes wait than with NV/FCFS, the strongest rule here, measured instance by instance.",
+     "tex": "$$L(\\delta) = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{\\text{rule},k} - I_{\\text{plan},k}\\big)$$",
+     "calc": "$$L(0) = 2.58 \\pm 0.16\\ \\text{s},\\qquad L(0.2) = 1.21 \\pm 0.32\\ \\text{s},\\qquad L(0.4) = 0.68 \\pm 0.30\\ \\text{s}$$"
     },
     {
      "step": "Room left for a better dispatcher",
      "text": "For each instance, $I_{\\text{rule}}$ is the best of the three real rules and $I_{\\text{PI}}$ the perfect-information benchmark. Their average gap $R$ is the room for improvement, and $R / \\bar I_{\\text{rule}}$ is the share of the rules\\' waiting that a perfect dispatcher would remove.",
      "tex": "$$R = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{\\text{rule},k} - I_{\\text{PI},k}\\big),\\qquad \\text{share} = \\frac{R}{\\bar I_{\\text{rule}}}$$",
-     "calc": "$$\\delta = 0.4:\\quad R = 2.70 \\pm 0.25\\ \\text{s},\\qquad \\frac{2.70}{5.99} = 45\\%$$"
+     "calc": "$$\\delta = 0.4:\\quad R = 2.88 \\pm 0.21\\ \\text{s},\\qquad \\frac{2.88}{5.93} = 49\\%$$"
     },
     {
      "step": "Reading the benchmark",
      "text": "The benchmark is the best of 3 search runs, and the search can miss the true best but never beat it. So a rule that is $R$ seconds above the benchmark is at least $R$ seconds above the true best. At ±0% only one run was made, since the plan made once is the same problem. Compared one run against one run, the benchmark rises gently with $\\delta$.",
      "tex": "$$\\bar I^{*} \\le \\bar I_{\\text{search}} \\quad\\Longrightarrow\\quad \\bar I_{\\text{rule}} - \\bar I^{*} \\ge R$$",
-     "calc": "$$\\text{one run:}\\quad 3.09,\\ 3.16,\\ 3.13,\\ 3.39,\\ 3.53\\ \\text{s for } \\delta = 0, 0.1, \\dots, 0.4$$"
+     "calc": "$$\\text{one run:}\\quad 2.95,\\ 3.05,\\ 3.17,\\ 3.37,\\ 3.32\\ \\text{s for } \\delta = 0, 0.1, \\dots, 0.4$$"
     }
    ]
   },
@@ -2034,12 +2040,12 @@
    "id": "E42",
    "stage": 4,
    "title": "Re-planning makes the GA the strongest traditional method, but it cannot see the future",
-   "lead": "Re-planning works. It beats the plan made once at every level of randomness, by 0.7 s per container at ±40%, and the best rule by 0.6 ± 0.2 s. But its gap to the benchmark grows from 0.7 s at ±10% to 2.1 s at ±40%, because it plans with crane times it cannot know.",
-   "body": "So the GA with re-planning is the strongest traditional method, and the one a learning dispatcher has to beat. Its weakness shows in its own numbers. At ±40% its re-plans together expected to save 4.1 s per container, yet only 0.7 s survived the real crane times. With fixed crane times it even ends below the benchmark, 2.92 s against 3.09 s, since re-planning is then just more search on the same problem. This confirms that the benchmark is the best plan known, not a proven best. A re-plan took 23 to 35 s on average on one core, well within one crane cycle, so the method could run in real time.",
+   "lead": "Re-planning works. It beats the plan made once at every level of randomness, by 0.7 s per container at ±40%, and the best rule by 1.1 ± 0.2 s. But its gap to the benchmark grows from 0.5 s at ±10% to 1.7 s at ±40%, because it plans with crane times it cannot know.",
+   "body": "So the GA with re-planning is the strongest traditional method, and the one a learning dispatcher has to beat. Its weakness shows in its own numbers. At ±40% its re-plans together expected to save 4.9 s per container, yet only 0.7 s survived the real crane times. With fixed crane times it even ends below the benchmark, 2.85 s against 2.95 s, since re-planning is then just more search on the same problem. This confirms that the benchmark is the best plan known, not a proven best. A re-plan took 25 to 38 s on average, within one crane cycle. Experiment 4.3 asks what happens when the terminal has to wait for it.",
    "details": [
     [
      "Setup",
-     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. 8 AGVs."
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025). 10 AGVs."
     ],
     [
      "Randomness",
@@ -2059,7 +2065,7 @@
     ],
     [
      "Run time",
-     "150 ships with 19 re-plans each, 35 minutes on 64 cores (server log in results_reference)."
+     "150 ships with 18 re-plans each, about 28 minutes on 64 cores (server log in results_reference)."
     ],
     [
      "Statistics",
@@ -2069,9 +2075,9 @@
    "label": "Experiment 4.2 · GA with re-planning",
    "design": {
     "question": "If the GA re-plans while the ship is worked, does it keep its lead when crane times vary?",
-    "why": "Experiment 4.1 showed that a plan made in advance loses its lead under randomness. The obvious answer is to re-plan as the terminal evolves, as dispatching systems do in practice. Only if re-planning also falls short is a learning dispatcher needed.",
+    "why": "Experiment 4.1 showed that a plan made in advance loses most of its lead under randomness. The obvious answer is to re-plan as the terminal evolves, as dispatching systems do in practice. Only if re-planning also falls short is a learning dispatcher needed.",
     "vary": "How much crane cycles vary, from ±0% to ±40%. The GA starts from the plan of Experiment 4.1 and re-plans after every 10 crane handovers, keeping the decisions already taken.",
-    "fixed": "8 AGVs, the standard ship, and the same 30 instances and crane-time draws as Experiment 4.1, so every method is compared instance by instance. Each re-plan is a memetic search of 500 simulator runs.",
+    "fixed": "10 AGVs, the standard ship, and the same 30 instances and crane-time draws as Experiment 4.1, so every method is compared instance by instance. Each re-plan is a memetic search of 500 simulator runs.",
     "measure": "Crane idle time per container, the gain over the plan made once and over the best rule, the gap to the benchmark, and the computing time of one re-plan.",
     "decide": "Re-planning is the stronger traditional method if it beats both the plan made once and the rules. What is left between it and the benchmark is what a dispatcher that anticipates better could still win."
    },
@@ -2093,18 +2099,18 @@
         "name": "GA, re-planned",
         "color": "#7c3aed",
         "mean": [
-         2.92,
-         3.62,
-         4.2,
-         4.9,
-         5.43
+         2.85,
+         3.35,
+         3.94,
+         4.31,
+         4.8
         ],
         "ci": [
          0.19,
-         0.23,
-         0.21,
-         0.32,
-         0.31
+         0.24,
+         0.26,
+         0.27,
+         0.27
         ],
         "dash": false,
         "hidden": false
@@ -2113,38 +2119,18 @@
         "name": "Plan, job order",
         "color": "#ea580c",
         "mean": [
-         3.09,
-         4.08,
-         4.7,
-         5.45,
-         6.16
+         2.95,
+         3.8,
+         4.52,
+         5.04,
+         5.48
         ],
         "ci": [
-         0.19,
+         0.21,
+         0.24,
+         0.25,
          0.27,
-         0.26,
-         0.29,
-         0.35
-        ],
-        "dash": false,
-        "hidden": false
-       },
-       {
-        "name": "Fixed groups",
-        "color": "#a16207",
-        "mean": [
-         5.41,
-         5.45,
-         5.58,
-         5.88,
-         6.26
-        ],
-        "ci": [
-         0.3,
-         0.29,
-         0.29,
-         0.31,
-         0.34
+         0.29
         ],
         "dash": false,
         "hidden": false
@@ -2153,18 +2139,38 @@
         "name": "NV/FCFS",
         "color": "#2563eb",
         "mean": [
-         5.49,
-         5.48,
-         5.67,
-         5.91,
-         6.27
+         5.54,
+         5.7,
+         5.73,
+         5.98,
+         6.16
         ],
         "ci": [
          0.26,
-         0.26,
+         0.3,
+         0.29,
+         0.28,
+         0.31
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "mean": [
+         5.66,
+         5.7,
+         5.84,
+         6.06,
+         6.32
+        ],
+        "ci": [
          0.27,
          0.27,
-         0.34
+         0.27,
+         0.27,
+         0.28
         ],
         "dash": false,
         "hidden": true
@@ -2173,17 +2179,17 @@
         "name": "Briskorn inventory",
         "color": "#0f766e",
         "mean": [
-         5.7,
-         5.75,
-         5.97,
-         6.58,
-         6.93
+         5.96,
+         5.99,
+         5.92,
+         6.26,
+         6.62
         ],
         "ci": [
-         0.26,
-         0.32,
          0.29,
-         0.39,
+         0.28,
+         0.33,
+         0.27,
          0.35
         ],
         "dash": false,
@@ -2193,18 +2199,18 @@
         "name": "Perfect information",
         "color": "#18181b",
         "mean": [
-         3.09,
-         2.94,
-         2.97,
+         2.95,
+         2.84,
+         2.96,
          3.1,
-         3.29
+         3.05
         ],
         "ci": [
-         0.19,
-         0.18,
-         0.16,
+         0.21,
+         0.21,
          0.22,
-         0.21
+         0.21,
+         0.2
         ],
         "dash": true,
         "hidden": false
@@ -2213,13 +2219,13 @@
      }
     ]
    },
-   "reproduce": "python experiments/exp4_2_replanning.py   (on a server, about 35 minutes on 64 cores)",
+   "reproduce": "python experiments/exp4_2_replanning.py   (on a server, about 30 minutes on 64 cores)",
    "tableTop": {
     "head": [
      "Crane times",
      "GA, re-planned",
      "Plan made once",
-     "Fixed groups",
+     "NV/FCFS",
      "Benchmark",
      "vs plan",
      "vs best rule"
@@ -2228,57 +2234,57 @@
      [
       "±0%",
       "2.9 ± 0.2",
-      "3.1",
-      "5.4",
-      "3.1",
-      "−0.17 ± 0.06",
-      "−2.24 ± 0.23"
+      "3.0",
+      "5.5",
+      "3.0",
+      "−0.10 ± 0.05",
+      "−2.49 ± 0.18"
      ],
      [
       "±10%",
-      "3.6 ± 0.2",
-      "4.1",
-      "5.4",
-      "2.9",
-      "−0.47 ± 0.23",
-      "−1.53 ± 0.28"
+      "3.3 ± 0.2",
+      "3.8",
+      "5.7",
+      "2.8",
+      "−0.46 ± 0.15",
+      "−2.01 ± 0.18"
      ],
      [
       "±20%",
-      "4.2 ± 0.2",
-      "4.7",
-      "5.6",
+      "3.9 ± 0.3",
+      "4.5",
+      "5.7",
       "3.0",
-      "−0.50 ± 0.18",
-      "−1.16 ± 0.18"
+      "−0.57 ± 0.25",
+      "−1.42 ± 0.22"
      ],
      [
       "±30%",
-      "4.9 ± 0.3",
-      "5.4",
-      "5.9",
+      "4.3 ± 0.3",
+      "5.0",
+      "6.0",
       "3.1",
-      "−0.55 ± 0.22",
-      "−0.72 ± 0.24"
+      "−0.73 ± 0.24",
+      "−1.33 ± 0.29"
      ],
      [
       "±40%",
-      "5.4 ± 0.3",
+      "4.8 ± 0.3",
+      "5.5",
       "6.2",
-      "6.3",
-      "3.3",
-      "−0.73 ± 0.38",
-      "−0.56 ± 0.24"
+      "3.1",
+      "−0.68 ± 0.27",
+      "−1.13 ± 0.20"
      ]
     ],
-    "caption": "Crane idle per container in seconds, 8 AGVs, the same 30 instances and crane-time draws as Experiment 4.1. The last two columns are re-planned minus the plan made once and minus the best rule, measured instance by instance, so a negative value means re-planning waits less. \"Best rule\" is the best of the three real rules on each instance."
+    "caption": "Crane idle per container in seconds, 10 AGVs, the same 30 instances and crane-time draws as Experiment 4.1. The last two columns are re-planned minus the plan made once and minus the best rule, measured instance by instance, so a negative value means re-planning waits less. \"Best rule\" is the best of the three real rules on each instance."
    },
    "maths": [
     {
      "step": "When the GA re-plans",
-     "text": "The plan is re-made after every $k = 10$ crane handovers. A ship of $n = 200$ containers therefore gets the number of re-plans below, the last handovers being too few to re-order.",
-     "tex": "$$\\text{re-plans} = \\frac{n}{k} - 1$$",
-     "calc": "$$\\frac{200}{10} - 1 = 19$$"
+     "text": "The plan is re-made after every $k = 10$ crane handovers. A ship of $n = 200$ containers gives at most the number below. The last re-plans are skipped when fewer than three jobs are left to re-order, so each ship here gets 18.",
+     "tex": "$$\\text{re-plans} \\le \\frac{n}{k} - 1$$",
+     "calc": "$$\\frac{200}{10} - 1 = 19,\\qquad \\text{here}\\ 18$$"
     },
     {
      "step": "What the GA knows at a re-plan",
@@ -2287,15 +2293,451 @@
     },
     {
      "step": "What re-planning thinks it gains, and what it gains",
-     "text": "Each re-plan compares the old plan with the new one under its own assumptions. Adding these believed gains over the 19 re-plans and comparing with the real gain over the plan made once shows how much of each improvement survives the crane times that actually happen. With fixed crane times the two must agree, and they do.",
-     "tex": "$$G_{\\text{believed}} = \\sum_{r=1}^{19} \\frac{F_r^{\\text{old}} - F_r^{\\text{new}}}{n},\\qquad G_{\\text{real}} = \\bar I_{\\text{plan}} - \\bar I_{\\text{re-planned}}$$",
-     "calc": "$$\\delta = 0:\\ 0.17\\ \\text{vs}\\ 0.17\\ \\text{s},\\qquad \\delta = 0.4:\\ 4.12\\ \\text{vs}\\ 0.73\\ \\text{s}$$"
+     "text": "Each re-plan compares the old plan with the new one under its own assumptions. Adding these believed gains over all re-plans and comparing with the real gain over the plan made once shows how much of each improvement survives the crane times that actually happen. With fixed crane times the two must agree, and they do.",
+     "tex": "$$G_{\\text{believed}} = \\sum_{r} \\frac{F_r^{\\text{old}} - F_r^{\\text{new}}}{n},\\qquad G_{\\text{real}} = \\bar I_{\\text{plan}} - \\bar I_{\\text{re-planned}}$$",
+     "calc": "$$\\delta = 0:\\ 0.10\\ \\text{vs}\\ 0.10\\ \\text{s},\\qquad \\delta = 0.4:\\ 4.86\\ \\text{vs}\\ 0.68\\ \\text{s}$$"
     },
     {
      "step": "Fast enough for real time",
-     "text": "A re-plan must finish before it is needed. One re-plan of 500 simulator runs took on average the time below on one core of the server, depending on the level of randomness, less than one crane cycle.",
+     "text": "A re-plan must finish before it is needed. One re-plan of 500 simulator runs took on average the time below on one core of the server, with 64 searches sharing the machine, less than one crane cycle. That is about 0.07 s per simulator run, the speed Experiment 4.3 uses to charge the thinking time.",
      "tex": "$$t_{\\text{re-plan}} < \\bar c = 75\\ \\text{s}$$",
-     "calc": "$$t_{\\text{re-plan}} = 23\\ \\text{to}\\ 35\\ \\text{s}$$"
+     "calc": "$$t_{\\text{re-plan}} = 25\\ \\text{to}\\ 38\\ \\text{s}$$"
+    }
+   ]
+  },
+  {
+   "id": "E43",
+   "stage": 4,
+   "title": "Re-planning fast enough for real time gains little over a plan made in advance",
+   "lead": "Fast re-planning helps only a little. At ±40%, with 1.1 and 4.9 s per re-plan, the GA waits 5.37 and 5.29 s per container, only 0.11 and 0.19 s less than the plan it started from, neither clearly different from zero. With 35 s to think it reaches 5.10 s, and 119 s brings nothing more. Every version stays more than 2 s above the benchmark.",
+   "body": "Its lead over the best rule, 0.56 ± 0.33 s with the fastest search, comes mostly from the plan made in advance, which keeps part of its lead at ±40% in Experiment 4.1. Paying for the thinking time costs 0.30 ± 0.26 s per container at ±40% against the same search made instantly, small but not free. Searching longer does not help once crane times vary, because the plan arrives late and is built on times that have already changed. With fixed crane times longer searches do help, down to 2.76 s with 1,700 runs, below the benchmark of Experiment 4.1, which again shows that the benchmark is a best-known plan. So no traditional method closes the gap in real time.",
+   "details": [
+    [
+     "Setup",
+     "Two quay cranes each work 2 bays of 25 discharge and then 25 load containers in a fixed order. The planned crane cycle is 75 s. The yard has 50 blocks laid out after Yangshan Phase IV, with the cranes over the middle. Discharge containers go to blocks within 10 of the 5 blocks behind the cranes, and load containers come from blocks within 15. These ranges are an assumption, set so that the cranes reach the productivity reported by Luo (2016). Each AGV takes the nearest free rack of its block, and a rack visit takes 51 s. AGVs drive at up to 6 m/s when empty and 3.5 m/s when carrying a container (Zhao et al., 2025). 10 AGVs."
+    ],
+    [
+     "Randomness",
+     "As in Experiment 4.1, the same draws, at δ = 0, 0.2 and 0.4."
+    ],
+    [
+     "Thinking time",
+     "Search size × 0.07 s, the time of one simulator run measured in Experiment 4.2. The GA plans on the state at the moment it starts, and its plan takes effect only after the thinking time. Until then the AGVs keep following the old plan."
+    ],
+    [
+     "Run time",
+     "360 ships, about 105 minutes on 64 cores (server log in results_reference)."
+    ],
+    [
+     "Statistics",
+     "30 seeds, with every method run on the same seeds. Means are shown with a 95% confidence interval (t = 2.045). Gains and gaps are measured instance by instance."
+    ]
+   ],
+   "label": "Experiment 4.3 · Thinking time",
+   "design": {
+    "question": "If every re-plan takes real time, during which the AGVs keep following the old plan, is re-planning still worth it?",
+    "why": "Experiment 4.2 gave the GA its new plans instantly. In a terminal a search of 500 simulator runs takes about 35 s, and the AGVs keep moving meanwhile. A real-time dispatcher has to decide in about a second, so this shows what a fast traditional method can still do.",
+    "vary": "The size of each re-plan, 15, 70, 500 and 1,700 simulator runs, which takes 1.1, 4.9, 35 and 119 s. Crane times fixed, ±20% and ±40%.",
+    "fixed": "10 AGVs, the standard ship, a re-plan after every 10 crane handovers, the plan of Experiment 4.1 as the start, and the same 30 instances and crane-time draws as Experiments 4.1 and 4.2.",
+    "measure": "Crane idle time per container, compared instance by instance with the best rule, the plan made once, the benchmark, and the same search without thinking time.",
+    "decide": "Re-planning suits real time if its fast versions keep most of the gain it makes when given time."
+   },
+   "chart": {
+    "xLabel": "Thinking time per re-plan (s)",
+    "xFmt": "int",
+    "defaultVariant": 2,
+    "variants": [
+     {
+      "label": "±0%",
+      "x": [
+       1.1,
+       4.9,
+       35.0,
+       119.0
+      ],
+      "series": [
+       {
+        "name": "GA, re-planned",
+        "color": "#7c3aed",
+        "mean": [
+         2.95,
+         2.95,
+         2.89,
+         2.76
+        ],
+        "ci": [
+         0.21,
+         0.21,
+         0.22,
+         0.21
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "GA, no delay",
+        "color": "#a78bfa",
+        "mean": [
+         2.85,
+         2.85,
+         2.85,
+         2.85
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "mean": [
+         2.95,
+         2.95,
+         2.95,
+         2.95
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Best rule",
+        "color": "#2563eb",
+        "mean": [
+         5.34,
+         5.34,
+         5.34,
+         5.34
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         2.95,
+         2.95,
+         2.95,
+         2.95
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "±20%",
+      "x": [
+       1.1,
+       4.9,
+       35.0,
+       119.0
+      ],
+      "series": [
+       {
+        "name": "GA, re-planned",
+        "color": "#7c3aed",
+        "mean": [
+         4.5,
+         4.36,
+         4.09,
+         3.85
+        ],
+        "ci": [
+         0.26,
+         0.26,
+         0.29,
+         0.27
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "GA, no delay",
+        "color": "#a78bfa",
+        "mean": [
+         3.94,
+         3.94,
+         3.94,
+         3.94
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "mean": [
+         4.52,
+         4.52,
+         4.52,
+         4.52
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Best rule",
+        "color": "#2563eb",
+        "mean": [
+         5.37,
+         5.37,
+         5.37,
+         5.37
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         2.96,
+         2.96,
+         2.96,
+         2.96
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "±40%",
+      "x": [
+       1.1,
+       4.9,
+       35.0,
+       119.0
+      ],
+      "series": [
+       {
+        "name": "GA, re-planned",
+        "color": "#7c3aed",
+        "mean": [
+         5.37,
+         5.29,
+         5.1,
+         5.12
+        ],
+        "ci": [
+         0.31,
+         0.29,
+         0.33,
+         0.32
+        ],
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "GA, no delay",
+        "color": "#a78bfa",
+        "mean": [
+         4.8,
+         4.8,
+         4.8,
+         4.8
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "mean": [
+         5.48,
+         5.48,
+         5.48,
+         5.48
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Best rule",
+        "color": "#2563eb",
+        "mean": [
+         5.93,
+         5.93,
+         5.93,
+         5.93
+        ],
+        "ci": null,
+        "dash": false,
+        "hidden": false
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "mean": [
+         3.05,
+         3.05,
+         3.05,
+         3.05
+        ],
+        "ci": null,
+        "dash": true,
+        "hidden": false
+       }
+      ]
+     }
+    ]
+   },
+   "reproduce": "python experiments/exp4_3_thinking_time.py   (on a server, about 105 minutes on 64 cores)",
+   "tableTop": {
+    "head": [
+     "Crane times",
+     "Search size",
+     "Thinking time",
+     "GA, re-planned",
+     "vs best rule",
+     "vs plan once",
+     "vs benchmark"
+    ],
+    "rows": [
+     [
+      "±0%",
+      "15",
+      "1.1 s",
+      "2.95 ± 0.21",
+      "−2.39 ± 0.18",
+      "0.00 ± 0.01",
+      "0.00 ± 0.01"
+     ],
+     [
+      "±0%",
+      "70",
+      "4.9 s",
+      "2.95 ± 0.21",
+      "−2.39 ± 0.18",
+      "0.00 ± 0.01",
+      "0.00 ± 0.01"
+     ],
+     [
+      "±0%",
+      "500",
+      "35 s",
+      "2.89 ± 0.22",
+      "−2.45 ± 0.20",
+      "−0.07 ± 0.06",
+      "−0.07 ± 0.06"
+     ],
+     [
+      "±0%",
+      "1,700",
+      "119 s",
+      "2.76 ± 0.21",
+      "−2.57 ± 0.17",
+      "−0.19 ± 0.09",
+      "−0.19 ± 0.09"
+     ],
+     [
+      "±20%",
+      "15",
+      "1.1 s",
+      "4.50 ± 0.26",
+      "−0.86 ± 0.26",
+      "−0.01 ± 0.12",
+      "+1.54 ± 0.23"
+     ],
+     [
+      "±20%",
+      "70",
+      "4.9 s",
+      "4.36 ± 0.26",
+      "−1.00 ± 0.23",
+      "−0.15 ± 0.17",
+      "+1.40 ± 0.20"
+     ],
+     [
+      "±20%",
+      "500",
+      "35 s",
+      "4.09 ± 0.29",
+      "−1.27 ± 0.27",
+      "−0.42 ± 0.25",
+      "+1.13 ± 0.20"
+     ],
+     [
+      "±20%",
+      "1,700",
+      "119 s",
+      "3.85 ± 0.27",
+      "−1.52 ± 0.26",
+      "−0.67 ± 0.25",
+      "+0.88 ± 0.17"
+     ],
+     [
+      "±40%",
+      "15",
+      "1.1 s",
+      "5.37 ± 0.31",
+      "−0.56 ± 0.33",
+      "−0.11 ± 0.16",
+      "+2.32 ± 0.31"
+     ],
+     [
+      "±40%",
+      "70",
+      "4.9 s",
+      "5.29 ± 0.29",
+      "−0.64 ± 0.25",
+      "−0.19 ± 0.18",
+      "+2.24 ± 0.26"
+     ],
+     [
+      "±40%",
+      "500",
+      "35 s",
+      "5.10 ± 0.33",
+      "−0.83 ± 0.32",
+      "−0.38 ± 0.33",
+      "+2.05 ± 0.26"
+     ],
+     [
+      "±40%",
+      "1,700",
+      "119 s",
+      "5.12 ± 0.32",
+      "−0.81 ± 0.34",
+      "−0.36 ± 0.33",
+      "+2.07 ± 0.29"
+     ]
+    ],
+    "caption": "Crane idle per container in seconds, 10 AGVs, the same 30 instances and crane-time draws as Experiments 4.1 and 4.2. The last three columns are measured instance by instance, so a negative value means the re-planning GA waits less. \"Best rule\" is the best of the three real rules on each instance."
+   },
+   "maths": [
+    {
+     "step": "Thinking time of one re-plan",
+     "text": "A re-plan simulates $n$ candidate plans, and one simulator run took about $\\tau_1 = 0.07$ s on the server in Experiment 4.2. The thinking time grows with the size of the search.",
+     "tex": "$$\\tau(n) = n\\,\\tau_1$$",
+     "calc": "$$\\tau(15) = 1.1\\ \\text{s},\\quad \\tau(70) = 4.9\\ \\text{s},\\quad \\tau(500) = 35\\ \\text{s},\\quad \\tau(1700) = 119\\ \\text{s}$$"
+    },
+    {
+     "step": "What the AGVs do while the GA thinks",
+     "text": "The re-plan $r$ starts at time $t_r$ and plans on the state at that moment. Its plan is used only from $t_r + \\tau$. Until then the AGVs keep following the previous plan, so decisions taken meanwhile are the old plan\\'s.",
+     "tex": "$$\\text{decision at } t \\text{ follows } \\begin{cases} \\pi_{r-1} & t_r \\le t < t_r + \\tau\\\\[2pt] \\pi_r & t \\ge t_r + \\tau \\end{cases}$$"
+    },
+    {
+     "step": "The price of thinking",
+     "text": "The same search of 500 runs is compared with and without its thinking time, instance by instance. The difference $C$ is what waiting for the plan costs.",
+     "tex": "$$C = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{k}^{\\,\\tau = 35\\,\\text{s}} - I_{k}^{\\,\\tau = 0}\\big)$$",
+     "calc": "$$\\delta = 0.2:\\ C = +0.15 \\pm 0.24\\ \\text{s},\\qquad \\delta = 0.4:\\ C = +0.30 \\pm 0.26\\ \\text{s}$$"
+    },
+    {
+     "step": "What fast re-planning adds to the plan made in advance",
+     "text": "The gain $\\Delta$ of the re-planning GA over the plan it starts from, instance by instance. A value near zero means the fast re-plans change little.",
+     "tex": "$$\\Delta(n) = \\frac{1}{30}\\sum_{k=1}^{30}\\big(I_{k}^{\\,\\text{re-planned}, n} - I_{k}^{\\,\\text{plan}}\\big)$$",
+     "calc": "$$\\delta = 0.4:\\quad \\Delta(15) = -0.11,\\ \\Delta(70) = -0.19\\ \\text{s}$$"
     }
    ]
   }

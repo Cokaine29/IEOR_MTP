@@ -37,7 +37,8 @@ export default function ExperimentsHeader() {
             </p>
             <p>
               The simulated terminal is a yard of 50 blocks, about 2.1 km long, laid out after Yangshan Phase IV in Shanghai
-              (<i>Liu et al., 2016</i>; <i>Wu et al., 2016</i>), served by two quay cranes and eight AGVs.
+              (<i>Liu et al., 2016</i>; <i>Wu et al., 2016</i>), served by two quay cranes and ten AGVs. An empty AGV drives at up to 6 m/s and a loaded one at
+              3.5 m/s (<i>Zhao et al., 2025</i>).
             </p>
           </div>
         </div>
