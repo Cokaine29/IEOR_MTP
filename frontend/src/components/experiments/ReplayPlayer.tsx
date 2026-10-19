@@ -35,7 +35,7 @@ export type ReplayPair = {
   right: string;
 };
 
-export const AGV_COLORS = ['#0f766e', '#2563eb', '#a16207', '#7c3aed', '#be123c', '#0891b2', '#4d7c0f', '#475569'];
+export const AGV_COLORS = ['#0f766e', '#2563eb', '#a16207', '#7c3aed', '#be123c', '#0891b2', '#4d7c0f', '#475569', '#db2777', '#78716c'];
 
 /* distance travelled after time u in one segment: accelerate, (cruise), decelerate at the same rate a */
 function distAt(s: Seg, T: number, u: number, a: number) {
