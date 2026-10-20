@@ -4,10 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { Replay, TerminalMap, fmtTime, prepare, stats } from '../experiments/ReplayPlayer';
 
-/* One real simulation run of the current model (v3), recorded by ACT_MTP webapp/export_replays.py home. */
-const FILE = '/replays/v3/n10_d0_nvfcfs.json';
+/* One real simulation run of the current model (v5), recorded by ACT_MTP webapp/export_replays.py home5. */
+const FILE = '/replays/v5/n12_d0_nvfcfs.json';
 const SPEED = 20;     // simulated seconds per real second
-const START = 2150;   // inside the run, all ten AGVs busy and the cranes about to wait
+const START = 1910;   // inside the run, most AGVs moving and both cranes about to wait (QC1 at 1950 s, QC2 at 2100 s)
 const WINDOW = 640;   // metres of quay shown, centred on the two cranes
 
 export default function HeroReplay({ dark = false }: { dark?: boolean }) {
@@ -83,8 +83,8 @@ export default function HeroReplay({ dark = false }: { dark?: boolean }) {
         )}
       </div>
       <figcaption className={`text-xs leading-relaxed ${dark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-        A recording of one run of the simulator, model v3, played at {SPEED}× real time. Two quay cranes work a vessel, and ten AGVs
-        are dispatched by the NV/FCFS rule. Each AGV has its own colour, filled when it carries a container. Only the 640 m of quay
+        A recording of one run of the simulator, model v5, played at {SPEED}× real time. Two quay cranes work a vessel, and twelve AGVs
+        are dispatched by the NV/FCFS rule. AGVs keep a safe braking gap and wait for each other at crossings and turns. Each AGV has its own colour, filled when it carries a container. Only the 640 m of quay
         around the cranes is shown here. The whole yard is 2.1 km long.
       </figcaption>
     </figure>
