@@ -32,25 +32,25 @@ const STAKES = [
   {
     icon: Globe2, stat: '849 million TEU',
     title: 'Containers Handled at the World’s Ports',
-    desc: 'World container port traffic in 2021. Every one of these boxes passes under a quay crane.',
+    desc: 'The total for 2021, counted in TEU (one TEU is one standard 20-foot container). Every one of them passes under a quay crane.',
     source: 'Notteboom, Pallis and Rodrigue (2022), Port Economics, Management and Policy, data of Drewry and UNCTAD',
   },
   {
-    icon: Gauge, stat: '30.5 moves/h',
+    icon: Gauge, stat: '30.5 per hour',
     title: 'The AGVs Set the Crane’s Pace',
-    desc: 'Quay crane productivity in a simulation of an automated terminal with 2 AGVs per crane. The same study reports higher crane rates only with more vehicles per crane.',
+    desc: 'In a simulation of an automated terminal, a crane served by 2 AGVs handled 30.5 containers an hour. Going faster took more vehicles per crane. The crane can only work as fast as the AGVs keep up.',
     source: 'Luo (2016), Sec. 2.3, Fig. 3',
   },
   {
     icon: Truck, stat: '38% to 50%+',
     title: 'More Vehicles Because AGVs Cannot Lift',
-    desc: 'Extra vehicles an AGV fleet needs compared with self-lifting vehicles, because an AGV must wait for a crane at every handover.',
+    desc: 'A terminal that runs AGVs needs 38% to over 50% more vehicles than one whose vehicles can lift a container by themselves. The reason is that an AGV has to wait for a crane at every handover.',
     source: 'Vis and Harika (2004) and Yang et al. (2004), as reported by Carlo et al. (2014)',
   },
   {
     icon: FileSearch, stat: '2 of 56',
     title: 'Studies That Optimise Under Uncertainty',
-    desc: 'Papers on container terminal transport up to 2012 that use stochastic optimisation. Most dispatching studies assume known, fixed operation times.',
+    desc: 'Of 56 studies on moving containers inside terminals (up to 2012), only 2 plan for times that are uncertain. The rest assume every crane and vehicle time is known in advance, which a real quay never guarantees.',
     source: 'Carlo et al. (2014), Table A1, column 22 (counted for this thesis)',
   },
 ];
@@ -251,7 +251,14 @@ export default function HomePage() {
       {/* ------------------------------------------------ why it matters */}
       <section className="border-y border-zinc-200 bg-white px-4 py-20">
         <div className="mx-auto max-w-6xl">
-          <motion.div {...fade}><SectionHead kicker="Why It Matters" title="Small Waits, at a Very Large Scale" /></motion.div>
+          <motion.div {...fade}>
+            <SectionHead kicker="Why It Matters" title="Small Waits, at a Very Large Scale">
+              <p>
+                A few seconds of crane waiting per container looks small. But it repeats for every container of every ship, and the
+                ship cannot leave until its last container is handled.
+              </p>
+            </SectionHead>
+          </motion.div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {STAKES.map((s, i) => (
               <motion.div key={s.title} {...fade} transition={{ duration: 0.5, delay: i * 0.08 }}
