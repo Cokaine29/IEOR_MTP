@@ -1,650 +1,444 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { 
-  ArrowRight, 
-  HelpCircle, 
-  Cpu, 
-  Clock, 
-  CloudLightning,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Target
+import { motion } from 'framer-motion';
+import {
+  ArrowRight, ArrowUpRight, Check, Minus, Clock3, Route, TrafficCone, Target,
+  Truck, MousePointerClick, Navigation, Handshake, Layers, Shuffle, Timer,
 } from 'lucide-react';
+import Md from '@/components/experiments/Md';
 
-/* --- Animation variants --- */
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } },
+const UPDATED = '21 Oct 2026';
+
+const fade = {
+  initial: { opacity: 0, y: 16 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.5 },
 };
 
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-};
+function SectionHead({ kicker, title, children }: { kicker: string; title: string; children?: React.ReactNode }) {
+  return (
+    <div className="mb-10 flex max-w-3xl flex-col gap-3">
+      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">{kicker}</span>
+      <h2 className="text-3xl font-bold tracking-tight text-zinc-900">{title}</h2>
+      {children && <div className="text-base leading-relaxed text-zinc-700">{children}</div>}
+    </div>
+  );
+}
+
+function Source({ children }: { children: React.ReactNode }) {
+  return <p className="border-t border-zinc-200 pt-3 text-xs italic leading-relaxed text-zinc-500">{children}</p>;
+}
+
+/* ---------- 1. the decision we make */
+const LEVELS = [
+  {
+    icon: Target, level: 'Dispatching', ours: true,
+    question: 'Which job does a free AGV take next, or should it wait?',
+    who: 'Decided by the dispatcher we study',
+  },
+  {
+    icon: Route, level: 'Routing', ours: false,
+    question: 'Which lanes does the AGV drive along to get there?',
+    who: 'Fixed lane rules in our simulator',
+  },
+  {
+    icon: TrafficCone, level: 'Traffic Control', ours: false,
+    question: 'Which AGV goes first where two paths cross?',
+    who: 'Fixed reservation rules in our simulator',
+  },
+];
+
+/* ---------- 2. when a decision happens */
+const LOOP = [
+  { icon: Truck, title: 'An AGV Becomes Free', text: 'It has just set a container on a yard rack, or handed one to the crane.' },
+  { icon: MousePointerClick, title: 'The Dispatcher Chooses', text: 'It gives the AGV the next job of one crane, or tells it to park.' },
+  { icon: Navigation, title: 'The AGV Drives', text: 'Empty to the crane to collect a container, or to the yard first to fetch one for loading.' },
+  { icon: Handshake, title: 'Crane and AGV Meet', text: 'The container changes hands. If the crane was ready first, its wait counts as idle time.' },
+];
+
+/* ---------- 3. what the dispatcher may do */
+const RULES = [
+  { text: 'An AGV carries one container at a time.', source: '' },
+  { text: 'Each crane handles its containers in a fixed order, set by the ship’s stowage plan.', source: '' },
+  { text: 'The dispatcher sees the next 10 containers of each crane.', source: 'Kim and Bae (2004)' },
+  { text: 'It may only give out the first container of a crane that has no AGV yet.', source: 'Briskorn, Drexl and Hartmann (2006)' },
+  { text: 'It sends no more empty AGVs to a crane than that crane will soon unload.', source: '' },
+  { text: 'AGVs never collide. Each one reserves the road ahead of it, its body plus its braking distance.', source: 'Kim, Jeon and Ryu (2006)' },
+];
+
+/* ---------- 4. why seconds matter, Experiment 4.5 at level 1 (crane times ±20%, AGV speeds ±10%) */
+const BARS = [
+  { name: 'Knows the Future', note: 'benchmark', mean: 1.05, ci: 0.18, tone: 'bg-teal-600' },
+  { name: 'Plan, Re-optimised During Service', note: 'memetic GA', mean: 2.62, ci: 0.39, tone: 'bg-zinc-800' },
+  { name: 'Plan Made in Advance', note: 'memetic GA', mean: 3.38, ci: 0.48, tone: 'bg-zinc-800' },
+  { name: 'NV/FCFS Rule', note: 'Grunow et al. 2006', mean: 3.77, ci: 0.53, tone: 'bg-zinc-500' },
+  { name: 'Fixed Groups Rule', note: 'AGVs tied to one crane', mean: 4.09, ci: 1.04, tone: 'bg-zinc-500' },
+  { name: 'Inventory Rule', note: 'Briskorn et al. 2006', mean: 4.45, ci: 1.0, tone: 'bg-zinc-500' },
+  { name: 'Random Choice', note: 'floor', mean: 7.63, ci: 0.76, tone: 'bg-zinc-300' },
+];
+const XMAX = 9.5;
+
+/* ---------- 5. why it is hard */
+const HARD = [
+  {
+    icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Orders',
+    text: 'Our simulated ship has 2 cranes with 100 containers each. The containers can get their AGVs in about 9 × 10⁵⁸ different orders, far too many to try. On small ships of 12 containers, where all 924 orders can be tried, our search finds the best one in 17 to 19 of 20 cases.',
+    source: 'Number of orders is 200 choose 100 (our arithmetic). Search check, Experiment 3.1, 20 Oct 2026.',
+  },
+  {
+    icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
+    text: 'With exact times, a plan made in advance saves 2.26 s per container against the NV/FCFS rule. With random crane times and AGV speeds, the saving drops to 0.39 s, and that is no longer a clear result (±0.57 s). A plan followed rigidly does worse than every rule except Random, at 5.33 s.',
+    source: 'Experiments 4.1 and 4.5, 30 paired seeds, 95% intervals, 20 to 21 Oct 2026.',
+  },
+  {
+    icon: Timer, stat: '55 to 74 s', title: 'Little Time to Think',
+    text: 'Finding a new plan takes 55 to 74 s on one processor, almost a full 75 s crane cycle. Re-planning during service helps, but the cranes still wait 1.57 s per container longer than with a dispatcher that knows the future.',
+    source: 'Experiment 4.5, 21 Oct 2026. Choe et al. (2016) report 10 to 40 s per decision for their rolling search.',
+  },
+];
+
+/* ---------- 6. what we model */
+const SCOPE: { title: string; tone: 'yes' | 'simple' | 'later'; items: string[] }[] = [
+  { title: 'Modelled', tone: 'yes', items: [
+    'Layout of Yangshan Phase IV, 2 quay cranes and 50 yard blocks',
+    '12 AGVs that accelerate, brake and turn on real lanes',
+    'AGV traffic, AGVs wait for each other and never collide',
+    'Unloading and loading, 200 containers per ship',
+    'Random crane times, ±0% to ±40%',
+    'Random AGV speed on every trip, ±0% to ±20%',
+  ] },
+  { title: 'Simplified', tone: 'simple', items: [
+    'Yard cranes are not simulated. The AGV sets each container on a transfer rack by itself',
+    'AGVs follow a fixed lane grid, the dispatcher does not plan paths',
+    'No battery charging. AGVs are assumed to have enough charge, as in Gao et al. (2023) and Zhao et al. (2025)',
+    'No breakdowns',
+    'One ship at a time',
+  ] },
+  { title: 'Next', tone: 'later', items: [
+    'A learned dispatcher, first DQN, then PPO',
+    'MAPPO, one cooperating agent per AGV',
+    'Curriculum learning, from easy cases to harder ones',
+  ] },
+];
+
+/* ---------- 7. research questions */
+const QUESTIONS = [
+  {
+    n: 'RQ1', title: 'How Much Do Today’s Methods Lose?',
+    text: 'How much crane idle time do dispatching rules, a plan made in advance and a plan re-optimised during service lose as crane times and AGV speeds grow more random, compared with a dispatcher that knows the future?',
+    status: 'Answered for model v5, the last runs finish on 21 Oct',
+  },
+  {
+    n: 'RQ2', title: 'Can a Learned Dispatcher Do Better?',
+    text: 'Can a dispatcher trained with deep reinforcement learning (DQN, PPO, then MAPPO) close part of that gap, while deciding in real time?',
+    status: 'Next',
+  },
+];
 
 export default function ProblemPage() {
   return (
-    <div className="relative bg-zinc-50 min-h-screen pb-32">
-      {/* SECTION 1: Hook */}
-      <section className="pt-40 pb-20 px-4 bg-zinc-900 text-white selection:bg-cyan-500/30 relative overflow-hidden">
-        <div className="absolute inset-0 grid-bg opacity-20"></div>
-        <div className="max-w-5xl mx-auto relative z-10">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]"
-          >
-            A complex game of <br className="hidden md:block"/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
-              time and space.
-            </span>
+    <div className="min-h-screen bg-white text-zinc-900">
+      {/* ------------------------------------------------ hero */}
+      <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6">
+          <motion.span initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800 px-3.5 py-1.5 text-xs font-semibold text-zinc-200">
+            <span className="h-2 w-2 rounded-full bg-teal-400" /> The Problem in Detail
+          </motion.span>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+            className="max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+            Which AGV Goes Where Next?
           </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-xl md:text-2xl text-zinc-400 font-medium max-w-2xl leading-relaxed"
-          >
-            How do you dispatch 130 autonomous vehicles to keep 26 giant cranes fed, when every second costs money and nothing goes to plan?
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+            className="max-w-3xl text-lg leading-relaxed text-zinc-300">
+            At Yangshan Phase IV in Shanghai, one central system dispatches <b className="text-white">155 AGVs</b> to{' '}
+            <b className="text-white">29 quay cranes</b>. Each time an AGV becomes free, the system must choose its next job at once.
+            And crane handling times and AGV travel times never go exactly as planned.
+          </motion.p>
+          <p className="text-xs italic text-zinc-500">
+            Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, 14 Aug 2026.
+          </p>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ 1. the decision */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="The Decision" title="We Choose the Job, Not the Path">
+              <p>
+                Moving AGVs around a terminal takes three kinds of decisions. This thesis studies only the first, <b>Dispatching</b>.
+                Routing and traffic control are still simulated, so a poor choice also costs time in traffic. The dispatcher feels
+                those delays but does not control them.
+              </p>
+            </SectionHead>
+          </motion.div>
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <motion.ol {...fade} className="flex flex-col gap-3">
+              {LEVELS.map((l, i) => (
+                <li key={l.level} className={`flex gap-4 rounded-2xl border p-5 ${l.ours ? 'border-teal-300 bg-teal-50' : 'border-zinc-200 bg-white'}`}>
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${l.ours ? 'bg-teal-600 text-white' : 'bg-zinc-100 text-zinc-500'}`}>
+                    <l.icon className="h-5 w-5" />
+                  </span>
+                  <span className="flex flex-col gap-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Level {i + 1}</span>
+                    <span className="text-lg font-semibold text-zinc-900">{l.level}</span>
+                    <span className="text-sm text-zinc-600">{l.question}</span>
+                    <span className={`mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${l.ours ? 'bg-teal-600 text-white' : 'bg-zinc-100 text-zinc-600'}`}>
+                      {l.ours ? <Check className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />} {l.who}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </motion.ol>
+            <motion.figure {...fade} className="flex h-full flex-col justify-between gap-5 rounded-2xl border border-zinc-200 bg-white p-7">
+              <blockquote className="font-serif text-lg italic leading-relaxed text-zinc-700">
+                “AGV dispatching usually consists of three sub-problems, namely, assigning AGVs to transportation orders, routing the
+                AGVs, and traffic control. Algorithms for routing and traffic control are generally already included in the control
+                software provided by the AGV manufacturer. Thus, <b className="not-italic text-zinc-900">only the assignment problem is
+                investigated in this paper.</b>”
+              </blockquote>
+              <figcaption className="text-sm font-semibold text-zinc-900">
+                Grunow, Günther and Lehmann (2006)
+                <span className="block text-xs font-normal italic text-zinc-500">OR Spectrum 28, 587–610, Sec. 2</span>
+              </figcaption>
+              <p className="rounded-xl bg-zinc-50 px-4 py-3 text-sm leading-relaxed text-zinc-600">
+                We follow the same split. Our dispatchers make the assignment. The simulator plays the part of the manufacturer’s
+                software, with fixed lanes and road reservations.
+              </p>
+            </motion.figure>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ 2. when a decision happens */}
+      <section className="border-y border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="The Moment of Choice" title="A Decision Every Time an AGV Becomes Free">
+              <p>
+                The dispatcher is asked when an AGV finishes a job, as in <i>Kim and Bae (2004)</i> and <i>Briskorn et al. (2006)</i>.
+                A parked AGV is asked again whenever a crane completes a handover, because new jobs then come into view.
+              </p>
+            </SectionHead>
+          </motion.div>
+          <motion.ol {...fade} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {LOOP.map((s, i) => (
+              <li key={s.title} className={`relative flex flex-col gap-3 rounded-2xl border p-5 ${i === 1 ? 'border-teal-300 bg-teal-50' : 'border-zinc-200 bg-zinc-50'}`}>
+                <div className="flex items-center justify-between">
+                  <span className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${i === 1 ? 'bg-teal-600 text-white' : 'bg-zinc-900 text-white'}`}>{i + 1}</span>
+                  <s.icon className={`h-5 w-5 ${i === 1 ? 'text-teal-700' : 'text-zinc-400'}`} />
+                </div>
+                <span className="font-semibold text-zinc-900">{s.title}</span>
+                <span className="text-sm leading-relaxed text-zinc-600">{s.text}</span>
+                {i < LOOP.length - 1 && (
+                  <ArrowRight className="absolute -right-3.5 top-1/2 hidden h-5 w-5 -translate-y-1/2 text-zinc-300 lg:block" />
+                )}
+              </li>
+            ))}
+          </motion.ol>
+          <motion.p {...fade} className="mt-5 text-sm text-zinc-500">
+            Then the AGV is free again, and the loop starts over. A ship of 200 containers needs 200 of these decisions or more.
           </motion.p>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 mt-16 space-y-32">
-        
-        {/* SECTION 1.5: The Architecture / Scope */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: What part of the vehicle's job we control.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">The Scope: Dispatching vs Routing</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-            <p className="text-zinc-600 mt-4 max-w-2xl mx-auto font-medium text-lg">
-              We focus on one decision: which vehicle goes where next. Detailed driving paths and traffic control are handled by the vehicle manufacturer's software and appear in our simulator only as delays.
-            </p>
+      {/* ------------------------------------------------ 3. what the dispatcher may do */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="The Problem, Precisely" title="What the Dispatcher Can Do, Must Respect and Is Judged On" />
           </motion.div>
-
-          <div className="grid md:grid-cols-12 gap-8 items-start">
-            {/* The Hierarchy Visual */}
-            <motion.div variants={fadeUp} className="md:col-span-5 space-y-4">
-              <div className="bg-indigo-600 text-white p-5 rounded-2xl shadow-lg border-2 border-indigo-400 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10"><Target className="w-20 h-20"/></div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="bg-white/20 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Level 1</span>
-                  <span className="font-bold text-lg">Dispatching (Assignment)</span>
-                </div>
-                <p className="text-indigo-100 text-sm mb-3">Where should each free AGV go next: which quay crane, which yard block, or hold?</p>
-                <div className="bg-indigo-800/50 rounded-lg px-3 py-2 text-sm font-semibold flex justify-between items-center border border-indigo-500/30">
-                  <span>Who solves it?</span>
-                  <span className="text-amber-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Methods under study</span>
-                </div>
-                <p className="text-xs text-indigo-200 mt-2">Standard methods in Phase 1; PPO and MAPPO in Phase 2.</p>
-              </div>
-
-              <div className="bg-zinc-100 p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="bg-zinc-200 text-zinc-600 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Level 2</span>
-                  <span className="font-bold text-zinc-800 text-lg">Routing (Path Planning)</span>
-                </div>
-                <p className="text-zinc-600 text-sm mb-3">Which specific lanes should the AGV take?</p>
-                <div className="bg-white rounded-lg px-3 py-2 text-sm font-semibold flex justify-between items-center border border-zinc-200 text-zinc-500">
-                  <span>Who solves it?</span>
-                  <span className="flex items-center gap-1"><XCircle className="w-4 h-4"/> Usually manufacturer software</span>
-                </div>
-              </div>
-
-              <div className="bg-zinc-100 p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="bg-zinc-200 text-zinc-600 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider">Level 3</span>
-                  <span className="font-bold text-zinc-800 text-lg">Traffic Control</span>
-                </div>
-                <p className="text-zinc-600 text-sm mb-3">Who brakes at intersections to avoid collisions?</p>
-                <div className="bg-white rounded-lg px-3 py-2 text-sm font-semibold flex justify-between items-center border border-zinc-200 text-zinc-500">
-                  <span>Who solves it?</span>
-                  <span className="flex items-center gap-1"><XCircle className="w-4 h-4"/> Usually manufacturer software</span>
-                </div>
-              </div>
+          <div className="grid gap-5 lg:grid-cols-3">
+            <motion.div {...fade} className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">Its Choices</h3>
+              <ul className="flex flex-col gap-3 text-sm leading-relaxed text-zinc-700">
+                <li className="rounded-xl border border-zinc-200 p-3"><b className="text-zinc-900">Serve a Crane.</b> The free AGV takes the next open job of one of the cranes. For unloading it drives empty to the crane. For loading it first fetches the container from the yard.</li>
+                <li className="rounded-xl border border-zinc-200 p-3"><b className="text-zinc-900">Park.</b> The AGV waits, ready for a later job.</li>
+              </ul>
+              <p className="mt-auto text-xs leading-relaxed text-zinc-500">With 2 cranes, that is at most 3 options per decision. The difficulty is not one choice but the long chain of them.</p>
             </motion.div>
-
-            {/* The Academic Justification */}
-            <motion.div variants={fadeUp} className="md:col-span-7 space-y-6">
-              <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 h-full flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-indigo-600" /> Scope, in Precise Terms
-                  </h3>
-                  
-                  <p className="text-zinc-700 font-medium mb-6 text-justify leading-relaxed">
-                    In the literature, dispatching (assigning vehicles to jobs) and routing (choosing driving paths) are sometimes used interchangeably. Carlo, Vis & Roodbergen (2014) treat transport operations as vehicle type, number of vehicles, and routing and dispatching. This thesis studies the dispatching (assignment) decision.
-                  </p>
-
-                  <div className="bg-zinc-50 border-l-4 border-zinc-300 p-5 rounded-r-xl">
-                    <blockquote className="text-zinc-600 italic font-serif leading-relaxed text-justify">
-                      "AGV dispatching usually consists of three sub-problems, namely, assigning AGVs to transportation orders, routing the AGVs, and traffic control. Algorithms for routing and traffic control are generally already included in the control software provided by the AGV manufacturer. Thus, <strong>only the assignment problem is investigated in this paper.</strong>"
-                    </blockquote>
-                    <div className="text-indigo-800 font-bold text-sm mt-4 text-right">
-                      — Grunow, Günther & Lehmann (2006), OR Spectrum 28:587–610, Sec. 2
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-zinc-700 font-medium text-justify leading-relaxed mt-2 pt-6 border-t border-zinc-100">
-                  Our dispatchers act only at Level 1. Lane-level paths, ordering of vehicles inside a zone and physical deadlocks are not modelled; in the simulator they appear as travel-time delays and queueing. We test how well each dispatching method copes with those delays.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        {/* SECTION 2: Where the Decision Happens */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: When does the software make a choice?</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">The Dispatching Decision Point</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
-            {/* Flow Diagram */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 overflow-x-auto pb-4">
-              <div className="flex-1 bg-zinc-100 p-4 rounded-xl text-center font-semibold text-zinc-700 min-w-[120px]">Vessel</div>
-              <ArrowRight className="w-6 h-6 text-zinc-400 shrink-0" />
-              <div className="flex-1 bg-zinc-100 p-4 rounded-xl text-center font-semibold text-zinc-700 min-w-[120px]">Quay Crane</div>
-              <ArrowRight className="w-6 h-6 text-zinc-400 shrink-0" />
-              <div className="flex-[1.5] bg-indigo-600 text-white p-4 rounded-xl text-center font-bold shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2 min-w-[200px] border-2 border-indigo-400">
-                <HelpCircle className="w-5 h-5" /> DISPATCH DECISION
-              </div>
-              <ArrowRight className="w-6 h-6 text-zinc-400 shrink-0" />
-              <div className="flex-1 bg-zinc-100 p-4 rounded-xl text-center font-semibold text-zinc-700 min-w-[140px]">Transport Area</div>
-              <ArrowRight className="w-6 h-6 text-zinc-400 shrink-0" />
-              <div className="flex-1 bg-zinc-100 p-4 rounded-xl text-center font-semibold text-zinc-700 min-w-[120px]">Yard Block</div>
-            </div>
-
-            <div className="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-2xl">
-              <p className="text-indigo-900 text-lg font-medium leading-relaxed text-justify">
-                A dispatch decision is needed when a vehicle becomes free or a container job becomes ready. Studies use both triggers (vehicle-initiated in Kim & Bae 2004, Briskorn et al. 2006 and Choe et al. 2016; both in Zheng et al. 2022). The exact trigger is fixed in our formulation. The aim is to time the assignment so that the vehicle arrives when the crane needs it. Too early, and the vehicle waits. Too late, and the crane waits.
-              </p>
-            </div>
-          </motion.div>
-        </motion.section>
-
-        {/* SECTION 3: Formal Problem Definition */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: The options, rules and goal of the problem.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">What Exactly Are We Solving?</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            <motion.div variants={fadeUp} className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Decision Variable</h3>
-              <p className="text-zinc-700 font-medium mb-3 text-justify">The dispatcher decides where an empty vehicle goes next. The exact set of choices is fixed in the formulation: in the small setting it is 'which crane's next job'; larger settings may add yard-block choice and a 'hold' option.</p>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Constraints</h3>
-              <ul className="list-disc pl-5 space-y-2 text-zinc-600 font-medium text-justify">
-                <li><strong className="text-zinc-800">Capacity:</strong> one container per AGV at a time.</li>
-                <li><strong className="text-zinc-800">Synchronization:</strong> AGV and QC must synchronize at handoff (wait times accrue if either is late).</li>
-                <li><strong className="text-zinc-800">Battery:</strong> no random treatment is described in the studies we read (Song et al. 2024 model charging; Gao et al. 2023 and Zhao et al. 2025 assume enough charge). Whether it is used in Phase 1 is fixed in the formulation.</li>
-                <li><strong className="text-zinc-800">Congestion:</strong> the dispatcher does not plan lanes, but suffers queueing delays if too many vehicles are sent to the same place.</li>
+            <motion.div {...fade} className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500">Rules It Must Respect</h3>
+              <ul className="flex flex-col gap-3">
+                {RULES.map((r) => (
+                  <li key={r.text} className="flex gap-2.5 text-sm leading-relaxed text-zinc-700">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+                    <span>{r.text}{r.source && <i className="text-zinc-500"> {r.source}</i>}</span>
+                  </li>
+                ))}
               </ul>
             </motion.div>
-
-            <motion.div variants={fadeUp} className="bg-zinc-900 text-white p-6 rounded-2xl shadow-lg border border-zinc-800">
-              <h3 className="text-xl font-bold text-amber-400 mb-4 pb-2 border-b border-zinc-700">Objective</h3>
-              <p className="font-medium text-lg leading-relaxed text-justify mb-4">
-                Minimise the total time quay cranes sit idle during a ship's service. Idle time here means the time a crane waits for a vehicle (the 'QC waiting' of Zheng et al. 2022; crane delay in Kim & Bae 2004). The exact definition is fixed in the formulation.
+            <motion.div {...fade} className="flex flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-white">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-teal-400">What It Is Judged On</h3>
+              <Md className="text-white">{String.raw`$$\bar I \;=\; \frac{1}{N}\sum_{j=1}^{N}\bigl(h_j - r_j\bigr)$$`}</Md>
+              <Md className="text-sm leading-relaxed text-zinc-300">{String.raw`**Crane Idle Time per Container**, in seconds. For each of the $N$ containers, the time from when the crane is ready ($r_j$) to when the handover really happens ($h_j$), averaged over the ship. Lower is better.`}</Md>
+              <p className="text-xs leading-relaxed text-zinc-400">
+                The delay of one handover is defined as in <i>Kim and Bae (2004), Fig. 2</i>. The same measure is shown on the Home tab.
               </p>
-              <p className="font-medium text-sm leading-relaxed text-indigo-200 text-justify">
-                QC idle time is the time a quay crane waits for an AGV.
+              <p className="mt-auto rounded-xl bg-zinc-800 px-4 py-3 text-xs leading-relaxed text-zinc-300">
+                Every method is run on the same 30 ships with the same random draws. Results are the mean with a 95% interval of the
+                paired differences.
               </p>
             </motion.div>
           </div>
+        </div>
+      </section>
 
-          <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 text-center">
-            <div className="text-2xl md:text-3xl font-serif text-zinc-900 mb-6 bg-zinc-50 py-4 rounded-xl border border-zinc-100">
-              <strong>Minimise:</strong> <span className="italic text-indigo-700">∑ T<sub>q</sub><sup>idle</sup></span>
-            </div>
-            <p className="text-zinc-600 mb-6 font-medium text-justify">where <span className="italic text-zinc-900 font-bold">T<sub>q</sub><sup>idle</sup></span> is the cumulative time Quay Crane <span className="italic font-bold">q</span> waits for an AGV during the vessel service episode (unloading and loading).</p>
-            
-            <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-100 text-left">
-              <p className="text-zinc-800 font-medium leading-relaxed mb-3 text-justify">
-                Quay cranes are widely regarded as the most critical asset in a container terminal (Garmouch et al., 2025). Every minute a crane waits for a vehicle delays the ship's turnaround.
+      {/* ------------------------------------------------ 4. why seconds matter */}
+      <section className="border-y border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Why Seconds Matter" title="Today’s Best Methods Still Leave the Cranes Waiting">
+              <p>
+                A quay crane in our simulator needs 75 s per container. So every second of waiting per container is about 1.3% of
+                the crane’s working time (1 ÷ 75, our arithmetic). The chart shows what each method loses on our simulated ship when
+                crane times vary by ±20% and AGV speeds by ±10%.
               </p>
-                          </div>
+            </SectionHead>
           </motion.div>
-        </motion.section>
-
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="my-6 bg-gradient-to-r from-indigo-900 to-indigo-800 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden border border-indigo-700/50">
-            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-              <AlertCircle className="w-48 h-48 text-white" />
-            </div>
-            <div className="relative z-10">
-              <h3 className="text-amber-400 font-bold mb-6 tracking-widest text-sm uppercase flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" /> A Recent Statement of the Link (2025)
-              </h3>
-              <blockquote className="text-xl md:text-2xl font-serif text-white leading-relaxed italic mb-4 text-justify">
-                "Delays in either the availability of AGVs or the operations of ASCs will directly increase crane idle time, as the cranes must wait for the completion of container handoffs."
-              </blockquote>
-              <blockquote className="text-lg font-serif text-indigo-100 leading-relaxed italic mb-6 text-justify">
-                "If an AGV/ASC takes an additional 10 min to transport a container due to congestion, the quay crane remains idle for that duration, increasing total idle time."
-              </blockquote>
-              <div className="text-indigo-200 font-medium text-lg">
-                — Garmouch, Abdoun &amp; Garmouch (2025), <cite className="text-white font-bold">Scientific Reports</cite>
-              </div>
-              <p className="text-xs text-indigo-300 mt-4 italic text-justify">
-                ASC = automated stacking crane. The second sentence is the authors' illustrative example, not a measured result. Their study schedules crane maintenance on synthetic data.
-              </p>
-            </div>
-          </motion.div>
-        </motion.section>
-
-        {/* SECTION 3.5: The Cascade of Losses */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="mb-14 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: How a small delay costs a lot of money.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">The Cascade of Losses: Why Seconds Matter</h2>
-            <div className="w-24 h-1 bg-red-500 mx-auto mt-4 rounded-full mb-4"></div>
-            <p className="text-zinc-600 max-w-2xl mx-auto font-medium text-lg">
-              Illustrative example using reference parameters (Liu et al., 2001): 5 cranes, 42 moves/hour, 86 s cycle. Yangshan operates more cranes; the mechanism is the same. With double-trolley cranes, a transfer platform absorbs part of such delays; the simulator treats its capacity as an assumed parameter.
-            </p>
-          </motion.div>
-
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="relative border-l-4 border-red-100 ml-4 md:ml-0 md:border-none space-y-12 pb-10">
-              
-              {/* Center line for desktop */}
-              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-red-100 -translate-x-1/2 rounded-full"></div>
-
-              {/* Step 1 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
-                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">1</div>
-                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:text-right md:pr-12">
-                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
-                    <h3 className="font-bold text-zinc-900 text-lg mb-2">The Dispatching Error</h3>
-                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify md:text-right">A bad assignment sends an AGV into a congested block. It is delayed by <strong>15 seconds</strong>.</p>
-                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">Illustrative assumption: every container adds 15 s of crane waiting.</p>
-                  </div>
-                </div>
-                <div className="hidden md:block w-5/12"></div>
-              </motion.div>
-
-              {/* Step 2 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
-                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">2</div>
-                <div className="hidden md:block w-5/12"></div>
-                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:pl-12">
-                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
-                    <h3 className="font-bold text-zinc-900 text-lg mb-2">The Handoff Starvation</h3>
-                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify">The QC finishes its 86s cycle and expects the next empty AGV. It is not there. The QC sits idle for 15s.</p>
-                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">42 moves per hour is the average double-mode crane rate in Liu et al. (2001). The 86 s cycle is 3600/42 (our arithmetic).</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Step 3 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
-                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-white border-4 border-red-500 text-red-600 font-bold rounded-full flex items-center justify-center z-10 shadow-md group-hover:scale-110 transition-transform">3</div>
-                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:text-right md:pr-12">
-                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 group-hover:border-red-300 transition-colors">
-                    <h3 className="font-bold text-zinc-900 text-lg mb-2">Idle Time Adds Up</h3>
-                    <p className="text-zinc-600 font-medium text-sm leading-relaxed text-justify md:text-right">This error repeats across the 3,400 containers handled for one 8,000 TEU ship: 15 s × 3,400 ≈ <strong>14.2 hours</strong> of aggregate QC idle time.</p>
-                    <p className="text-[10px] text-zinc-400 mt-2 italic text-center">3,400 40-ft containers per ship: Liu et al. (2001), Sec. 2.3. The multiplication is our arithmetic, using the illustrative 15 s.</p>
-                  </div>
-                </div>
-                <div className="hidden md:block w-5/12"></div>
-              </motion.div>
-
-              {/* Step 4 */}
-              <motion.div variants={fadeUp} className="relative flex flex-col md:flex-row items-center md:justify-between group">
-                <div className="absolute left-[-28px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 bg-zinc-900 border-4 border-red-600 text-white font-bold rounded-full flex items-center justify-center z-10 shadow-lg group-hover:scale-110 transition-transform">
-                  <AlertCircle className="w-5 h-5" />
-                </div>
-                <div className="hidden md:block w-5/12"></div>
-                <div className="w-full md:w-5/12 ml-6 md:ml-0 md:pl-12">
-                  <div className="bg-red-50 p-6 rounded-2xl shadow-md border-2 border-red-200 group-hover:border-red-400 transition-colors">
-                    <h3 className="font-bold text-red-900 text-lg mb-2">The Cost to the Ship</h3>
-                    <p className="text-red-800 font-medium text-sm leading-relaxed text-justify">If that idle time is spread evenly over the 5 cranes, each crane loses about 2.8 hours (14.2 h ÷ 5), so the ship stays at berth about that much longer. The largest container ships cost more than 100 million US dollars, and their economies of scale are lost if they have to wait in port. Ships queued behind it wait too.</p>
-                    <p className="text-[10px] text-red-700/60 mt-2 italic text-center">Ship cost and waiting-in-port point: Haralambides (2019), Maritime Economics &amp; Logistics, DOI 10.1057/s41278-018-00116-0. The 2.8 h is our arithmetic.</p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* SECTION 4: Three Layers of Difficulty */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}>
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: Why we need advanced software to solve this.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Why Is This Problem Hard?</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-10">
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
-              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                <Cpu className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Too Many Possible Assignments</h3>
-              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
-                With n vehicles and m waiting jobs, the number of possible assignments grows very quickly (combinatorially).
-              </p>
-              <div className="mt-6 pt-6 border-t border-zinc-100">
-                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
-                  Choe et al. (2016) state that optimal plans need computation that grows exponentially with the number of jobs and go stale when conditions change. Their rolling-horizon search takes about 10 to 40 s per decision, against a dispatch interval of about 10 s.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
-              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                <Clock className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Decisions Come Fast</h3>
-              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
-                In the reference terminal, a crane needs a new vehicle about every 86 seconds. With 26 cranes, requests arrive roughly every 3 seconds (86 s ÷ 26, an upper-bound illustration). But speed alone is not the whole story: simple rules and assignment methods already run in well under a second (Briskorn et al. 2006: under 0.001 s on average; Grunow et al. 2006: under 1 s). The harder question is how good the decisions stay when conditions vary.
-              </p>
-              <div className="mt-6 pt-6 border-t border-zinc-100">
-                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
-                  Liu et al. (2001) give 42 moves per hour per crane; 86 s is 3600/42 (our arithmetic).
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200">
-              <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                <CloudLightning className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-4">Uncertainty From Many Sources</h3>
-              <p className="text-zinc-600 font-medium leading-relaxed text-justify">
-                The literature mentions at least seven sources of uncertainty: crane cycle time, travel and congestion, task arrival, stowage workload (how work is spread over cranes), vehicle breakdown, yard-crane delay and battery. Among the 11 dispatching and scheduling studies we reviewed, crane cycle time is modelled as random in five and yard-crane delay in three; vehicle breakdown and battery are not modelled as random in any (see Table 1 below).
-              </p>
-              <div className="mt-6 pt-6 border-t border-zinc-100">
-                <p className="text-xs text-zinc-500 italic text-justify leading-relaxed">
-                  Carlo, Vis & Roodbergen (2014) observe that most models assume deterministic (non-varying) operational times.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div variants={fadeUp} className="bg-zinc-900 text-white p-8 rounded-3xl border border-zinc-800 shadow-xl text-center max-w-4xl mx-auto">
-            <h3 className="text-xl font-bold text-amber-400 mb-4">The Setting</h3>
-            <p className="text-lg font-medium leading-relaxed mb-0 text-justify">
-              Phase 1 uses a small terminal (proposed: 3 quay cranes, 5 vehicles, 5 yard blocks; to be confirmed). The long-term reference is Yangshan Phase IV in Shanghai (26 double-trolley quay cranes, about 130 vehicles, 61 yard blocks, 2,350 m quay; Liu et al. (2016), Port &amp; Waterway Engineering), which is planned for Phase 2.
-            </p>
-            </motion.div>
-        </motion.section>
-
-        {/* SECTION 4.5: What Phase 1 Models */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-16">
-          <motion.div variants={fadeUp} className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-2 border-indigo-500 relative flex flex-col h-full">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Modelled in Phase 1</h3>
-              <ul className="list-disc pl-5 space-y-3 text-zinc-700 font-medium text-justify">
-                <li>A small terminal with a few quay cranes, vehicles and yard blocks (size to be confirmed).</li>
-                <li>Dispatch decisions and the quay-crane idle-time objective (exact definition fixed in the formulation).</li>
-                <li>A run without disruption, then runs with increasing levels of uncertainty.</li>
-                <li>Rules, a genetic algorithm, tabular Q-learning and DQN on identical scenarios.</li>
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+            <motion.figure {...fade} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+              <figcaption className="mb-5 text-sm font-semibold text-zinc-900">Crane Idle Time per Container, in Seconds</figcaption>
+              <ul className="flex flex-col gap-3.5" aria-label="Crane idle time per container for seven methods">
+                {BARS.map((b) => (
+                  <li key={b.name} className="grid grid-cols-[9.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                    <span className="flex flex-col leading-tight">
+                      <span className="text-sm font-medium text-zinc-900">{b.name}</span>
+                      <span className="text-xs text-zinc-500">{b.note}</span>
+                    </span>
+                    <span className="relative flex h-6 items-center">
+                      <motion.span initial={{ width: 0 }} whileInView={{ width: `${(b.mean / XMAX) * 100}%` }} viewport={{ once: true }}
+                        transition={{ duration: 0.8 }} className={`h-full rounded-r-md ${b.tone}`} />
+                      <span className="absolute h-3 border-x border-zinc-900/60"
+                        style={{ left: `${((b.mean - b.ci) / XMAX) * 100}%`, width: `${((2 * b.ci) / XMAX) * 100}%` }}>
+                        <span className="absolute left-0 right-0 top-1/2 border-t border-zinc-900/60" />
+                      </span>
+                      <span className="absolute text-xs font-semibold tabular-nums text-zinc-900"
+                        style={{ left: `calc(${((b.mean + b.ci) / XMAX) * 100}% + 6px)` }}>{b.mean.toFixed(2)}</span>
+                    </span>
+                  </li>
+                ))}
               </ul>
-              <div className="mt-4 pt-4 border-t border-indigo-100">
-                <h4 className="text-xs font-bold text-zinc-900 mb-2">Candidate uncertainty sources, each seen in earlier studies. The exact set and levels used in Phase 1 are fixed in the formulation.</h4>
-                <ul className="list-disc pl-5 space-y-1 text-xs text-zinc-500 mb-3">
-                  <li>Crane cycle time varies — Briskorn et al. 2006; Grunow et al. 2006; Kim &amp; Bae 2004; Liu et al. 2001; Zhao et al. 2025</li>
-                  <li>Travel time and congestion — Briskorn et al. 2006; Zheng et al. 2022 (random vehicle speed)</li>
-                  <li>Task arrival timing — Zheng et al. 2022 (random ship arrival)</li>
-                  <li>Stowage / workload variation — Choe et al. 2016; Grunow et al. 2006; Liu et al. 2001</li>
-                  <li>Yard-crane delay — Briskorn et al. 2006; Grunow et al. 2006; Zhao et al. 2025</li>
-                  <li>Vehicle breakdown, battery — no random treatment is described in the 11 dispatching and scheduling studies we read; Angeloudis &amp; Bell (2010) list maintenance and safety stops among sources of plan-versus-actual difference.</li>
+              <p className="mt-5 text-xs italic leading-relaxed text-zinc-500">
+                Experiment 4.5, model v5, 12 AGVs, 30 paired seeds, mean with 95% interval, 21 Oct 2026. The dispatcher that knows
+                the future is the best plan our search found with the real times known in advance.
+              </p>
+            </motion.figure>
+            <div className="flex flex-col gap-5">
+              <motion.div {...fade} className="rounded-2xl border border-teal-200 bg-teal-50 p-6">
+                <div className="text-3xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</div>
+                <p className="mt-2 text-sm leading-relaxed text-teal-900">
+                  The best method available today, a plan re-optimised during service, still makes the cranes wait 2.62 s per
+                  container. A dispatcher that knew the future would need only 1.05 s (our arithmetic, 2.62 ÷ 1.05). This gap is the
+                  room a learned dispatcher can aim for.
+                </p>
+              </motion.div>
+              <motion.figure {...fade} className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-6">
+                <blockquote className="font-serif text-base italic leading-relaxed text-zinc-700">
+                  “Longer turnaround times reduce effective shipping capacity and propagate delays across global networks.”
+                </blockquote>
+                <Source>
+                  World Bank (2026), The Container Port Performance Index 2025, data of S&amp;P Global Market Intelligence,{' '}
+                  <a href="https://trid.trb.org/View/2712643" target="_blank" rel="noreferrer" className="underline hover:text-zinc-700">abstract</a>
+                </Source>
+              </motion.figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ 5. why it is hard */}
+      <section className="bg-zinc-50 px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Why It Is Hard" title="Three Reasons, Each Measured in Our Simulator" />
+          </motion.div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {HARD.map((h, i) => (
+              <motion.div key={h.title} {...fade} transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6">
+                <h.icon className="mb-5 h-7 w-7 text-teal-700" />
+                <div className="text-2xl font-bold tracking-tight tabular-nums">{h.stat}</div>
+                <h3 className="mb-3 mt-1 text-sm font-semibold text-zinc-800">{h.title}</h3>
+                <p className="mb-5 flex-grow text-sm leading-relaxed text-zinc-600">{h.text}</p>
+                <Source>{h.source}</Source>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ 6. what we model */}
+      <section className="border-y border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Scope" title="What the Simulator Includes, Simplifies and Leaves for Later">
+              <p>
+                Every value in the simulator comes from a published source or is marked as our own assumption. The full list is on
+                the Simulation tab.
+              </p>
+            </SectionHead>
+          </motion.div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {SCOPE.map((c) => (
+              <motion.div key={c.title} {...fade}
+                className={`flex flex-col gap-4 rounded-2xl border p-6 ${c.tone === 'yes' ? 'border-teal-300 bg-teal-50' : c.tone === 'later' ? 'border-amber-200 bg-amber-50' : 'border-zinc-200 bg-zinc-50'}`}>
+                <h3 className={`text-lg font-semibold ${c.tone === 'yes' ? 'text-teal-900' : c.tone === 'later' ? 'text-amber-900' : 'text-zinc-900'}`}>{c.title}</h3>
+                <ul className="flex flex-col gap-2.5">
+                  {c.items.map((it) => (
+                    <li key={it} className="flex gap-2.5 text-sm leading-snug text-zinc-700">
+                      {c.tone === 'yes' ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
+                        : c.tone === 'later' ? <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                        : <Minus className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />}
+                      {it}
+                    </li>
+                  ))}
                 </ul>
-                <p className="text-[10px] text-zinc-400 italic">Most models assume deterministic (non-varying) operational times (Carlo, Vis &amp; Roodbergen, 2014).</p>
-              </div>
-            </div>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-200 flex flex-col h-full">
-              <h3 className="text-xl font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Simplified (appears only as delays)</h3>
-              <ul className="list-disc pl-5 space-y-3 text-zinc-600 text-justify">
-                <li>Driving paths and lane-level movement.</li>
-                <li>Traffic control and deadlock resolution.</li>
-                <li>Handling and queueing inside yard blocks, as a parameter.</li>
-                <li>Transfer-platform capacity of double-trolley cranes, as an assumed parameter.</li>
-              </ul>
-            </div>
-            <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col h-full">
-              <h3 className="text-xl font-bold text-indigo-900 mb-4 pb-2 border-b border-indigo-100/50">Waits for Phase 2</h3>
-              <ul className="list-disc pl-5 space-y-3 text-indigo-800 text-justify">
-                <li>Yangshan Phase IV scale.</li>
-                <li>Different behaviour of end-loading and side-loading yard blocks (real-port layout).</li>
-                <li>Any uncertainty sources not selected for Phase 1.</li>
-                <li>PPO and MAPPO with curriculum learning; fleet-size optimisation.</li>
-              </ul>
-            </div>
-          </motion.div>
-        </motion.section>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-{/* SECTION 5: The Literature Gap */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-24">
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: We read 14 papers (11 dispatching or scheduling studies). Table 1 shows which uncertainties each study models; Table 2 shows what each study did and did not test.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">What Existing Research Has, and Has Not, Solved</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full mb-8"></div>
+      {/* ------------------------------------------------ 7. research questions, closing */}
+      <section className="bg-zinc-900 px-4 py-20 text-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10">
+          <motion.div {...fade} className="flex max-w-3xl flex-col gap-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-400">Research Questions</span>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Two Questions This Thesis Answers</h2>
           </motion.div>
-
-          {/* Table 1 */}
-          <motion.div variants={fadeUp} className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 overflow-hidden mb-8">
-            <div className="p-4 bg-zinc-50 border-b border-zinc-200 text-sm font-medium text-zinc-700">
-              <span className="font-bold mr-2">Legend:</span>
-              <span className="inline-block px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs mr-2">R = randomly varied</span>
-              <span className="inline-block px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs mr-2">E = emerges from sim</span>
-              <span className="inline-block px-2 py-0.5 rounded-full bg-zinc-200 text-zinc-800 text-xs mr-2">F = fixed</span>
-              <span className="inline-block px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs mr-2">? = not described</span>
-              <span className="inline-block px-2 py-0.5 rounded-full bg-zinc-300 text-zinc-700 text-xs">- = not applicable</span>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left whitespace-nowrap">
-                <thead className="bg-zinc-100 text-zinc-900 text-sm">
-                  <tr>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Paper</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Approach</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Trigger</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">QC cycle</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">Travel/congest</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">Task arrival</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">Stowage</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">Breakdown</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">YC delay</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 text-center">Battery</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200 text-sm font-medium text-zinc-700">
-                  {
-                    [
-                      ['Egbelu & Tanchoco 1984','Rules','both','-','E','?','-','?','-','?'],
-                      ['Liu et al. 2001','Rules (terminal design)','vehicle','R','E','F','R','?','F','?'],
-                      ['Briskorn et al. 2006','Assignment rule','vehicle','R','R','F','F','?','R','?'],
-                      ['Grunow et al. 2006','Assignment rule','both','R','F','E','R','?','R','?'],
-                      ['Kim & Bae 2004','Optimisation + heuristic','vehicle','R','F','F','F','?','F','?'],
-                      ['Angeloudis & Bell 2010','Optimisation, rolling horizon','both','?','E','?','F','?','?','?'],
-                      ['Song et al. 2024','Metaheuristic (offline)','vehicle','?','F','F','?','F','?','F'],
-                      ['Zhao, Li & Yang 2025','Metaheuristic (offline)','n/a','R','F','F','?','?','R','F'],
-                      ['Choe et al. 2016','Online preference learning','vehicle','?','E','F','R','?','?','?'],
-                      ['Gao et al. 2023','Tabular Q-learning + contract net','task','?','E','F','?','?','?','F'],
-                      ['Zheng et al. 2022','DQN','both','?','R','R','F','?','?','?'],
-                    ].map((row, i) => (
-                      <tr key={i} className="hover:bg-zinc-50">
-                        <td className="px-4 py-3 font-bold text-zinc-900">{row[0]}</td>
-                        <td className="px-4 py-3">{row[1]}</td>
-                        <td className="px-4 py-3">{row[2]}</td>
-                        {row.slice(3).map((val, j) => {
-                          let bg = 'bg-zinc-200 text-zinc-800';
-                          if (val === 'R') bg = 'bg-emerald-100 text-emerald-800';
-                          else if (val === 'E') bg = 'bg-sky-100 text-sky-800';
-                          else if (val === '?') bg = 'bg-amber-100 text-amber-800';
-                          else if (val === '-') bg = 'bg-zinc-300 text-zinc-700';
-                          return (
-                            <td key={j} className="px-4 py-3 text-center">
-                              <span className={`inline-block w-6 h-6 leading-6 text-center rounded-full text-xs font-bold ${bg}`}>{val}</span>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-
-          {/* Table 2 */}
-          <motion.div variants={fadeUp} className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 overflow-hidden mb-8">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left whitespace-nowrap">
-                <thead className="bg-zinc-100 text-zinc-900 text-sm">
-                  <tr>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200 sticky left-0 bg-zinc-100 z-10 shadow-[1px_0_0_rgba(0,0,0,0.1)]">Paper</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Objective (crane-related?)</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Learning-based?</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Uncertainty level sweep?</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Compared against</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Seeds / intervals</th>
-                    <th className="px-4 py-3 font-bold border-b border-zinc-200">Multi-agent?</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200 text-sm font-medium text-zinc-700">
-                  {
-                    [
-                      ['Egbelu & Tanchoco 1984','Shop throughput (not crane-related)','No','No','Other rule combinations only','2 runs; no intervals','No'],
-                      ['Liu et al. 2001','Design targets; crane idle rate reported as an output','No','No','None','One 24 h run','No'],
-                      ['Briskorn et al. 2006','Waterside productivity (crane-related)','No','No (noise present, not varied)','Greedy and Hungarian due-time rules','100 runs of 11 h; no intervals','No'],
-                      ['Grunow et al. 2006','Processing time incl. crane waiting (crane-related)','No','Yes (cycle-time variance x0.5, x1, x2)','On-line NV/FCFS rule; lower bound','10 replications; spread not shown','No'],
-                      ['Kim & Bae 2004','Crane delay, then travel (crane-related)','No','Yes (noise swept)','STT/D, EDD, r-SI','10 replications; 1% tests','No'],
-                      ['Angeloudis & Bell 2010','Net benefit (no crane metric)','No','No (weights and fleet size swept)','Closest, Greedy, First, mTSP','Seeds not stated; no intervals','No'],
-                      ['Song et al. 2024','Longest vehicle completion time (not crane-related)','No','No (charging threshold swept)','One-threshold charging only','Runs not described','No'],
-                      ['Zhao, Li & Yang 2025','Vehicle energy (not crane-related)','No','No','Greedy start; GA','10 groups; no tests','No'],
-                      ['Choe et al. 2016','Crane makespan + empty travel (crane-related)','Yes (supervised preference learning)','Two scenario families, not graded','Rolling-horizon GA, policy search, Q-learning','50 scenarios; t-tests','No'],
-                      ['Gao et al. 2023','Earliness + lateness; congestion (not crane-related)','Yes (tabular Q-learning for routing)','No','CNA, Dijkstra, GA, PSO','GA/PSO mean of 10 runs; own runs not described','Contract-net agents (not multi-agent RL)'],
-                      ['Zheng et al. 2022','Crane waiting for vehicle + vehicle completion (crane-related)','Yes (DQN)','No (one level; sweep is over size)','Static GA; FCFS, STD, LWT','Not described; no intervals','No'],
-                    ].map((row, i) => (
-                      <tr key={i} className="hover:bg-zinc-50">
-                        <td className="px-4 py-3 font-bold text-zinc-900 sticky left-0 bg-white shadow-[1px_0_0_rgba(0,0,0,0.05)] z-10">{row[0]}</td>
-                        <td className="px-4 py-3">{row[1]}</td>
-                        <td className="px-4 py-3">{row[2]}</td>
-                        <td className="px-4 py-3">{row[3]}</td>
-                        <td className="px-4 py-3">{row[4]}</td>
-                        <td className="px-4 py-3">{row[5]}</td>
-                        <td className="px-4 py-3">{row[6]}</td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
-            <h3 className="font-bold text-zinc-900 mb-4">What the tables show</h3>
-            <ul className="list-disc pl-5 space-y-2 text-zinc-700 text-sm mb-4">
-              <li>Among these 11 studies, no learning-based dispatcher was evaluated across graded uncertainty levels; the two studies with level sweeps (Kim & Bae 2004; Grunow et al. 2006) are not learning-based.</li>
-              <li>No study compares rules, a metaheuristic, tabular Q-learning and DQN on the same scenarios with seeds and intervals.</li>
-              <li>No study in this set uses multi-agent learning.</li>
-              <li>Vehicle breakdown and battery are not modelled as random in any of them.</li>
-              <li>Gao et al. (2023) list deep reinforcement learning as future work for dispatching AGVs together with other equipment.</li>
-            </ul>
-            <p className="text-xs text-zinc-500 italic">This summarises the papers we read; it is not evidence about the wider literature. A '?' means the paper does not describe it, not that the paper is weak.</p>
-          </motion.div>
-        </motion.section>
-{/* SECTION 6: The Research Question */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-24">
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: The exact questions this thesis will answer.</p>
-          </motion.div>
-          <motion.div variants={fadeUp} className="bg-gradient-to-br from-indigo-900 to-zinc-900 text-white p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden border border-indigo-700/50">
-            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-              <HelpCircle className="w-48 h-48" />
-            </div>
-            <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-sm font-bold tracking-widest uppercase mb-6 border border-indigo-500/30">
-                <Target className="w-4 h-4" /> Research Questions
-              </div>
-              
-              <p className="text-xl md:text-2xl font-medium leading-relaxed mb-6 text-justify">
-                <span className="text-amber-400 font-bold block mb-2">Phase 1:</span>
-                In a small automated terminal, how do rule-based dispatching, a genetic algorithm, tabular Q-learning and DQN perform on quay-crane idle time without disruption and as uncertainty increases, and where does each stop working?
-              </p>
-              
-              <p className="text-xl md:text-2xl font-medium leading-relaxed mb-4 text-justify">
-                <span className="text-amber-400 font-bold block mb-2">Phase 2:</span>
-                Do PPO and MAPPO, trained with curriculum learning, add value (better or more robust crane idle time) over the Phase 1 methods as uncertainty rises?
-              </p>
-
-              <p className="text-sm font-medium leading-relaxed text-indigo-200 mt-6 pt-6 border-t border-indigo-700/50">
-                Planned for Phase 2: whether results differ between end-loading and side-loading yard blocks.
-              </p>
-            </div>
-          </motion.div>
-          
-          <motion.div variants={fadeUp} className="mt-8 bg-white p-6 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-            <h3 className="text-lg font-bold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">Two-Step Comparison</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-zinc-50 text-zinc-600 text-sm">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold border-b border-zinc-200 w-24">Layer</th>
-                    <th className="px-4 py-3 font-semibold border-b border-zinc-200">Methods Being Compared</th>
-                    <th className="px-4 py-3 font-semibold border-b border-zinc-200">What It Tells Us</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-100 text-sm">
-                  <tr>
-                    <td className="px-4 py-4 font-bold text-zinc-900">Phase 1</td>
-                    <td className="px-4 py-4 font-medium text-zinc-800">Rules, genetic algorithm, tabular Q-learning, DQN, across uncertainty levels</td>
-                    <td className="px-4 py-4 text-zinc-600">Where do standard methods stop working?</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-4 font-bold text-zinc-900">Phase 2</td>
-                    <td className="px-4 py-4 font-medium text-zinc-800">PPO against the best Phase 1 methods; MAPPO against PPO</td>
-                    <td className="px-4 py-4 text-zinc-600">Does each newer learning method add value?</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-        </motion.section>
-{/* SECTION 7: Bridge to Methodology */}
-        <motion.section variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="text-center pb-20 border-t border-zinc-200 pt-20">
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <p className="text-sm text-zinc-500 italic mb-2">In plain words: How we are going to build it.</p>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Our Approach</h2>
-            <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full mb-8"></div>
-          </motion.div>
-          
-          <motion.div variants={fadeUp} className="max-w-4xl mx-auto text-lg text-zinc-700 font-medium leading-relaxed mb-10 text-left space-y-4 bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-justify">
-            <p>To answer this question, we:</p>
-            <ol className="list-decimal pl-6 space-y-3 text-justify">
-              <li><strong className="text-zinc-900">Formulate</strong> the dispatching decision as a Markov Decision Process (MDP), a step-by-step description of the situation, the choice and the outcome, with quay-crane idle time as the objective.</li>
-              <li><strong className="text-zinc-900">Build</strong> a Python/Gymnasium simulator, first without disruption and then with adjustable uncertainty levels. Phase 1 uses a small terminal; scaling and calibration to Yangshan Phase IV (26 cranes, about 130 vehicles, 61 yard blocks; Liu et al. (2016), Port &amp; Waterway Engineering) is planned for Phase 2.</li>
-              <li><strong className="text-zinc-900">Implement</strong> standard methods for comparison: rules (FCFS, STD, LWT and an Egbelu-style rule), a genetic algorithm, tabular Q-learning and DQN (Zheng et al. 2022), all on identical scenarios.</li>
-              <li><strong className="text-zinc-900">Evaluate</strong> with several random seeds, interquartile mean and 95% bootstrap confidence intervals (Agarwal et al. 2021). Primary metric: total quay-crane idle time. Secondary metrics (reported, not optimised): makespan, maximum idle time of any single crane, empty travel distance, deadlock events.</li>
-              <li><strong className="text-zinc-900">In Phase 2, train</strong> PPO and then extend to MAPPO with curriculum learning, and compare with the Phase 1 methods.</li>
-            </ol>
-          </motion.div>
-
-          <motion.div variants={fadeUp}>
-            <Link 
-              href="/methodology" 
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-indigo-600/30"
-            >
-              See the Methodology <ArrowRight className="w-5 h-5" />
+          <motion.ol {...fade} className="grid gap-4 md:grid-cols-2">
+            {QUESTIONS.map((q) => (
+              <li key={q.n} className="flex flex-col gap-4 rounded-2xl border border-zinc-700 bg-zinc-800/60 p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-teal-400 px-3 py-1 text-sm font-bold text-zinc-900">{q.n}</span>
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${q.status === 'Next' ? 'bg-zinc-700 text-zinc-300' : 'bg-amber-400/15 text-amber-300'}`}>{q.status}</span>
+                </div>
+                <span className="text-xl font-semibold">{q.title}</span>
+                <p className="border-t border-zinc-700 pt-4 text-sm leading-relaxed text-zinc-300">{q.text}</p>
+              </li>
+            ))}
+          </motion.ol>
+          <motion.div {...fade} className="flex flex-wrap gap-3">
+            <Link href="/methodology" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-zinc-900 shadow-sm hover:bg-zinc-200">
+              How We Answer Them <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/simulation" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+              The Simulated Terminal <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+            </Link>
+            <Link href="/experiments" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+              See the Experiments <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+            </Link>
+            <Link href="/literature" className="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-800">
+              What Earlier Studies Did <ArrowUpRight className="h-4 w-4 text-zinc-400" />
             </Link>
           </motion.div>
-        </motion.section>
-
-      </div>
+          <p className="text-xs text-zinc-500">Last updated {UPDATED}.</p>
+        </div>
+      </section>
     </div>
   );
 }
