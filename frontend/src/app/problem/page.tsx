@@ -158,7 +158,9 @@ export default function ProblemPage() {
             And crane handling times and AGV travel times never go exactly as planned.
           </motion.p>
           <p className="text-xs italic text-zinc-500">
-            Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, 14 Aug 2026.
+            <a href="https://english.shanghai.gov.cn/en-Latest-WhatsNew/20260814/f4427a05be154fc4957a5f62d67d6f2e.html" target="_blank" rel="noreferrer" className="underline decoration-zinc-600 underline-offset-2 hover:text-zinc-300">
+              Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, news release, 14 Aug 2026
+            </a>
           </p>
         </div>
       </section>
