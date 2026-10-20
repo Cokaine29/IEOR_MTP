@@ -74,14 +74,14 @@ const CHAIN = [
 ];
 
 const HARD = [
-  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'Every container needs its own AGV trip, so a ship of 200 containers (100 unloaded, 100 loaded) needs 200 dispatching decisions. They are linked: sending an AGV to one crane now decides where it will be, and which AGVs are free, for every later decision.' },
+  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'Every container unloaded from or loaded onto a ship needs its own AGV trip, so one ship means hundreds of dispatching decisions, one after another. They are linked: sending an AGV to one crane now decides where it will be, and which AGVs are free, for every later decision.' },
   { icon: Shuffle, title: 'Random Times', text: 'Real crane handling times and AGV travel times vary, so a plan made on the planned times goes stale.' },
   { icon: Timer, title: 'No Time to Re-plan', text: 'Searching for a new plan takes time the terminal does not have, so the decision must be made in real time.' },
 ];
 
 const SYMBOLS = [
   { sym: String.raw`$\bar I$`, name: 'Crane Idle Time per Container', unit: 'seconds', text: 'The average wait of the crane over all containers of the ship. Lower is better.' },
-  { sym: String.raw`$N$`, name: 'Containers of the Ship', unit: '', text: '200 in every run here, 100 discharge and 100 load.' },
+  { sym: String.raw`$N$`, name: 'Containers of the Ship', unit: '', text: 'All containers the cranes unload from and load onto the ship.' },
   { sym: String.raw`$r_j$`, name: 'Crane Ready', unit: 'seconds', text: 'The time at which the crane is ready to hand over container $j$ to an AGV. Only the crane sets it.' },
   { sym: String.raw`$h_j$`, name: 'Handover', unit: 'seconds', text: 'The time the handover of container $j$ really happens, once an AGV is under the crane.' },
 ];
