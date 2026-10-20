@@ -41,12 +41,12 @@ const LEVELS = [
   {
     icon: Route, level: 'Routing', ours: false,
     question: 'Which lanes does the AGV drive along to get there?',
-    who: 'Fixed lane rules in our simulator',
+    who: 'Done by our simulator, AGVs follow set lanes',
   },
   {
     icon: TrafficCone, level: 'Traffic Control', ours: false,
     question: 'Which AGV goes first where two paths cross?',
-    who: 'Fixed reservation rules in our simulator',
+    who: 'Done by our simulator, AGVs book the road ahead',
   },
 ];
 
@@ -207,8 +207,10 @@ export default function ProblemPage() {
                 <span className="block text-xs font-normal italic text-zinc-500">OR Spectrum 28, 587–610, Sec. 2</span>
               </figcaption>
               <p className="rounded-xl bg-zinc-50 px-4 py-3 text-sm leading-relaxed text-zinc-600">
-                We follow the same split. Our dispatchers make the assignment. The simulator plays the part of the manufacturer’s
-                software, with fixed lanes and road reservations.
+                We follow the same split. Our dispatchers only make the assignment. The simulator does the rest, as the
+                manufacturer’s software would. Every AGV drives along set lanes, like cars on marked roads. Before it moves,
+                it books the stretch of road just ahead of it, long enough to brake to a stop, and no other AGV may enter
+                that stretch until it has passed. So AGVs never collide, but one may have to wait for another.
               </p>
             </motion.figure>
           </div>
