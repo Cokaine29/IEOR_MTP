@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Globe2, Gauge, Truck, FileSearch, Repeat, Shuffle, Timer } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Globe2, Gauge, Truck, FileSearch, Repeat, Shuffle, Timer } from 'lucide-react';
 import HeroReplay from '@/components/home/HeroReplay';
 import CraneWait from '@/components/home/CraneWait';
 import Md from '@/components/experiments/Md';
@@ -71,10 +71,22 @@ const SYMBOLS = [
   { sym: String.raw`$h_j$`, name: 'Handover', unit: 'seconds', text: 'The time the handover of container $j$ really happens, once an AGV is under the crane.' },
 ];
 
-const STEPS = [
-  { title: 'Build a Realistic Terminal', text: 'A simulator of an automated terminal, with AGVs that accelerate, turn, keep safe gaps and wait for each other, built from published data.' },
-  { title: 'Test Today’s Methods', text: 'Dispatching rules and optimised plans, measured as crane and travel times become random, against a dispatcher that knows the future.' },
-  { title: 'Train a Learned Dispatcher', text: 'Deep reinforcement learning, first PPO with one central dispatcher, then MAPPO with one cooperating agent per AGV.' },
+const STEPS: { title: string; status: 'Done' | 'In Progress' | 'Next'; points: string[] }[] = [
+  { title: 'Build a Realistic Terminal', status: 'Done', points: [
+    'Layout of a real automated terminal, Yangshan Phase IV',
+    'AGVs accelerate, turn and keep safe braking gaps',
+    'Every value taken from a published source',
+  ] },
+  { title: 'Test Today’s Methods', status: 'In Progress', points: [
+    'Dispatching rules and plans optimised in advance',
+    'Random crane times and random AGV speeds',
+    'Compared with a dispatcher that knows the future',
+  ] },
+  { title: 'Train a Learned Dispatcher', status: 'Next', points: [
+    'Deep reinforcement learning, deciding in real time',
+    'PPO with one central dispatcher',
+    'MAPPO with one cooperating agent per AGV',
+  ] },
 ];
 
 function Photo({ p }: { p: (typeof PHOTOS)['terminal'] }) {
@@ -250,10 +262,22 @@ export default function HomePage() {
           </motion.div>
           <motion.ol {...fade} className="grid gap-4 md:grid-cols-3">
             {STEPS.map((st, i) => (
-              <li key={st.title} className="flex flex-col gap-2 rounded-2xl border border-zinc-700 bg-zinc-800/60 p-6">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-400 text-sm font-bold text-zinc-900">{i + 1}</span>
+              <li key={st.title} className="flex flex-col gap-4 rounded-2xl border border-zinc-700 bg-zinc-800/60 p-6">
+                <div className="flex items-center justify-between">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-400 text-sm font-bold text-zinc-900">{i + 1}</span>
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${st.status === 'Done' ? 'bg-teal-400/15 text-teal-300' : st.status === 'In Progress' ? 'bg-amber-400/15 text-amber-300' : 'bg-zinc-700 text-zinc-300'}`}>{st.status}</span>
+                </div>
                 <span className="text-lg font-semibold">{st.title}</span>
-                <span className="text-sm leading-relaxed text-zinc-400">{st.text}</span>
+                <ul className="flex flex-col gap-2.5 border-t border-zinc-700 pt-4">
+                  {st.points.map((pt) => (
+                    <li key={pt} className="flex gap-2.5 text-sm leading-snug text-zinc-300">
+                      {st.status === 'Done'
+                        ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal-400" />
+                        : <span className={`mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full ${st.status === 'In Progress' ? 'bg-amber-300' : 'bg-zinc-500'}`} />}
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </motion.ol>
