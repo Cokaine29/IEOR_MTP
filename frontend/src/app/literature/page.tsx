@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
+import StudyTables from '@/components/literature/StudyTables';
 
 // - DATA -
 
@@ -668,6 +669,8 @@ export default function LiteraturePage() {
             );
           })}
         </div>
+
+        <StudyTables />
 
         {/* The Final Conclusion Box */}
         <motion.div 
