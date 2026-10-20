@@ -74,15 +74,15 @@ const CHAIN = [
 ];
 
 const HARD = [
-  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'The choice repeats about 200 times per ship here, and each one changes where every AGV will be later.' },
+  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'Each container that comes off or goes onto a ship needs its own AGV trip. So a single ship brings hundreds of these decisions, one after the other. And no decision stands alone. Where an AGV is sent now decides where it will be later, and which AGVs are still free when the next containers come up.' },
   { icon: Shuffle, title: 'Random Times', text: 'Real crane handling times and AGV travel times vary, so a plan made on the planned times goes stale.' },
   { icon: Timer, title: 'No Time to Re-plan', text: 'Searching for a new plan takes time the terminal does not have, so the decision must be made in real time.' },
 ];
 
 const SYMBOLS = [
   { sym: String.raw`$\bar I$`, name: 'Crane Idle Time per Container', unit: 'seconds', text: 'The average wait of the crane over all containers of the ship. Lower is better.' },
-  { sym: String.raw`$N$`, name: 'Containers of the Ship', unit: '', text: '200 in every run here, 100 discharge and 100 load.' },
-  { sym: String.raw`$r_j$`, name: 'Crane Ready', unit: 'seconds', text: 'The time the crane is ready to hand over container $j$. Only the crane sets it.' },
+  { sym: String.raw`$N$`, name: 'Containers of the Ship', unit: '', text: 'All containers the cranes unload from and load onto the ship.' },
+  { sym: String.raw`$r_j$`, name: 'Crane Ready', unit: 'seconds', text: 'The time at which the crane is ready to hand over container $j$ to an AGV. Only the crane sets it.' },
   { sym: String.raw`$h_j$`, name: 'Handover', unit: 'seconds', text: 'The time the handover of container $j$ really happens, once an AGV is under the crane.' },
 ];
 
@@ -202,9 +202,9 @@ export default function HomePage() {
               </li>
             ))}
           </motion.ol>
-          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+          <div className="grid items-start gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
             <motion.div {...fade}><CraneWait /></motion.div>
-            <motion.div {...fade} className="flex flex-col gap-5">
+            <motion.div {...fade} className="lg:row-span-2">
               <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">What the Dispatcher Minimises</h3>
                 <Md className="text-zinc-800">{String.raw`$$\bar I \;=\; \frac{1}{N}\sum_{j=1}^{N}\bigl(h_j - r_j\bigr)$$`}</Md>
@@ -229,6 +229,8 @@ export default function HomePage() {
                   usual sign for an average.
                 </p>
               </div>
+            </motion.div>
+            <motion.div {...fade}>
               <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                 <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">Why It Is Hard</h3>
                 <ul className="flex flex-col gap-4">
