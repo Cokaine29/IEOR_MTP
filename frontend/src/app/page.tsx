@@ -79,6 +79,13 @@ const HARD = [
   { icon: Timer, title: 'No Time to Re-plan', text: 'Searching for a new plan takes time the terminal does not have, so the decision must be made in real time.' },
 ];
 
+const SYMBOLS = [
+  { sym: String.raw`$\bar I$`, name: 'Crane Idle Time per Container', unit: 'seconds', text: 'The average wait of the crane over all containers of the ship. Lower is better.' },
+  { sym: String.raw`$N$`, name: 'Containers of the Ship', unit: '', text: '200 in every run here, 100 discharge and 100 load.' },
+  { sym: String.raw`$r_j$`, name: 'Crane Ready', unit: 'seconds', text: 'The time the crane is ready to hand over container $j$. Only the crane sets it.' },
+  { sym: String.raw`$h_j$`, name: 'Handover', unit: 'seconds', text: 'The time the handover of container $j$ really happens, once an AGV is under the crane.' },
+];
+
 type Status = 'done' | 'partly' | 'next';
 const PATH: { n: string; title: string; detail: string; status: Status }[] = [
   { n: '1', title: 'Simulator Check', detail: 'The simulator matches a hand-built answer key to within 1e-6 s.', status: 'done' },
@@ -201,7 +208,26 @@ export default function HomePage() {
               <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">What the Dispatcher Minimises</h3>
                 <Md className="text-zinc-800">{String.raw`$$\bar I \;=\; \frac{1}{N}\sum_{j=1}^{N}\bigl(h_j - r_j\bigr)$$`}</Md>
-                <Md className="mt-3 text-sm leading-relaxed text-zinc-700">{String.raw`$\bar I$ is the crane idle time per container in seconds. $N$ is the number of containers of the ship (200 in every run here). $r_j$ is the time the crane is ready to hand over container $j$, and $h_j$ is the time the handover really happens. The dispatcher cannot change $r_j$, it can only bring $h_j$ closer to it.`}</Md>
+                <dl className="mt-4 divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200">
+                  {SYMBOLS.map((v) => (
+                    <div key={v.name} className="flex items-start gap-4 px-4 py-3">
+                      <dt className="flex h-9 w-12 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-900">
+                        <Md>{v.sym}</Md>
+                      </dt>
+                      <dd className="text-sm leading-relaxed text-zinc-600">
+                        <b className="text-zinc-900">{v.name}</b>
+                        {v.unit && <span className="ml-1.5 rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-500">{v.unit}</span>}
+                        <Md className="block">{v.text}</Md>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <Md className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-900">{String.raw`The dispatcher cannot change $r_j$. It can only bring $h_j$ closer to it.`}</Md>
+                <p className="mt-3 text-xs leading-relaxed text-zinc-500">
+                  The delay of one handover, actual time minus earliest possible time, is defined as in <i>Kim and Bae (2004), Fig. 2</i>,
+                  who minimise the total crane delay. Here it is averaged over the containers, so ships of any size compare. The bar is the
+                  usual sign for an average.
+                </p>
               </div>
               <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                 <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">Why It Is Hard</h3>
