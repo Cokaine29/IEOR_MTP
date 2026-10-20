@@ -74,7 +74,7 @@ const CHAIN = [
 ];
 
 const HARD = [
-  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'Every container unloaded from or loaded onto a ship needs its own AGV trip, so one ship means hundreds of dispatching decisions, one after another. They are linked: sending an AGV to one crane now decides where it will be, and which AGVs are free, for every later decision.' },
+  { icon: Repeat, title: 'Hundreds of Linked Decisions', text: 'Each container that comes off or goes onto a ship needs its own AGV trip. So a single ship brings hundreds of these decisions, one after the other. And no decision stands alone. Where an AGV is sent now decides where it will be later, and which AGVs are still free when the next containers come up.' },
   { icon: Shuffle, title: 'Random Times', text: 'Real crane handling times and AGV travel times vary, so a plan made on the planned times goes stale.' },
   { icon: Timer, title: 'No Time to Re-plan', text: 'Searching for a new plan takes time the terminal does not have, so the decision must be made in real time.' },
 ];

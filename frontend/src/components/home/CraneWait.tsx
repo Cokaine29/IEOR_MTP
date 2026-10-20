@@ -100,7 +100,7 @@ export default function CraneWait() {
       </svg>
       <figcaption className="text-xs leading-relaxed text-zinc-500">
         Schematic, not to scale. The crane is ready to set container <i>j</i> down at time <i>r<sub>j</sub></i>, but it can only
-        let go once an AGV stands under it, at time <i>h<sub>j</sub></i>. For a load container it is the other way round: the
+        let go once an AGV stands under it, at time <i>h<sub>j</sub></i>. For a load container it works the other way round. The
         crane is ready to lift at <i>r<sub>j</sub></i>, and the AGV bringing the container arrives at <i>h<sub>j</sub></i>.
       </figcaption>
     </figure>
