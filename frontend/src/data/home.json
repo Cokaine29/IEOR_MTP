@@ -1,265 +1,276 @@
 {
- "model": "v3 (loaded AGVs at 3.5 m/s, 10 AGVs)",
+ "model": "v5 (AGV traffic, 10 m turns, 12 AGVs)",
+ "fleet_n": 12,
  "seeds": 30,
  "budget": 10000,
- "fleet10": {
+ "fleet": {
   "Briskorn inventory": [
-   5.959,
-   0.291
+   3.889,
+   0.703
   ],
   "NV/FCFS": [
-   5.537,
-   0.265
+   3.388,
+   0.428
   ],
   "Fixed groups": [
-   5.656,
-   0.267
+   3.909,
+   0.952
   ],
   "Random": [
-   11.552,
-   1.06
+   7.817,
+   1.009
   ]
  },
- "work_per_box": 261.2,
+ "work_per_box": 263.9,
  "crane_noise": [
   {
    "delta": 0.0,
    "best_rule": "NV/FCFS",
    "best": [
-    5.537,
-    0.265
+    3.388,
+    0.428
    ],
    "random": [
-    11.552,
-    1.06
+    7.817,
+    1.009
    ],
    "plan": [
-    2.954,
-    0.213
+    1.127,
+    0.174
    ],
    "plan_strict": [
-    2.954,
-    0.213
+    1.127,
+    0.174
    ],
    "benchmark": [
-    2.954,
-    0.213
+    1.127,
+    0.174
    ],
    "lead_of_plan": [
-    2.583,
-    0.159
+    2.261,
+    0.404
    ],
    "plan_wins": 30,
    "room": [
-    2.583,
-    0.159
+    2.261,
+    0.404
    ],
    "rules": {
     "Briskorn inventory": [
-     5.959,
-     0.291
+     3.889,
+     0.703
     ],
     "NV/FCFS": [
-     5.537,
-     0.265
+     3.388,
+     0.428
     ],
     "Fixed groups": [
-     5.656,
-     0.267
+     3.909,
+     0.952
     ]
-   }
+   },
+   "best_by_mean": "NV/FCFS",
+   "saved_share": 0.667
   },
   {
    "delta": 0.1,
    "best_rule": "NV/FCFS",
    "best": [
-    5.698,
-    0.296
+    3.467,
+    0.451
    ],
    "random": [
-    11.716,
-    1.062
+    7.569,
+    0.822
    ],
    "plan": [
-    3.803,
-    0.238
+    2.808,
+    0.454
    ],
    "plan_strict": [
-    6.685,
-    0.551
+    4.556,
+    0.67
    ],
    "benchmark": [
-    2.837,
-    0.212
+    1.146,
+    0.193
    ],
    "lead_of_plan": [
-    1.894,
-    0.282
+    0.659,
+    0.601
    ],
-   "plan_wins": 30,
+   "plan_wins": 21,
    "room": [
-    2.86,
-    0.187
+    2.321,
+    0.374
    ],
    "rules": {
     "Briskorn inventory": [
-     5.987,
-     0.283
+     3.423,
+     0.316
     ],
     "NV/FCFS": [
-     5.698,
-     0.296
+     3.467,
+     0.451
     ],
     "Fixed groups": [
-     5.703,
-     0.265
+     4.154,
+     1.306
     ]
-   }
+   },
+   "best_by_mean": "Briskorn inventory",
+   "saved_share": 0.669
   },
   {
    "delta": 0.2,
    "best_rule": "NV/FCFS",
    "best": [
-    5.726,
-    0.286
+    3.511,
+    0.425
    ],
    "random": [
-    11.935,
-    1.039
+    7.559,
+    0.84
    ],
    "plan": [
-    4.515,
-    0.249
+    3.206,
+    0.498
    ],
    "plan_strict": [
-    7.232,
-    0.439
+    5.249,
+    0.8
    ],
    "benchmark": [
-    2.964,
-    0.218
+    1.1,
+    0.194
    ],
    "lead_of_plan": [
-    1.21,
-    0.322
+    0.305,
+    0.56
    ],
-   "plan_wins": 28,
+   "plan_wins": 17,
    "room": [
-    2.762,
-    0.233
+    2.411,
+    0.378
    ],
    "rules": {
     "Briskorn inventory": [
-     5.92,
-     0.332
+     3.694,
+     0.361
     ],
     "NV/FCFS": [
-     5.726,
-     0.286
+     3.511,
+     0.425
     ],
     "Fixed groups": [
-     5.844,
-     0.268
+     4.189,
+     1.348
     ]
-   }
+   },
+   "best_by_mean": "NV/FCFS",
+   "saved_share": 0.687
   },
   {
    "delta": 0.3,
    "best_rule": "NV/FCFS",
    "best": [
-    5.979,
-    0.276
+    3.563,
+    0.272
    ],
    "random": [
-    11.981,
-    1.048
+    7.655,
+    0.741
    ],
    "plan": [
-    5.04,
-    0.275
+    3.226,
+    0.326
    ],
    "plan_strict": [
-    7.744,
-    0.578
+    5.294,
+    0.494
    ],
    "benchmark": [
-    3.096,
-    0.207
+    1.179,
+    0.199
    ],
    "lead_of_plan": [
-    0.939,
-    0.273
+    0.337,
+    0.284
    ],
-   "plan_wins": 26,
+   "plan_wins": 22,
    "room": [
-    2.884,
-    0.211
+    2.384,
+    0.243
    ],
    "rules": {
     "Briskorn inventory": [
-     6.264,
-     0.266
+     3.748,
+     0.39
     ],
     "NV/FCFS": [
-     5.979,
-     0.276
+     3.563,
+     0.272
     ],
     "Fixed groups": [
-     6.06,
-     0.272
+     3.456,
+     0.301
     ]
-   }
+   },
+   "best_by_mean": "Fixed groups",
+   "saved_share": 0.669
   },
   {
    "delta": 0.4,
    "best_rule": "NV/FCFS",
    "best": [
-    6.159,
-    0.308
+    4.057,
+    0.476
    ],
    "random": [
-    12.182,
-    1.047
+    7.984,
+    0.759
    ],
    "plan": [
-    5.482,
-    0.289
+    4.082,
+    0.59
    ],
    "plan_strict": [
-    8.24,
-    0.422
+    5.868,
+    0.693
    ],
    "benchmark": [
-    3.05,
-    0.197
+    1.377,
+    0.205
    ],
    "lead_of_plan": [
-    0.677,
-    0.302
+    -0.025,
+    0.646
    ],
-   "plan_wins": 25,
+   "plan_wins": 16,
    "room": [
-    3.109,
-    0.243
+    2.68,
+    0.402
    ],
    "rules": {
     "Briskorn inventory": [
-     6.623,
-     0.347
+     4.184,
+     0.705
     ],
     "NV/FCFS": [
-     6.159,
-     0.308
+     4.057,
+     0.476
     ],
     "Fixed groups": [
-     6.315,
-     0.277
+     4.324,
+     1.096
     ]
-   }
+   },
+   "best_by_mean": "NV/FCFS",
+   "saved_share": 0.661
   }
  ],
  "sources": [
-  "results_reference/current/exp2_1_fleet_sweep.json",
-  "results_reference/current/exp4_1_crane_noise.json"
+  "results_reference/v5/exp2_1_fleet_sweep.json",
+  "results_reference/v5/exp4_1_crane_noise.json"
  ]
 }

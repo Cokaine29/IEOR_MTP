@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Replay, agvPose, lastIdx } from '../experiments/ReplayPlayer';
 
-/* Interactive drawing of the simulated terminal, built from the layout stored in the model v3 replay
+/* Interactive drawing of the simulated terminal, built from the layout stored in the model v5 replay
    (ACT_MTP webapp/export_replays.py home), so every block, crane and zone is where the simulator has it. */
-const FILE = '/replays/v3/n10_d0_nvfcfs.json';
+const FILE = '/replays/v5/n12_d0_nvfcfs.json';
 const SPEED = 20;
 
 const TEAL = '#0f766e', BLUE = '#93c5fd', ORANGE = '#fdba74', GREY = '#e4e4e7', INK = '#18181b', RED = '#b91c1c';

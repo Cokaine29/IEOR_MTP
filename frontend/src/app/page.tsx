@@ -19,7 +19,7 @@ const PHOTOS: Record<'terminal' | 'quay', { src: string | null; alt: string; cre
 };
 
 const REPO = 'https://github.com/Cokaine29/ACT_MTP';
-const UPDATED = '19 Oct 2026';
+const UPDATED = '20 Oct 2026';
 
 const fade = {
   initial: { opacity: 0, y: 16 },
@@ -57,11 +57,14 @@ const STAKES = [
 
 const SPECS = [
   { value: '2 Quay Cranes', detail: 'Over blocks 24 and 26, 82 m apart, 75 s per container', source: 'Zhao et al. (2025); Liu, Jula and Ioannou (2001)' },
-  { value: '10 AGVs', detail: 'Five per crane, the operating fleet chosen in Experiment 2.1', source: 'Luo (2016), usually 5 to 8 AGVs per crane' },
-  { value: '6.0 / 3.5 m/s', detail: 'Top speed of an empty and a loaded AGV, 3 m/s in turns', source: 'Luo (2016); Zhao et al. (2025), Table 1' },
+  { value: '12 AGVs', detail: 'Six per crane, the operating fleet chosen in Experiment 2.1', source: 'Luo (2016), usually 5 to 8 AGVs per crane' },
+  { value: '6.0 / 3.5 m/s', detail: 'Top speed of an empty and a loaded AGV, 3 m/s in turns of 10 m radius', source: 'Luo (2016); Luo (2016b), Table 2; Zhao et al. (2025), Table 1' },
+  { value: 'AGV Traffic', detail: 'Each AGV reserves the road ahead of it, its body plus its braking distance, so AGVs never collide and wait for each other', source: 'Kim, Jeon and Ryu (2006); Li et al. (2016)' },
   { value: '50 Yard Blocks', detail: 'About 2.1 km of yard, 5 transfer racks per block', source: 'Liu et al. (2016); Wu et al. (2016)' },
   { value: '200 Containers', detail: '100 discharge and 100 load per ship, 2 bays per crane', source: 'Kim and Bae (2004); Zhao et al. (2025)' },
   { value: '±0% to ±40%', detail: 'Random crane handling times, the same draws for every method', source: 'Kim and Bae (2004)' },
+  { value: '±0% to ±20%', detail: 'Random AGV speed on each trip, so travel times vary too', source: 'Li et al. (2018), Table 4' },
+  { value: '14.8 m × 3.0 m', detail: 'AGV body, all-wheel steering, both axles follow the path', source: 'Luo (2016), Table 3; Konecranes LIFT AGV' },
 ];
 
 const CHAIN = [
@@ -79,10 +82,10 @@ const HARD = [
 type Status = 'done' | 'partly' | 'next';
 const PATH: { n: string; title: string; detail: string; status: Status }[] = [
   { n: '1', title: 'Simulator Check', detail: 'The simulator matches a hand-built answer key to within 1e-6 s.', status: 'done' },
-  { n: '2', title: 'Where Decisions Matter', detail: 'Fleet size, look-ahead and ship size. 10 AGVs chosen as the operating fleet.', status: 'done' },
-  { n: '3', title: 'Search Check', detail: 'The memetic search recovers 82% to 100% of the room for improvement at 10 AGVs, in small cases solved exactly.', status: 'done' },
-  { n: '4', title: 'Crane-Time Randomness', detail: 'Rules, a plan made in advance and the perfect dispatcher are done. The re-planning GA and its thinking time are being re-run.', status: 'partly' },
-  { n: '5', title: 'Travel-Time Randomness', detail: 'AGV speeds and delays become random.', status: 'next' },
+  { n: '2', title: 'Where Decisions Matter', detail: 'Fleet size, look-ahead and ship size, now with AGV traffic. 12 AGVs chosen as the operating fleet.', status: 'done' },
+  { n: '3', title: 'Search Check', detail: 'The memetic search recovers 100% of the room for improvement at 12 AGVs, in small cases solved exactly.', status: 'done' },
+  { n: '4', title: 'Crane-Time Randomness', detail: 'Rules, a plan made in advance and the perfect dispatcher are done on the model with traffic. The re-planning GA and its thinking time are running.', status: 'partly' },
+  { n: '5', title: 'Travel-Time Randomness', detail: 'AGV speeds vary on every trip (±0% to ±20%), alone and together with random crane times. Running.', status: 'partly' },
   { n: '6', title: 'MDP Design', detail: 'What the dispatcher sees and what it can choose, with an imitation-learning baseline.', status: 'next' },
   { n: '7', title: 'DQN', detail: 'A value-based learning dispatcher.', status: 'next' },
   { n: '8', title: 'PPO, then MAPPO', detail: 'One central learned dispatcher, then one cooperating agent per AGV.', status: 'next' },
@@ -119,7 +122,9 @@ function SectionHead({ kicker, title, children }: { kicker: string; title: strin
 
 export default function HomePage() {
   const n = home.crane_noise;
-  const f = home.fleet10 as Record<string, number[]>;
+  const f = home.fleet as Record<string, number[]>;
+  const saved = Math.round(100 * Math.min(...n.map((r) => r.saved_share))), savedHi = Math.round(100 * Math.max(...n.map((r) => r.saved_share)));
+  const lead = (v: number) => (Math.abs(v) < 0.05 ? '0.0' : v.toFixed(1));
   const first = n[0], last = n[n.length - 1];
   const roomLo = Math.min(...n.map((r) => r.room[0])), roomHi = Math.max(...n.map((r) => r.room[0]));
   const roomCiLo = Math.min(...n.map((r) => r.room[1])), roomCiHi = Math.max(...n.map((r) => r.room[1]));
@@ -273,7 +278,7 @@ export default function HomePage() {
       <section className="border-y border-zinc-200 bg-white px-4 py-20">
         <div className="mx-auto max-w-6xl">
           <motion.div {...fade}>
-            <SectionHead kicker="Baseline Results · Model v3" title="What Traditional Methods Achieve, and What They Leave">
+            <SectionHead kicker="Baseline Results · Model v5" title="What Traditional Methods Achieve, and What They Leave">
               <p>
                 Before any learning, the thesis measures the methods a terminal could use today. These are the baselines the learned
                 dispatcher has to beat. All numbers are means over {home.seeds} paired ships with 95% intervals.
@@ -285,19 +290,19 @@ export default function HomePage() {
               {
                 head: 'Dispatching Matters',
                 big: `${f['NV/FCFS'][0].toFixed(1)} s vs ${f['Random'][0].toFixed(1)} s`,
-                text: `Crane idle per container with 10 AGVs, the best rule (NV/FCFS, ±${f['NV/FCFS'][1].toFixed(1)}) against random dispatching (±${f['Random'][1].toFixed(1)}). Same AGVs, same ship, only the decisions differ.`,
+                text: `Crane idle per container with ${home.fleet_n} AGVs, the best rule (NV/FCFS, ±${f['NV/FCFS'][1].toFixed(1)}) against random dispatching (±${f['Random'][1].toFixed(1)}). Same AGVs, same ship, only the decisions differ.`,
                 exp: 'Experiment 2.1',
               },
               {
                 head: 'Plans Made in Advance Break',
-                big: `${first.lead_of_plan[0].toFixed(1)} s → ${last.lead_of_plan[0].toFixed(1)} s`,
-                text: `Lead of a plan made in advance over the best rule, with exact crane times (±${first.lead_of_plan[1].toFixed(2)}) and with ±40% randomness (±${last.lead_of_plan[1].toFixed(2)}). The plan was right for the planned times only.`,
+                big: `${lead(first.lead_of_plan[0])} s → ${lead(last.lead_of_plan[0])} s`,
+                text: `Lead of a plan made in advance over the best rule, with exact crane times (±${first.lead_of_plan[1].toFixed(2)}) and with ±40% randomness (±${last.lead_of_plan[1].toFixed(2)}). At ±40% the lead is gone. The plan was right for the planned times only.`,
                 exp: 'Experiment 4.1',
               },
               {
                 head: 'Room Left for Real-Time Decisions',
                 big: `${roomLo.toFixed(1)} to ${roomHi.toFixed(1)} s`,
-                text: `Extra crane idle per container of the best rule over a perfect dispatcher that knew the real crane times (±${roomCiLo.toFixed(2)} to ±${roomCiHi.toFixed(2)}). The perfect dispatcher waits only ${benchLo.toFixed(1)} to ${benchHi.toFixed(1)} s, so about half of the best rule's waiting could be avoided.`,
+                text: `Extra crane idle per container of the best rule over a perfect dispatcher that knew the real crane times (±${roomCiLo.toFixed(2)} to ±${roomCiHi.toFixed(2)}). The perfect dispatcher waits only ${benchLo.toFixed(1)} to ${benchHi.toFixed(1)} s, so ${saved}% to ${savedHi}% of the best rule's waiting could be avoided.`,
                 exp: 'Experiment 4.1',
               },
             ].map((c) => (
@@ -314,8 +319,8 @@ export default function HomePage() {
             <NoiseChart />
           </motion.div>
           <p className="mt-6 text-sm leading-relaxed text-zinc-600">
-            Still to come on this model are the GA that re-plans during the ship (Experiment 4.2) and the cost of its thinking time
-            (Experiment 4.3). Every experiment, with its set-up, maths and full results, is on the{' '}
+            Running now on this model are random AGV speeds (Experiments 4.4 and 4.5), the GA that re-plans during the ship
+            (Experiment 4.2) and the cost of its thinking time (Experiment 4.3). Every experiment, with its set-up, maths and full results, is on the{' '}
             <Link href="/experiments" className="font-medium text-teal-700 underline underline-offset-2">Experiments tab</Link>.
           </p>
         </div>
