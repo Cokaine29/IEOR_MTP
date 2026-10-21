@@ -278,14 +278,6 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
 
 /* ---------- 6. what we model */
 const SCOPE: { title: string; tone: 'yes' | 'simple' | 'later'; items: string[] }[] = [
-  { title: 'Modelled', tone: 'yes', items: [
-    'Layout of Yangshan Phase IV, 2 quay cranes and 50 yard blocks',
-    '12 AGVs that accelerate, brake and turn on real lanes',
-    'AGV traffic, AGVs wait for each other and never collide',
-    'Unloading and loading, 200 containers per ship',
-    'Random crane times, ±0% to ±40%',
-    'Random AGV speed on every trip, ±0% to ±20%',
-  ] },
   { title: 'Simplified', tone: 'simple', items: [
     'Yard cranes are not simulated. The AGV sets each container on a transfer rack by itself',
     'AGVs follow a fixed lane grid, the dispatcher does not plan paths',
@@ -297,7 +289,90 @@ const SCOPE: { title: string; tone: 'yes' | 'simple' | 'later'; items: string[] 
     'A learned dispatcher, first DQN, then PPO',
     'MAPPO, one cooperating agent per AGV',
     'Curriculum learning, from easy cases to harder ones',
+    'Scale up to the whole of Yangshan Phase IV, with all 29 quay cranes and its full AGV fleet',
   ] },
+];
+
+
+function Squares({ n, on, tone }: { n: number; on: number; tone: string }) {
+  return (
+    <div className="flex flex-wrap gap-[3px]" aria-hidden>
+      {Array.from({ length: n }, (_, k) => (
+        <span key={k} className={`h-2.5 w-2.5 rounded-[2px] ${k < on ? tone : 'bg-zinc-200'}`} />
+      ))}
+    </div>
+  );
+}
+
+function Spread({ lo, mid, hi, unit }: { lo: string; mid: string; hi: string; unit: string }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="relative h-5 rounded bg-zinc-100">
+        <span className="absolute inset-y-0 rounded bg-teal-300" style={{ left: '10%', right: '10%' }} />
+        <span className="absolute inset-y-[-3px] left-1/2 w-0.5 -translate-x-1/2 bg-zinc-900" />
+      </div>
+      <div className="flex justify-between text-[11px] tabular-nums text-zinc-500">
+        <span className="pl-[6%]">{lo}</span><span className="font-semibold text-zinc-800">{mid} {unit}</span><span className="pr-[6%]">{hi}</span>
+      </div>
+    </div>
+  );
+}
+
+const MODELLED: { title: string; text: string; visual: React.ReactNode }[] = [
+  {
+    title: 'A Section of Yangshan Phase IV',
+    text: 'Not the whole terminal yet, but a real slice of it, laid out from published data.',
+    visual: (
+      <div className="flex flex-col gap-2 text-[11px] text-zinc-600">
+        <span>2 of its 29 quay cranes</span><Squares n={29} on={2} tone="bg-teal-600" />
+        <span>50 yard blocks along about 2.1 km</span><Squares n={50} on={50} tone="bg-teal-600" />
+      </div>
+    ),
+  },
+  {
+    title: '12 AGVs That Drive Like Real Ones',
+    text: 'They speed up, brake and turn on the real lanes, at speeds from published data.',
+    visual: (
+      <div className="flex flex-wrap gap-1.5" aria-hidden>
+        {Array.from({ length: 12 }, (_, k) => (
+          <span key={k} className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 text-white"><Truck className="h-4 w-4" /></span>
+        ))}
+      </div>
+    ),
+  },
+  {
+    title: 'AGV Traffic',
+    text: 'Each AGV books the road just ahead of it. Others wait, so AGVs never collide.',
+    visual: (
+      <div className="relative h-12 rounded bg-zinc-100" aria-hidden>
+        <span className="absolute inset-x-2 top-5 border-t border-dashed border-zinc-300" />
+        <span className="absolute left-[6%] top-2 flex h-6 w-9 items-center justify-center rounded bg-zinc-900 text-white"><Truck className="h-3.5 w-3.5" /></span>
+        <span className="absolute left-[20%] top-1.5 flex h-7 w-[50%] items-center justify-center rounded bg-amber-200/80 text-[10px] font-semibold text-amber-900">booked road ahead</span>
+        <span className="absolute left-[74%] top-2 flex h-6 w-9 items-center justify-center rounded bg-zinc-500 text-white"><Truck className="h-3.5 w-3.5 -scale-x-100" /></span>
+        <span className="absolute left-[74%] top-[33px] w-9 text-center text-[9px] font-semibold text-zinc-500">waits</span>
+      </div>
+    ),
+  },
+  {
+    title: '200 Containers per Ship',
+    text: 'Each crane works 2 bays of the ship. In each bay it unloads 25 containers, then loads 25.',
+    visual: (
+      <div className="flex h-7 overflow-hidden rounded text-[11px] font-semibold text-white">
+        <span className="flex w-1/2 items-center justify-center bg-sky-600">100 unloaded</span>
+        <span className="flex w-1/2 items-center justify-center bg-violet-600">100 loaded</span>
+      </div>
+    ),
+  },
+  {
+    title: 'Random Crane Times',
+    text: 'Each container’s crane time is drawn at random, up to 40% above or below 75 s.',
+    visual: <Spread lo="45 s" mid="75" hi="105 s" unit="s" />,
+  },
+  {
+    title: 'Random AGV Speeds',
+    text: 'On every trip, the AGV’s speed is drawn at random, up to 20% above or below normal.',
+    visual: <Spread lo="−20%" mid="normal" hi="+20%" unit="speed" />,
+  },
 ];
 
 /* ---------- 7. research questions */
@@ -698,16 +773,27 @@ export default function ProblemPage() {
               </p>
             </SectionHead>
           </motion.div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <motion.div {...fade} className="mb-5 rounded-2xl border border-teal-300 bg-teal-50 p-6">
+            <h3 className="mb-5 flex items-center gap-2 text-lg font-semibold text-teal-900"><Check className="h-5 w-5" /> Modelled</h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {MODELLED.map((m) => (
+                <div key={m.title} className="flex flex-col gap-3 rounded-xl border border-teal-200 bg-white p-4">
+                  <span className="font-semibold text-zinc-900">{m.title}</span>
+                  {m.visual}
+                  <p className="text-sm leading-relaxed text-zinc-600">{m.text}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <div className="grid gap-5 md:grid-cols-2">
             {SCOPE.map((c) => (
               <motion.div key={c.title} {...fade}
-                className={`flex flex-col gap-4 rounded-2xl border p-6 ${c.tone === 'yes' ? 'border-teal-300 bg-teal-50' : c.tone === 'later' ? 'border-amber-200 bg-amber-50' : 'border-zinc-200 bg-zinc-50'}`}>
-                <h3 className={`text-lg font-semibold ${c.tone === 'yes' ? 'text-teal-900' : c.tone === 'later' ? 'text-amber-900' : 'text-zinc-900'}`}>{c.title}</h3>
+                className={`flex flex-col gap-4 rounded-2xl border p-6 ${c.tone === 'later' ? 'border-amber-200 bg-amber-50' : 'border-zinc-200 bg-zinc-50'}`}>
+                <h3 className={`text-lg font-semibold ${c.tone === 'later' ? 'text-amber-900' : 'text-zinc-900'}`}>{c.title}</h3>
                 <ul className="flex flex-col gap-2.5">
                   {c.items.map((it) => (
                     <li key={it} className="flex gap-2.5 text-sm leading-snug text-zinc-700">
-                      {c.tone === 'yes' ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-teal-700" />
-                        : c.tone === 'later' ? <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                      {c.tone === 'later' ? <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
                         : <Minus className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />}
                       {it}
                     </li>
@@ -716,6 +802,7 @@ export default function ProblemPage() {
               </motion.div>
             ))}
           </div>
+          <p className="mt-4 text-xs italic text-zinc-500">29 quay cranes from the Shanghai news release (2026). Yard length chosen close to the 2,350 m quay of Liu et al. (2016).</p>
         </div>
       </section>
 
