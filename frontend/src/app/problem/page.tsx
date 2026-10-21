@@ -169,19 +169,29 @@ function Row({ left, right, tone = 'zinc' }: { left: React.ReactNode; right: Rea
 
 const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; body: React.ReactNode; source: string }[] = [
   {
-    icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Orders',
-    lead: 'The number of orders in which containers can get their AGVs explodes with ship size.',
+    icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Plans',
+    lead: 'Each crane’s containers come in a fixed order. So a plan only has to say which crane gets each next free AGV, as a list like this.',
     body: (
-      <div className="flex flex-col gap-2">
-        <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 orders <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
-        <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ orders <span className="text-red-600">✕</span></span>} tone="red" />
-        <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-          All 924 can be tried, and there our search finds the best order in <b className="text-zinc-800">17 to 19 of 20</b> cases.
-          The big ship can only be searched, never checked fully.
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5">
+          {['C1', 'C2', 'C2', 'C1', 'C2', 'C1', 'C1'].map((c, k) => (
+            <span key={k} className={`rounded px-1.5 py-0.5 text-xs font-semibold ${c === 'C1' ? 'bg-zinc-800 text-white' : 'bg-teal-600 text-white'}`}>{c}</span>
+          ))}
+          <span className="text-xs text-zinc-400">… one entry per container</span>
+        </div>
+        <span className="text-xs font-medium text-zinc-500">How many different lists are possible</span>
+        <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
+        <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ <span className="text-red-600">✕</span></span>} tone="red" />
+        <div className="rounded-lg bg-zinc-900 px-3 py-2.5 text-sm leading-snug text-white">
+          Checking a billion lists every second would take about <b className="text-amber-300">3 × 10⁴² years</b>.
+        </div>
+        <p className="text-xs leading-relaxed text-zinc-500">
+          So nobody can check every plan. A search tries the promising ones. On the small ship we can check all 924, and our
+          search found the very best list in <b className="text-zinc-800">17 to 19 of 20</b> cases. On the real ship we have to trust it.
         </p>
       </div>
     ),
-    source: 'Number of orders is 200 choose 100 (our arithmetic). Search check, Experiment 3.1, 20 Oct 2026.',
+    source: '200 choose 100 lists, and 9 × 10⁵⁸ ÷ 10⁹ per second, our arithmetic. Search check, Experiment 3.1, 20 Oct 2026.',
   },
   {
     icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
