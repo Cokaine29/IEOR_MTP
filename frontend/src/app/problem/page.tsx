@@ -31,6 +31,14 @@ function Source({ children }: { children: React.ReactNode }) {
   return <p className="border-t border-zinc-200 pt-3 text-xs italic leading-relaxed text-zinc-500">{children}</p>;
 }
 
+/* ---------- 0. the setting in brief (values as on the Simulation tab) */
+const SETTING = [
+  { stat: '2', unit: 'Quay Cranes', text: 'Each one needs about 75 s to handle a container.', source: 'Zhao et al. (2025); Liu, Jula and Ioannou (2001)' },
+  { stat: '12', unit: 'AGVs', text: 'Six per crane on average. Any AGV can serve either crane.', source: 'Luo (2016), usually 5 to 8 AGVs per crane' },
+  { stat: '50', unit: 'Yard Blocks', text: 'AGVs set containers down on, or pick them up from, transfer racks at each block.', source: 'Liu et al. (2016); Wu et al. (2016)' },
+  { stat: '200', unit: 'Containers per Ship', text: '100 to unload from the ship and 100 to load onto it.', source: 'Kim and Bae (2004); Zhao et al. (2025)' },
+];
+
 /* ---------- 1. the decision we make */
 const LEVELS = [
   {
@@ -124,11 +132,11 @@ const LOOP: { icon: typeof Truck; title: string; body: React.ReactNode }[] = [
 /* ---------- 3. what the dispatcher may do */
 const RULES = [
   { text: 'An AGV carries one container at a time.', source: '' },
-  { text: 'Each crane handles its containers in a fixed order, set by the ship’s stowage plan.', source: '' },
-  { text: 'The dispatcher sees the next 10 containers of each crane.', source: 'Kim and Bae (2004)' },
-  { text: 'It may only give out the first container of a crane that has no AGV yet.', source: 'Briskorn, Drexl and Hartmann (2006)' },
-  { text: 'It sends no more empty AGVs to a crane than that crane will soon unload.', source: '' },
-  { text: 'AGVs never collide. Each one reserves the road ahead of it, its body plus its braking distance.', source: 'Kim, Jeon and Ryu (2006)' },
+  { text: 'Each crane works through its own list of containers in a fixed order, set by the ship’s stowage plan.', source: '' },
+  { text: 'The dispatcher can look only a little way ahead. It sees the next 10 containers on each crane’s list.', source: 'Kim and Bae (2004)' },
+  { text: 'Containers get their AGVs in list order. The dispatcher cannot send an AGV for a later container while an earlier one on the same list still has none.', source: 'Briskorn, Drexl and Hartmann (2006)' },
+  { text: 'It does not send more empty AGVs to a crane than that crane has containers to unload soon.', source: '' },
+  { text: 'AGVs never collide. Each one books the road ahead of it, its own length plus its braking distance.', source: 'Kim, Jeon and Ryu (2006)' },
 ];
 
 /* ---------- 4. why seconds matter, Experiment 4.5 at level 1 (crane times ±20%, AGV speeds ±10%) */
@@ -202,7 +210,7 @@ const QUESTIONS = [
 
 export default function ProblemPage() {
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
+    <div className="min-h-screen bg-white text-zinc-900 [&_p:not(.italic)]:text-justify [&_p]:hyphens-auto [&_li]:text-justify [&_li]:hyphens-auto [&_blockquote]:text-justify">
       {/* ------------------------------------------------ hero */}
       <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
         <div className="mx-auto flex max-w-6xl flex-col gap-6">
@@ -225,6 +233,42 @@ export default function ProblemPage() {
               Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, news release, 14 Aug 2026
             </a>
           </p>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ 0. the setting */}
+      <section className="border-b border-zinc-200 bg-white px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <motion.div {...fade}>
+            <SectionHead kicker="Our Simulated Terminal" title="The Setting in Brief">
+              <p>
+                We study the problem on a simulated part of Yangshan Phase IV, built from published data. Two of its quay cranes
+                serve one ship, and a fleet of AGVs carries every container between the cranes and the yard.
+              </p>
+            </SectionHead>
+          </motion.div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SETTING.map((s, i) => (
+              <motion.div key={s.unit} {...fade} transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold tracking-tight tabular-nums text-teal-700">{s.stat}</span>
+                  <span className="font-semibold text-zinc-900">{s.unit}</span>
+                </div>
+                <p className="flex-grow text-sm leading-relaxed text-zinc-600">{s.text}</p>
+                <p className="text-xs italic leading-relaxed text-zinc-500">{s.source}</p>
+              </motion.div>
+            ))}
+          </div>
+          <motion.div {...fade} className="mt-4 flex flex-col gap-3 rounded-2xl border border-teal-200 bg-teal-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-relaxed text-teal-900">
+              <b>Each crane has a work list.</b> It handles its containers in a fixed order, set by the ship’s stowage plan, the
+              plan of where every container sits on the ship. An AGV must be under the crane for each one in turn.
+            </p>
+            <Link href="/simulation" className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-teal-800 hover:text-teal-950">
+              Full set-up <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 

@@ -114,7 +114,7 @@ function SectionHead({ kicker, title, children }: { kicker: string; title: strin
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
+    <div className="min-h-screen bg-white text-zinc-900 [&_p:not(.italic)]:text-justify [&_p]:hyphens-auto [&_li]:text-justify [&_li]:hyphens-auto [&_blockquote]:text-justify">
       {/* ------------------------------------------------ hero */}
       <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
         <div className="mx-auto flex max-w-6xl flex-col gap-10">
