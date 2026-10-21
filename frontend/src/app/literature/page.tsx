@@ -6,9 +6,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
-import { BookOpen, ArrowUpRight, Target, Zap, Lightbulb, FileText } from 'lucide-react';
+import { ArrowUpRight, Target, Zap, Lightbulb, FileText } from 'lucide-react';
 import { Timeline, ObjectiveMap, UncertaintyHeatmap, TestingMatrix } from '@/components/literature/CompareVisuals';
 import { GROUP_STYLE } from '@/components/literature/compareData';
+import ResearchGap from '@/components/literature/ResearchGap';
 import { GROUPS, PAPERS, type Paper, type GroupId } from '@/components/literature/papers';
 
 const DISPATCH: GroupId[] = ['rules', 'assignment', 'lookahead', 'metaheuristic', 'learning'];
@@ -276,7 +277,7 @@ export default function LiteraturePage() {
         </motion.div>
 
         <nav className="mb-16 flex flex-wrap justify-center gap-2" aria-label="Paper groups">
-          {[...GROUPS.slice(0, DISPATCH.length), { id: 'compare', title: 'Side by Side' }, ...GROUPS.slice(DISPATCH.length)].map((g) => (
+          {[...GROUPS.slice(0, DISPATCH.length), { id: 'compare', title: 'Side by Side' }, ...GROUPS.slice(DISPATCH.length), { id: 'gap', title: 'The Research Gap' }].map((g) => (
             <a key={g.id} href={`#${g.id}`} className="rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50">
               {g.title}
             </a>
@@ -334,15 +335,7 @@ export default function LiteraturePage() {
 
         {GROUPS.filter((g) => !DISPATCH.includes(g.id)).map((g, gi) => renderGroup(g, gi + DISPATCH.length))}
 
-        <motion.div {...fade} className="mt-16 rounded-3xl bg-zinc-900 p-8 text-center md:p-12">
-          <BookOpen className="mx-auto mb-4 h-7 w-7 text-teal-400" />
-          <h3 className="mb-4 text-2xl font-bold tracking-tight text-white md:text-3xl">Where This Leaves Us</h3>
-          <p className="mx-auto max-w-3xl leading-relaxed text-zinc-300 md:text-lg">
-            Among the 11 dispatching studies reviewed here, none tests a learned dispatcher across graded levels of randomness. The two
-            that do grade randomness, Kim and Bae (2004) and Grunow et al. (2006), use rules and optimisation. Our experiments start
-            from this point.
-          </p>
-        </motion.div>
+        <ResearchGap />
       </div>
 
       <AnimatePresence>
