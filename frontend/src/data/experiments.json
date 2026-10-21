@@ -267,7 +267,7 @@
   ]
  },
  "generated": "2026-10-21",
- "source": "ACT_MTP af7b99f / v1_slice",
+ "source": "ACT_MTP 8978439 / v1_slice",
  "stages": [
   {
    "n": 1,
@@ -1243,6 +1243,565 @@
     "measure": "Crane idle time per container and the order of the rules, with 95% confidence intervals.",
     "decide": "The standard ship is large enough if the idle time per container and the order of the rules stay the same from it upward."
    },
+   "bars": {
+    "yLabel": "QC idle per container (s)",
+    "defaultVariant": 0,
+    "note": "Jobs per crane, bays × (discharge + load). Bars are means over 30 instances with 95% intervals. Hover over a group to read the values.",
+    "variants": [
+     {
+      "label": "12 AGVs, ±0%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         5.97,
+         3.89,
+         3.47,
+         1.92,
+         3.78
+        ],
+        "ci": [
+         0.89,
+         0.7,
+         0.33,
+         0.19,
+         0.48
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         5.89,
+         3.39,
+         3.24,
+         1.7,
+         3.06
+        ],
+        "ci": [
+         1.2,
+         0.43,
+         0.3,
+         0.22,
+         0.2
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         6.12,
+         3.91,
+         3.08,
+         1.67,
+         3.35
+        ],
+        "ci": [
+         1.05,
+         0.95,
+         0.37,
+         0.23,
+         0.28
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         8.01,
+         7.82,
+         8.05,
+         6.96,
+         8.52
+        ],
+        "ci": [
+         0.9,
+         1.01,
+         0.57,
+         0.63,
+         0.41
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     },
+     {
+      "label": "12 AGVs, ±20%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         6.65,
+         3.69,
+         3.69,
+         2.09,
+         3.89
+        ],
+        "ci": [
+         0.84,
+         0.36,
+         0.47,
+         0.2,
+         0.46
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         6.26,
+         3.51,
+         3.14,
+         1.73,
+         3.33
+        ],
+        "ci": [
+         0.98,
+         0.42,
+         0.27,
+         0.19,
+         0.24
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         5.96,
+         4.19,
+         3.41,
+         1.74,
+         3.36
+        ],
+        "ci": [
+         1.05,
+         1.35,
+         0.56,
+         0.16,
+         0.33
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         7.79,
+         7.56,
+         7.92,
+         7.02,
+         8.52
+        ],
+        "ci": [
+         1.01,
+         0.84,
+         0.62,
+         0.74,
+         0.41
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     },
+     {
+      "label": "10 AGVs, ±0%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         9.87,
+         6.91,
+         6.66,
+         5.28,
+         6.49
+        ],
+        "ci": [
+         0.84,
+         0.69,
+         0.28,
+         0.75,
+         0.18
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         9.98,
+         6.67,
+         6.63,
+         4.74,
+         6.73
+        ],
+        "ci": [
+         1.0,
+         0.35,
+         0.27,
+         0.21,
+         0.21
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         9.87,
+         6.88,
+         6.51,
+         4.56,
+         6.45
+        ],
+        "ci": [
+         0.86,
+         0.42,
+         0.31,
+         0.21,
+         0.18
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         12.73,
+         12.29,
+         12.98,
+         11.48,
+         13.72
+        ],
+        "ci": [
+         1.17,
+         1.02,
+         0.84,
+         0.76,
+         0.63
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     },
+     {
+      "label": "10 AGVs, ±20%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         9.96,
+         6.78,
+         6.68,
+         5.18,
+         6.89
+        ],
+        "ci": [
+         1.19,
+         0.36,
+         0.23,
+         0.29,
+         0.27
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         10.14,
+         6.9,
+         6.72,
+         5.07,
+         7.0
+        ],
+        "ci": [
+         1.02,
+         0.43,
+         0.34,
+         0.3,
+         0.21
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         9.94,
+         6.92,
+         6.7,
+         4.72,
+         6.54
+        ],
+        "ci": [
+         0.89,
+         0.35,
+         0.28,
+         0.23,
+         0.19
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         12.96,
+         12.63,
+         13.18,
+         11.5,
+         13.74
+        ],
+        "ci": [
+         1.21,
+         0.99,
+         0.93,
+         0.79,
+         0.63
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     },
+     {
+      "label": "14 AGVs, ±0%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         6.27,
+         6.64,
+         4.93,
+         7.26,
+         4.69
+        ],
+        "ci": [
+         1.58,
+         2.46,
+         1.38,
+         3.03,
+         1.21
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         4.01,
+         3.14,
+         2.39,
+         1.71,
+         2.06
+        ],
+        "ci": [
+         0.84,
+         0.54,
+         0.39,
+         0.34,
+         0.21
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         5.77,
+         3.75,
+         2.39,
+         1.41,
+         2.55
+        ],
+        "ci": [
+         1.43,
+         1.56,
+         0.77,
+         0.3,
+         0.44
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         7.05,
+         4.81,
+         4.94,
+         3.65,
+         4.86
+        ],
+        "ci": [
+         1.45,
+         0.79,
+         0.71,
+         0.47,
+         0.34
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     },
+     {
+      "label": "14 AGVs, ±20%",
+      "groups": [
+       "1 × (12+12)\n24 jobs per crane",
+       "2 × (25+25)\n100 jobs per crane",
+       "4 × (25+25)\n200 jobs per crane",
+       "2 × (50+50)\n200 jobs per crane",
+       "8 × (25+25)\n400 jobs per crane"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         6.56,
+         5.77,
+         3.63,
+         4.27,
+         3.45
+        ],
+        "ci": [
+         1.85,
+         2.08,
+         1.31,
+         1.51,
+         0.62
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         6.0,
+         3.49,
+         2.2,
+         1.96,
+         2.02
+        ],
+        "ci": [
+         1.56,
+         0.74,
+         0.3,
+         0.45,
+         0.23
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         4.89,
+         3.17,
+         2.53,
+         2.11,
+         3.08
+        ],
+        "ci": [
+         1.02,
+         1.32,
+         0.73,
+         0.72,
+         0.64
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         7.12,
+         4.9,
+         5.23,
+         4.02,
+         5.3
+        ],
+        "ci": [
+         1.55,
+         0.75,
+         0.76,
+         0.41,
+         0.37
+        ],
+        "outline": false,
+        "hidden": true
+       }
+      ]
+     }
+    ]
+   },
    "reproduce": "python experiments/exp2_3_ship_size.py",
    "table": {
     "head": [
@@ -1644,6 +2203,112 @@
     "fixed": "The current yard and rules. On these ships every one of the 924 or 12,870 order lists is simulated, which gives the exact best. The search runs three times per case with fixed seeds.",
     "measure": "How far the search ends above the exact best, how often it finds it, and the share of the rules' room for improvement it recovers.",
     "decide": "The search is fit to serve as the benchmark if it recovers nearly all of the room at the operating fleet. Wherever it misses, the benchmark is read as \"at least this much better than the rules\"."
+   },
+   "bars": {
+    "yLabel": "QC idle per container (s)",
+    "note": "Exact best found by trying every order list. Search is the best of 3 runs. Hover over a group to read the values.",
+    "variants": [
+     {
+      "label": "12 AGVs",
+      "groups": [
+       "12 jobs, ±0%",
+       "12 jobs, ±30%",
+       "16 jobs, ±0%",
+       "16 jobs, ±30%"
+      ],
+      "series": [
+       {
+        "name": "Best rule",
+        "color": "#2563eb",
+        "values": [
+         8.51,
+         8.61,
+         9.12,
+         9.17
+        ],
+        "ci": null,
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Search, best of 3",
+        "color": "#ea580c",
+        "values": [
+         7.04,
+         7.22,
+         5.83,
+         4.49
+        ],
+        "ci": null,
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Exact best",
+        "color": "#18181b",
+        "values": [
+         7.03,
+         7.2,
+         5.64,
+         4.48
+        ],
+        "ci": null,
+        "outline": true,
+        "hidden": false
+       }
+      ]
+     },
+     {
+      "label": "6 AGVs",
+      "groups": [
+       "12 jobs, ±0%",
+       "12 jobs, ±30%",
+       "16 jobs, ±0%",
+       "16 jobs, ±30%"
+      ],
+      "series": [
+       {
+        "name": "Best rule",
+        "color": "#2563eb",
+        "values": [
+         43.47,
+         43.18,
+         41.93,
+         41.68
+        ],
+        "ci": null,
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Search, best of 3",
+        "color": "#ea580c",
+        "values": [
+         31.5,
+         31.81,
+         33.27,
+         32.08
+        ],
+        "ci": null,
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Exact best",
+        "color": "#18181b",
+        "values": [
+         31.39,
+         31.27,
+         31.16,
+         30.92
+        ],
+        "ci": null,
+        "outline": true,
+        "hidden": false
+       }
+      ]
+     }
+    ]
    },
    "reproduce": "python experiments/exp3_1_search_check.py",
    "tableTop": {
@@ -3044,6 +3709,133 @@
     "fixed": "12 AGVs, the standard ship, traffic on, and the same 30 instances and draws for every method.",
     "measure": "Crane idle time per container, and the paired differences between the rule, the plan, re-planning and the benchmark.",
     "decide": "The strongest method is the one with a clear paired lead over the others under both kinds of randomness."
+   },
+   "bars": {
+    "yLabel": "QC idle per container (s)",
+    "note": "Means over the same 30 instances, with 95% intervals. The benchmark is the dashed outline. Hover over a group to read the values.",
+    "variants": [
+     {
+      "label": "all",
+      "groups": [
+       "No randomness",
+       "Crane ±20% and AGV speed ±10%"
+      ],
+      "series": [
+       {
+        "name": "Briskorn inventory",
+        "color": "#0f766e",
+        "values": [
+         3.89,
+         4.45
+        ],
+        "ci": [
+         0.7,
+         1.0
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "NV/FCFS",
+        "color": "#2563eb",
+        "values": [
+         3.39,
+         3.77
+        ],
+        "ci": [
+         0.43,
+         0.53
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Fixed groups",
+        "color": "#a16207",
+        "values": [
+         3.91,
+         4.09
+        ],
+        "ci": [
+         0.95,
+         1.04
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Random",
+        "color": "#a1a1aa",
+        "values": [
+         7.82,
+         7.63
+        ],
+        "ci": [
+         1.01,
+         0.76
+        ],
+        "outline": false,
+        "hidden": true
+       },
+       {
+        "name": "Plan, job order",
+        "color": "#ea580c",
+        "values": [
+         1.13,
+         3.38
+        ],
+        "ci": [
+         0.17,
+         0.48
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Plan, AGV routes",
+        "color": "#be123c",
+        "values": [
+         1.13,
+         5.33
+        ],
+        "ci": [
+         0.17,
+         0.46
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "GA, re-planned",
+        "color": "#7c3aed",
+        "values": [
+         1.03,
+         2.62
+        ],
+        "ci": [
+         0.17,
+         0.39
+        ],
+        "outline": false,
+        "hidden": false
+       },
+       {
+        "name": "Perfect information",
+        "color": "#18181b",
+        "values": [
+         1.13,
+         1.05
+        ],
+        "ci": [
+         0.17,
+         0.18
+        ],
+        "outline": true,
+        "hidden": false
+       }
+      ]
+     }
+    ]
    },
    "reproduce": "python experiments/exp4_5_both.py   (on a server, about 90 minutes for the searches and 24 minutes for re-planning on 56 cores)",
    "tableTop": {
