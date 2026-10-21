@@ -169,56 +169,94 @@ function Row({ left, right, tone = 'zinc' }: { left: React.ReactNode; right: Rea
 
 const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; body: React.ReactNode; source: string }[] = [
   {
-    icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Orders',
-    lead: 'The number of orders in which containers can get their AGVs explodes with ship size.',
+    icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Plans',
+    lead: 'Each crane’s containers come in a fixed order. So a plan only has to say which crane gets each next free AGV, as a list like this.',
     body: (
-      <div className="flex flex-col gap-2">
-        <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 orders <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
-        <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ orders <span className="text-red-600">✕</span></span>} tone="red" />
-        <p className="mt-1 text-xs leading-relaxed text-zinc-500">
-          All 924 can be tried, and there our search finds the best order in <b className="text-zinc-800">17 to 19 of 20</b> cases.
-          The big ship can only be searched, never checked fully.
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-1 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5">
+          {['C1', 'C2', 'C2', 'C1', 'C2', 'C1', 'C1'].map((c, k) => (
+            <span key={k} className={`rounded px-1.5 py-0.5 text-xs font-semibold ${c === 'C1' ? 'bg-zinc-800 text-white' : 'bg-teal-600 text-white'}`}>{c}</span>
+          ))}
+          <span className="text-xs text-zinc-400">… one entry per container</span>
+        </div>
+        <span className="text-xs font-medium text-zinc-500">How many different lists are possible</span>
+        <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
+        <Md className="-mt-1 px-1 text-xs text-zinc-600">{String.raw`Pick which 6 of the 12 slots say C1, the rest say C2. $$\binom{12}{6} = \frac{12!}{6!\;6!} = 924$$`}</Md>
+        <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ <span className="text-red-600">✕</span></span>} tone="red" />
+        <Md className="-mt-1 px-1 text-xs text-zinc-600">{String.raw`Pick which 100 of the 200 slots say C1. $$\binom{200}{100} \approx 9 \times 10^{58}$$`}</Md>
+        <div className="rounded-lg bg-zinc-900 px-3 py-2.5 text-sm leading-snug text-white">
+          Checking a billion lists every second would take about <b className="text-amber-300">3 × 10⁴² years</b>.
+        </div>
+        <p className="text-xs leading-relaxed text-zinc-500">
+          So nobody can check every plan. A search tries the promising ones. On the small ship we can check all 924, and our
+          search found the very best list in <b className="text-zinc-800">17 to 19 of 20</b> cases. On the real ship we have to trust it.
         </p>
       </div>
     ),
-    source: 'Number of orders is 200 choose 100 (our arithmetic). Search check, Experiment 3.1, 20 Oct 2026.',
+    source: 'Counts and 9 × 10⁵⁸ ÷ 10⁹ per second are our arithmetic. Search check, Experiment 3.1, 20 Oct 2026.',
   },
   {
-    icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
-    lead: 'What a plan made in advance saves per container, compared with the NV/FCFS rule.',
+    icon: Shuffle, stat: '30 of 30 → 17 of 30', title: 'Plans Go Stale',
+    lead: 'A plan made in advance against the simple NV/FCFS rule, on the same 30 test ships.',
     body: (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {[
-          { label: 'Exact times', v: 2.26, ci: 0.40, note: 'clear saving', tone: 'bg-teal-600' },
-          { label: 'Random times', v: 0.39, ci: 0.57, note: 'not clear', tone: 'bg-amber-500' },
-        ].map((r) => (
-          <div key={r.label} className="flex flex-col gap-1">
-            <div className="flex items-baseline justify-between text-sm">
-              <span className="font-medium text-zinc-800">{r.label}</span>
-              <span className="tabular-nums text-zinc-900"><b>{r.v.toFixed(2)} s</b> <span className="text-xs text-zinc-500">± {r.ci.toFixed(2)}, {r.note}</span></span>
+          { label: 'With exact times', plan: 1.13, rule: 3.39, wins: 30, verdict: 'The plan wins on every ship.', good: true },
+          { label: 'With random times', plan: 3.38, rule: 3.77, wins: 17, verdict: 'The plan wins on only 17 ships, close to a coin toss.', good: false },
+        ].map((c) => (
+          <div key={c.label} className={`flex flex-col gap-2 rounded-lg border p-3 ${c.good ? 'border-teal-200 bg-teal-50' : 'border-amber-200 bg-amber-50'}`}>
+            <span className="text-sm font-semibold text-zinc-900">{c.label}</span>
+            {[['Plan', c.plan, 'bg-zinc-800'], ['NV/FCFS', c.rule, 'bg-zinc-400']].map(([n, v, tone]) => (
+              <div key={n as string} className="flex items-center gap-2 text-xs">
+                <span className="w-14 shrink-0 text-zinc-600">{n}</span>
+                <span className="h-2.5 flex-1 rounded bg-white">
+                  <span className={`block h-full rounded ${tone}`} style={{ width: `${((v as number) / 4) * 100}%` }} />
+                </span>
+                <span className="w-12 shrink-0 text-right font-semibold tabular-nums text-zinc-900">{(v as number).toFixed(2)} s</span>
+              </div>
+            ))}
+            <div className="mt-1 flex flex-wrap gap-[3px]" aria-label={`Plan wins on ${c.wins} of 30 ships`}>
+              {Array.from({ length: 30 }, (_, k) => (
+                <span key={k} className={`h-2.5 w-2.5 rounded-full ${k < c.wins ? (c.good ? 'bg-teal-600' : 'bg-amber-500') : 'bg-zinc-300'}`} />
+              ))}
             </div>
-            <div className="relative h-3.5 rounded bg-zinc-100">
-              <span className="absolute left-[12%] top-[-4px] z-10 h-[22px] border-l-2 border-dashed border-zinc-500" />
-              <span className={`absolute top-0 h-full rounded ${r.tone}`} style={{ left: '12%', width: `${(r.v / 2.8) * 88}%` }} />
-              <span className="absolute top-1/2 h-2 -translate-y-1/2 border-x border-t-0 border-zinc-800"
-                style={{ left: `${12 + ((r.v - r.ci) / 2.8) * 88}%`, width: `${((2 * r.ci) / 2.8) * 88}%` }}>
-                <span className="absolute left-0 right-0 top-1/2 border-t border-zinc-800" />
-              </span>
-            </div>
+            <span className="text-xs text-zinc-700">Each dot is one ship, coloured where the plan waited less. {c.verdict}</span>
           </div>
         ))}
-        <p className="text-[11px] text-zinc-500">Dashed line is zero saving. With random times the interval crosses it.</p>
-        <Row left="Plan followed rigidly" right="5.33 s" tone="red" />
-        <p className="-mt-1 text-xs text-zinc-500">Worse than every rule except Random.</p>
+        <div className="flex flex-col gap-2 rounded-lg border border-red-200 bg-red-50 p-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-sm font-semibold text-zinc-900">Plan as a fixed timetable per AGV</span>
+            <span className="shrink-0 text-sm font-bold tabular-nums text-red-700">5.33 s</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-1 text-xs">
+            <span className="text-zinc-600">AGV 3’s own list</span>
+            {['C1', 'C1', 'C2', 'C1'].map((c, k) => (
+              <span key={k} className="flex items-center gap-1">
+                <span className={`rounded px-1.5 py-0.5 font-semibold text-white ${c === 'C1' ? 'bg-zinc-800' : 'bg-teal-600'}`}>{c}</span>
+                {k < 3 && <ArrowRight className="h-3 w-3 text-zinc-400" />}
+              </span>
+            ))}
+          </div>
+          <span className="text-xs leading-relaxed text-zinc-700">
+            Many plans made in advance give each AGV its own fixed list of jobs. With random times, an AGV keeps waiting for its
+            planned crane even when the other crane needs it. This does worse than every rule except Random.
+          </span>
+        </div>
       </div>
     ),
-    source: 'Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 30 paired seeds, 95% intervals.',
+    source: 'Crane wait per container, average over 30 test ships. Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 20 to 21 Oct 2026.',
   },
   {
     icon: Timer, stat: '55 to 74 s', title: 'Little Time to Think',
-    lead: 'Making a new plan during service takes almost a full crane cycle.',
+    lead: 'The obvious fix for stale plans is to make a new plan during service. But that takes time.',
     body: (
       <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
+          <span className="text-sm font-semibold text-zinc-900">How re-planning works</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">1</b> After every 10 containers handed over, the memetic GA starts again from the current situation.</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">2</b> It tests 500 new lists in the simulator, about 0.1 s each.</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">3</b> The best list replaces the old one.</span>
+        </div>
         <div className="flex flex-col gap-1">
           <div className="relative h-6 overflow-hidden rounded bg-zinc-200">
             <span className="absolute inset-y-0 left-0 bg-amber-400/80" style={{ width: `${(74 / 75) * 100}%` }} />
@@ -227,12 +265,14 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
           </div>
           <div className="flex justify-between text-[11px] text-zinc-500"><span>0 s</span><span>one crane cycle, 75 s</span></div>
         </div>
-        <Row left="Waiting 54 s for each new plan costs" right="+0.43 s" tone="amber" />
-        <Row left="Re-planning still waits more than the target by" right="+1.57 s" tone="zinc" />
-        <p className="text-xs text-zinc-500">Per container, at high randomness. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
+        <span className="text-xs font-medium text-zinc-500">Extra crane wait per container, compared with a plan that is ready at once</span>
+        <Row left="Wait 54 s for each full search" right="+0.43 s" tone="amber" />
+        <Row left="Use a quick search instead, 1.6 s with 15 tests" right="+0.46 s" tone="amber" />
+        <Row left="And a plan ready at once still waits more than the target by" right="+1.59 s" tone="zinc" />
+        <p className="text-xs leading-relaxed text-zinc-500">A dispatcher that decides in a fraction of a second is needed. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
       </div>
     ),
-    source: 'Experiments 4.3 (crane times ±40%) and 4.5, one processor per search, 21 Oct 2026.',
+    source: 'All rows with crane times varying ±40%. Experiments 4.2 (plan ready at once) and 4.3 (thinking time counted), one processor per search, 21 Oct 2026. The 55 to 74 s is from Experiment 4.5.',
   },
 ];
 
