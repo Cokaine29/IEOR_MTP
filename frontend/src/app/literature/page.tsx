@@ -7,8 +7,11 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import { BookOpen, ArrowUpRight, Target, Zap, Lightbulb, FileText } from 'lucide-react';
-import StudyTables from '@/components/literature/StudyTables';
-import { GROUPS, PAPERS, type Paper } from '@/components/literature/papers';
+import { Timeline, ObjectiveMap, UncertaintyHeatmap, TestingMatrix } from '@/components/literature/CompareVisuals';
+import { GROUPS, PAPERS, type Paper, type GroupId } from '@/components/literature/papers';
+
+const DISPATCH: GroupId[] = ['rules', 'assignment', 'lookahead', 'metaheuristic', 'learning'];
+const STUDY_COUNT = 11;
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -147,7 +150,7 @@ function PaperCard({ paper, onOpen }: { paper: Paper; onOpen: () => void }) {
   const unread = paper.group === 'unread';
   const link = paper.url ?? (paper.doi ? `https://doi.org/${paper.doi}` : undefined);
   return (
-    <motion.article {...fade} className={`flex flex-col gap-4 rounded-3xl border bg-white p-6 sm:p-7 ${unread ? 'border-dashed border-zinc-300' : 'border-zinc-200'}`}>
+    <motion.article {...fade} id={`paper-${paper.id}`} className={`scroll-mt-28 flex flex-col gap-4 rounded-3xl border bg-white p-6 sm:p-7 ${unread ? 'border-dashed border-zinc-300' : 'border-zinc-200'}`}>
       <div className="flex items-start justify-between gap-3">
         <span className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-teal-800">{paper.approach}</span>
         <span className="font-mono text-sm font-bold text-zinc-600">{paper.year}</span>
@@ -207,7 +210,25 @@ export default function LiteraturePage() {
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null);
   const read = PAPERS.filter((p) => p.notes);
   const years = read.map((p) => p.year);
-  const families = GROUPS.filter((g) => !['borrowed', 'review', 'unread'].includes(g.id)).length;
+  const families = DISPATCH.length;
+  const renderGroup = (g: (typeof GROUPS)[number], gi: number) => {
+    const list = PAPERS.filter((p) => p.group === g.id).sort((a, b) => a.year - b.year);
+    if (list.length === 0) return null;
+    return (
+      <section key={g.id} id={g.id} className="mb-20 scroll-mt-28">
+        <motion.div {...fade} className="mb-8 flex max-w-3xl gap-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white">{gi + 1}</span>
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">{g.title}</h2>
+            <p className="mt-2 leading-relaxed text-zinc-700">{g.text}</p>
+          </div>
+        </motion.div>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {list.map((p) => <PaperCard key={p.id} paper={p} onOpen={() => setSelectedPaper(p)} />)}
+        </div>
+      </section>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-zinc-100 px-4 pb-16 pt-32 text-zinc-900 sm:px-6 lg:px-8">
@@ -231,40 +252,74 @@ export default function LiteraturePage() {
             { v: `${families}`, l: 'Families of dispatching methods' },
           ].map((s) => (
             <div key={s.l} className="rounded-2xl border border-zinc-200 bg-white p-4 text-center">
-              <span className="block text-2xl font-bold tabular-nums text-zinc-900">{s.v}</span>
+              <span className="block text-lg font-bold tabular-nums text-zinc-900 sm:text-2xl">{s.v}</span>
               <span className="text-xs text-zinc-600">{s.l}</span>
             </div>
           ))}
         </motion.div>
 
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mb-10">
+          <Timeline />
+        </motion.div>
+
         <nav className="mb-16 flex flex-wrap justify-center gap-2" aria-label="Paper groups">
-          {GROUPS.map((g) => (
+          {[...GROUPS.slice(0, DISPATCH.length), { id: 'compare', title: 'Side by Side' }, ...GROUPS.slice(DISPATCH.length)].map((g) => (
             <a key={g.id} href={`#${g.id}`} className="rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50">
               {g.title}
             </a>
           ))}
         </nav>
 
-        {GROUPS.map((g, gi) => {
-          const list = PAPERS.filter((p) => p.group === g.id).sort((a, b) => a.year - b.year);
-          if (list.length === 0) return null;
-          return (
-            <section key={g.id} id={g.id} className="mb-20 scroll-mt-28">
-              <motion.div {...fade} className="mb-8 flex max-w-3xl gap-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white">{gi + 1}</span>
-                <div>
-                  <h2 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">{g.title}</h2>
-                  <p className="mt-2 leading-relaxed text-zinc-700">{g.text}</p>
-                </div>
-              </motion.div>
-              <div className="grid gap-6 lg:grid-cols-2">
-                {list.map((p) => <PaperCard key={p.id} paper={p} onOpen={() => setSelectedPaper(p)} />)}
-              </div>
-            </section>
-          );
-        })}
+        {GROUPS.filter((g) => DISPATCH.includes(g.id)).map((g, gi) => renderGroup(g, gi))}
 
-        <StudyTables />
+        {/* ---------------- side by side */}
+        <section id="compare" className="mb-20 scroll-mt-28">
+          <motion.div {...fade} className="mb-8 max-w-3xl">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">Side by Side</span>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">How the {STUDY_COUNT} Dispatching Studies Compare</h2>
+            <p className="mt-3 leading-relaxed text-zinc-700">
+              Three questions for every study we read. What does it try to improve? Which real-world variations does it let happen?
+              And how was it tested? The last row of each chart is this thesis.
+            </p>
+          </motion.div>
+
+          <motion.h3 {...fade} className="mb-2 text-xl font-semibold text-zinc-900">1. What Each Study Tries to Improve</motion.h3>
+          <motion.p {...fade} className="mb-5 max-w-3xl text-sm leading-relaxed text-zinc-600">
+            Fewer than half aim at the quay crane, the machine the whole terminal waits on. The rest aim at the vehicles, energy or
+            deadlines.
+          </motion.p>
+          <motion.div {...fade} className="mb-14"><ObjectiveMap /></motion.div>
+
+          <motion.h3 {...fade} className="mb-2 text-xl font-semibold text-zinc-900">2. Which Variations Each Study Lets Happen</motion.h3>
+          <motion.p {...fade} className="mb-5 max-w-3xl text-sm leading-relaxed text-zinc-600">
+            Real terminals vary in many ways. Each cell shows whether a study draws that variation at random, lets it arise from
+            the simulation, or keeps it fixed. Green cells are rare, and no study makes AGV breakdowns or battery random.
+          </motion.p>
+          <motion.div {...fade} className="mb-14"><UncertaintyHeatmap /></motion.div>
+
+          <motion.h3 {...fade} className="mb-2 text-xl font-semibold text-zinc-900">3. How Each Study Was Tested</motion.h3>
+          <motion.p {...fade} className="mb-5 max-w-3xl text-sm leading-relaxed text-zinc-600">
+            Only two studies test their methods at several levels of randomness, and neither of them learns. The one study that
+            learns with deep reinforcement learning tests at a single level.
+          </motion.p>
+          <motion.div {...fade} className="mb-8"><TestingMatrix /></motion.div>
+
+          <motion.div {...fade} className="rounded-2xl border border-zinc-200 bg-white p-6">
+            <h4 className="mb-3 font-semibold text-zinc-900">What This Shows</h4>
+            <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-zinc-700">
+              <li>No learned dispatcher among these studies is tested across graded levels of randomness. The two studies that grade randomness, Kim and Bae (2004) and Grunow et al. (2006), use rules and optimisation.</li>
+              <li>No study compares rules, a search method, tabular Q-learning and DQN on the same ships with repeated runs and intervals.</li>
+              <li>No study in this set uses several learning agents.</li>
+              <li>AGV breakdowns and battery are never made random.</li>
+            </ul>
+            <p className="mt-4 text-xs italic text-zinc-500">
+              This sums up the papers we read, not the whole field. &lsquo;Not described&rsquo; means the paper does not say, not that the
+              paper is weak.
+            </p>
+          </motion.div>
+        </section>
+
+        {GROUPS.filter((g) => !DISPATCH.includes(g.id)).map((g, gi) => renderGroup(g, gi + DISPATCH.length))}
 
         <motion.div {...fade} className="mt-16 rounded-3xl bg-zinc-900 p-8 text-center md:p-12">
           <BookOpen className="mx-auto mb-4 h-7 w-7 text-teal-400" />
