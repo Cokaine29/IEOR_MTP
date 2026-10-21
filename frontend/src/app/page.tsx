@@ -72,6 +72,12 @@ const SYMBOLS = [
   { sym: String.raw`$h_j$`, name: 'Handover', unit: 'seconds', text: 'The time the handover of container $j$ really happens, once an AGV is under the crane.' },
 ];
 
+const TURNAROUND = [
+  { title: 'The Crane Waits', text: 'Every second without an AGV underneath is lost crane time.' },
+  { title: 'The Ship Stays Longer', text: 'It cannot leave until its last container is handled, so its turnaround time grows.' },
+  { title: 'Less Shipping Capacity', text: 'A ship held in port carries no cargo, and its delay passes on to the ports it calls at next.' },
+];
+
 const STEPS: { title: string; status: 'Done' | 'In Progress' | 'Next'; points: string[] }[] = [
   { title: 'Build a Realistic Terminal', status: 'Done', points: [
     'Layout of a real automated terminal, Yangshan Phase IV',
@@ -114,7 +120,7 @@ function SectionHead({ kicker, title, children }: { kicker: string; title: strin
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
+    <div className="min-h-screen bg-white text-zinc-900 [&_p:not(.italic)]:text-justify [&_p]:hyphens-auto [&_li]:text-justify [&_li]:hyphens-auto [&_blockquote]:text-justify">
       {/* ------------------------------------------------ hero */}
       <section className="bg-zinc-900 px-4 pb-16 pt-28 text-white sm:pt-32">
         <div className="mx-auto flex max-w-6xl flex-col gap-10">
@@ -251,6 +257,35 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
+          <motion.div {...fade} className="mt-10 rounded-2xl border border-zinc-200 bg-zinc-50 p-6 sm:p-8">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-zinc-500">From a Waiting Crane to the World’s Shipping</h3>
+            <ol className="grid gap-3 md:grid-cols-3">
+              {TURNAROUND.map((c, i) => (
+                <li key={c.title} className="relative flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4">
+                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${i === 2 ? 'bg-red-600' : 'bg-zinc-900'}`}>{i + 1}</span>
+                  <span className="flex flex-col gap-0.5">
+                    <span className="font-semibold text-zinc-900">{c.title}</span>
+                    <span className="text-sm leading-snug text-zinc-600">{c.text}</span>
+                  </span>
+                  {i < 2 && (
+                    <span className="absolute -right-3.5 top-1/2 z-10 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-200 bg-white md:flex">
+                      <ArrowRight className="h-4 w-4 text-zinc-400" />
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ol>
+            <figure className="mt-6 flex flex-col gap-2 border-l-4 border-teal-600 pl-5">
+              <blockquote className="font-serif text-xl italic leading-relaxed text-zinc-800">
+                “Longer turnaround times reduce effective shipping capacity and propagate delays across global networks.”
+              </blockquote>
+              <figcaption className="text-xs italic text-zinc-500">
+                <a href="https://trid.trb.org/View/2712643" target="_blank" rel="noreferrer" className="underline decoration-zinc-300 underline-offset-2 hover:text-zinc-700">
+                  World Bank (2026), The Container Port Performance Index 2025, data of S&amp;P Global Market Intelligence
+                </a>
+              </figcaption>
+            </figure>
+          </motion.div>
         </div>
       </section>
 
