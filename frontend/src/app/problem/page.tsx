@@ -428,20 +428,43 @@ export default function ProblemPage() {
       <section className="border-y border-zinc-200 bg-white px-4 py-20">
         <div className="mx-auto max-w-6xl">
           <motion.div {...fade}>
-            <SectionHead kicker="Why Seconds Matter" title="Today’s Best Methods Still Leave the Cranes Waiting">
-              <p>
-                A quay crane in our simulator needs 75 s per container. So every second of waiting per container is about 1.3% of
-                the crane’s working time (1 ÷ 75, our arithmetic). The chart shows what each method loses on our simulated ship when
-                crane times vary by ±20% and AGV speeds by ±10%.
-              </p>
-            </SectionHead>
+            <SectionHead kicker="Why Seconds Matter" title="Today’s Best Methods Still Leave the Cranes Waiting" />
+          </motion.div>
+          <motion.div {...fade} className="mb-8 grid gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="text-3xl font-bold tracking-tight text-teal-700">1 s = 1.3%</span>
+                <span className="text-sm font-medium text-zinc-700">of the crane’s working time, for every second of waiting per container</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex h-5 gap-px overflow-hidden rounded" aria-hidden>
+                  {Array.from({ length: 75 }, (_, k) => (
+                    <span key={k} className={`flex-1 ${k === 74 ? 'bg-red-500' : 'bg-zinc-300'}`} />
+                  ))}
+                </div>
+                <div className="flex justify-between text-[11px] font-medium text-zinc-500">
+                  <span>One crane cycle, 75 s per container</span>
+                  <span className="text-red-600">1 s of waiting</span>
+                </div>
+              </div>
+              <p className="text-xs italic text-zinc-500">1 ÷ 75, our arithmetic. Crane time per container from Zhao et al. (2025) and Liu, Jula and Ioannou (2001).</p>
+            </div>
+            <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+              <span className="text-sm font-semibold text-zinc-900">The Test in the Chart</span>
+              <div className="flex flex-wrap gap-2">
+                {['Crane times vary ±20%', 'AGV speeds vary ±10%', '30 ships', 'Same random draws for every method'].map((c) => (
+                  <span key={c} className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-700">{c}</span>
+                ))}
+              </div>
+              <p className="text-sm leading-relaxed text-zinc-600">Each bar is the average crane wait per container, with its 95% interval.</p>
+            </div>
           </motion.div>
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
             <motion.figure {...fade} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
               <figcaption className="mb-5 text-sm font-semibold text-zinc-900">Crane Idle Time per Container, in Seconds</figcaption>
               <ul className="flex flex-col gap-3.5" aria-label="Crane idle time per container for seven methods">
                 {BARS.map((b) => (
-                  <li key={b.name} className="grid grid-cols-[9.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                  <li key={b.name} className="!text-left grid grid-cols-[9.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
                     <span className="flex flex-col leading-tight">
                       <span className="text-sm font-medium text-zinc-900">{b.name}</span>
                       <span className="text-xs text-zinc-500">{b.note}</span>
@@ -464,25 +487,36 @@ export default function ProblemPage() {
                 the future is the best plan our search found with the real times known in advance.
               </p>
             </motion.figure>
-            <div className="flex flex-col gap-5">
-              <motion.div {...fade} className="rounded-2xl border border-teal-200 bg-teal-50 p-6">
-                <div className="text-3xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</div>
-                <p className="mt-2 text-sm leading-relaxed text-teal-900">
-                  The best method available today, a plan re-optimised during service, still makes the cranes wait 2.62 s per
-                  container. A dispatcher that knew the future would need only 1.05 s (our arithmetic, 2.62 ÷ 1.05). This gap is the
-                  room a learned dispatcher can aim for.
-                </p>
-              </motion.div>
-              <motion.figure {...fade} className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-6">
-                <blockquote className="font-serif text-base italic leading-relaxed text-zinc-700">
-                  “Longer turnaround times reduce effective shipping capacity and propagate delays across global networks.”
-                </blockquote>
-                <Source>
-                  World Bank (2026), The Container Port Performance Index 2025, data of S&amp;P Global Market Intelligence,{' '}
-                  <a href="https://trid.trb.org/View/2712643" target="_blank" rel="noreferrer" className="underline hover:text-zinc-700">abstract</a>
-                </Source>
-              </motion.figure>
-            </div>
+            <motion.div {...fade} className="flex flex-col gap-5 rounded-2xl border border-teal-200 bg-teal-50 p-6">
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</span>
+                <span className="text-sm font-semibold text-teal-900">more crane waiting than needed</span>
+              </div>
+              <div className="flex flex-col gap-3">
+                {[
+                  { label: 'Best method today', sub: 'plan re-optimised during service', v: 2.62, tone: 'bg-zinc-800' },
+                  { label: 'Knows the future', sub: 'benchmark', v: 1.05, tone: 'bg-teal-600' },
+                ].map((r) => (
+                  <div key={r.label} className="flex flex-col gap-1">
+                    <div className="flex items-baseline justify-between text-sm">
+                      <span className="font-medium text-zinc-900">{r.label} <span className="text-xs font-normal text-zinc-500">{r.sub}</span></span>
+                      <span className="font-semibold tabular-nums text-zinc-900">{r.v.toFixed(2)} s</span>
+                    </div>
+                    <div className="h-4 rounded bg-white">
+                      <motion.div initial={{ width: 0 }} whileInView={{ width: `${(r.v / 3) * 100}%` }} viewport={{ once: true }}
+                        transition={{ duration: 0.8 }} className={`h-full rounded ${r.tone}`} />
+                    </div>
+                  </div>
+                ))}
+                <div className="relative h-6">
+                  <span className="absolute top-1 h-3 border-x border-b border-amber-500" style={{ left: `${(1.05 / 3) * 100}%`, width: `${(1.57 / 3) * 100}%` }} />
+                </div>
+                <div className="-mt-2 rounded-xl bg-amber-100 px-4 py-3 text-sm text-amber-900">
+                  <b className="tabular-nums">1.57 s per container</b> of room left. This gap is what a learned dispatcher can aim for.
+                </div>
+              </div>
+              <p className="text-xs italic text-teal-900/70">2.62 ÷ 1.05 and 2.62 − 1.05, our arithmetic. Experiment 4.5.</p>
+            </motion.div>
           </div>
         </div>
       </section>
