@@ -103,7 +103,7 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
 
           {!paper.notes && (
             <div className="text-center py-16">
-              <p className="text-zinc-700 font-medium">We have not read this paper in full yet, so there are no notes.</p>
+              <p className="text-zinc-700 font-medium">The review of this paper is still to come, so there are no notes yet.</p>
             </div>
           )}
 
@@ -240,14 +240,14 @@ export default function LiteraturePage() {
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-zinc-900 md:text-5xl">What Others Have Tried</h1>
           <p className="mt-5 text-lg leading-relaxed text-zinc-700">
             Researchers have dispatched AGVs with simple rules, mathematical models, search methods and learning. Here are the
-            papers we have read in full, what each one found, and how each one shapes our work.
+            papers reviewed for this thesis, what each one found, and how each one shapes our work.
           </p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="mx-auto mb-12 grid max-w-3xl grid-cols-3 gap-3">
           {[
-            { v: `${read.length}`, l: 'Papers read in full' },
+            { v: `${read.length}`, l: 'Papers reviewed' },
             { v: `${Math.min(...years)} to ${Math.max(...years)}`, l: 'Years covered' },
             { v: `${families}`, l: 'Families of dispatching methods' },
           ].map((s) => (
@@ -278,7 +278,7 @@ export default function LiteraturePage() {
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">Side by Side</span>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">How the {STUDY_COUNT} Dispatching Studies Compare</h2>
             <p className="mt-3 leading-relaxed text-zinc-700">
-              Three questions for every study we read. What does it try to improve? Which real-world variations does it let happen?
+              Three questions for every study reviewed. What does it try to improve? Which real-world variations does it let happen?
               And how was it tested? The last row of each chart is this thesis.
             </p>
           </motion.div>
@@ -313,7 +313,7 @@ export default function LiteraturePage() {
               <li>AGV breakdowns and battery are never made random.</li>
             </ul>
             <p className="mt-4 text-xs italic text-zinc-500">
-              This sums up the papers we read, not the whole field. &lsquo;Not described&rsquo; means the paper does not say, not that the
+              This sums up the papers reviewed here, not the whole field. &lsquo;Not described&rsquo; means the paper does not say, not that the
               paper is weak.
             </p>
           </motion.div>
@@ -325,7 +325,7 @@ export default function LiteraturePage() {
           <BookOpen className="mx-auto mb-4 h-7 w-7 text-teal-400" />
           <h3 className="mb-4 text-2xl font-bold tracking-tight text-white md:text-3xl">Where This Leaves Us</h3>
           <p className="mx-auto max-w-3xl leading-relaxed text-zinc-300 md:text-lg">
-            Among the 11 dispatching studies we read, none tests a learned dispatcher across graded levels of randomness. The two
+            Among the 11 dispatching studies reviewed here, none tests a learned dispatcher across graded levels of randomness. The two
             that do grade randomness, Kim and Bae (2004) and Grunow et al. (2006), use rules and optimisation. Our experiments start
             from this point.
           </p>

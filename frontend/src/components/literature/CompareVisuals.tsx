@@ -30,7 +30,7 @@ export function Timeline() {
   return (
     <div className="rounded-3xl border border-zinc-200 bg-white p-5 sm:p-6">
       <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[720px]" role="img" aria-label="Timeline of the papers we read, by method family">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[720px]" role="img" aria-label="Timeline of the papers reviewed, by method family">
           {ticks.map((t) => (
             <g key={t}>
               <line x1={X(t)} x2={X(t)} y1={T - 8} y2={H - 26} stroke="#f4f4f5" />
@@ -74,7 +74,7 @@ export function Timeline() {
       </div>
       <p className="mt-2 min-h-[2.5em] text-sm text-zinc-600">
         {hp ? <><b className="text-zinc-900">{SHORT[hp.id]} ({hp.year}).</b> {hp.title}. Click to open its card.</>
-          : 'Each dot is a paper we read. Hover over one to see its title, or click it to jump to its card.'}
+          : 'Each dot is a reviewed paper. Hover over one to see its title, or click it to jump to its card.'}
       </p>
     </div>
   );
