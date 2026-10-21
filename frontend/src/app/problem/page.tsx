@@ -223,8 +223,25 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
             <span className="text-xs text-zinc-700">Each dot is one ship, coloured where the plan waited less. {c.verdict}</span>
           </div>
         ))}
-        <Row left="Plan followed rigidly, random times" right="5.33 s" tone="red" />
-        <p className="-mt-2 text-xs text-zinc-500">Worse than every rule except Random.</p>
+        <div className="flex flex-col gap-2 rounded-lg border border-red-200 bg-red-50 p-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-sm font-semibold text-zinc-900">Plan as a fixed timetable per AGV</span>
+            <span className="shrink-0 text-sm font-bold tabular-nums text-red-700">5.33 s</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-1 text-xs">
+            <span className="text-zinc-600">AGV 3’s own list</span>
+            {['C1', 'C1', 'C2', 'C1'].map((c, k) => (
+              <span key={k} className="flex items-center gap-1">
+                <span className={`rounded px-1.5 py-0.5 font-semibold text-white ${c === 'C1' ? 'bg-zinc-800' : 'bg-teal-600'}`}>{c}</span>
+                {k < 3 && <ArrowRight className="h-3 w-3 text-zinc-400" />}
+              </span>
+            ))}
+          </div>
+          <span className="text-xs leading-relaxed text-zinc-700">
+            Many plans made in advance give each AGV its own fixed list of jobs. With random times, an AGV keeps waiting for its
+            planned crane even when the other crane needs it. This does worse than every rule except Random.
+          </span>
+        </div>
       </div>
     ),
     source: 'Crane wait per container, average over 30 test ships. Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 20 to 21 Oct 2026.',
