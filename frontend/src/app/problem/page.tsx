@@ -149,6 +149,11 @@ const BARS = [
   { name: 'Random Choice', note: 'floor', mean: 7.63, ci: 0.76, tone: 'bg-zinc-300' },
 ];
 const XMAX = 9.5;
+const CRANE_ROWS = [
+  { label: 'NV/FCFS rule', wait: 3.77, target: false },
+  { label: 'Best method we tested', wait: 2.62, target: false },
+  { label: 'Target, knows the future', wait: 1.05, target: true },
+].map((r) => ({ ...r, cranes: (29 * r.wait) / (75 + r.wait) }));
 const TARGET = { name: 'Knows the Future', note: 'target only, not possible in practice', mean: 1.05, ci: 0.18 };
 
 /* ---------- 5. why it is hard */
@@ -493,31 +498,54 @@ export default function ProblemPage() {
           </motion.div>
           <motion.div {...fade} className="mb-8 grid gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="text-3xl font-bold tracking-tight text-teal-700">1 s = 1.3%</span>
-                <span className="text-sm font-medium text-zinc-700">of the crane’s working time, for every second of waiting per container</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-semibold text-zinc-900">What a Few Seconds Mean at Real Scale</span>
+                <span className="text-sm leading-relaxed text-zinc-600">
+                  Yangshan Phase IV runs <b className="text-zinc-900">29 quay cranes</b>. If its cranes waited as long as in our tests,
+                  the lost time would add up to whole cranes standing still, all year round.
+                </span>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <div className="flex h-5 gap-px overflow-hidden rounded" aria-hidden>
-                  {Array.from({ length: 75 }, (_, k) => (
-                    <span key={k} className={`flex-1 ${k === 74 ? 'bg-red-500' : 'bg-zinc-300'}`} />
-                  ))}
-                </div>
-                <div className="flex justify-between text-[11px] font-medium text-zinc-500">
-                  <span>One crane cycle, 75 s per container</span>
-                  <span className="text-red-600">1 s of waiting</span>
-                </div>
+              <div className="flex flex-col gap-3">
+                {CRANE_ROWS.map((r) => (
+                  <div key={r.label} className="flex flex-col gap-1.5">
+                    <div className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="font-medium text-zinc-800">{r.label} <span className="text-xs font-normal text-zinc-500">{r.wait.toFixed(2)} s per container</span></span>
+                      <span className={`shrink-0 font-bold tabular-nums ${r.target ? 'text-teal-700' : 'text-red-600'}`}>≈ {r.cranes.toFixed(1)} {r.cranes < 1.05 && r.cranes > 0.95 ? 'crane' : 'cranes'}</span>
+                    </div>
+                    <div className="flex gap-[3px]" aria-hidden>
+                      {Array.from({ length: 29 }, (_, k) => {
+                        const fill = Math.max(0, Math.min(1, r.cranes - k));
+                        return (
+                          <span key={k} className="relative h-4 flex-1 overflow-hidden rounded-sm bg-zinc-300">
+                            <span className={`absolute inset-y-0 left-0 ${r.target ? 'bg-teal-500' : 'bg-red-500'}`} style={{ width: `${fill * 100}%` }} />
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-xs italic text-zinc-500">1 ÷ 75, our arithmetic. Crane time per container from Zhao et al. (2025) and Liu, Jula and Ioannou (2001).</p>
+              <p className="text-xs italic leading-relaxed text-zinc-500">
+                Illustration, our arithmetic. Share of crane time lost = wait ÷ (75 s + wait), times 29 cranes. 29 cranes from the
+                Shanghai news release (2026), 75 s per container from Zhao et al. (2025) and Liu, Jula and Ioannou (2001). Assumes
+                the real cranes lose time at the rate of our simulated ones.
+              </p>
             </div>
             <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
               <span className="text-sm font-semibold text-zinc-900">The Test in the Chart</span>
               <div className="flex flex-wrap gap-2">
-                {['Crane times vary ±20%', 'AGV speeds vary ±10%', '30 ships', 'Same random draws for every method'].map((c) => (
+                {['Crane times vary ±20%', 'AGV speeds vary ±10%', '30 test ships'].map((c) => (
                   <span key={c} className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-700">{c}</span>
                 ))}
               </div>
-              <p className="text-sm leading-relaxed text-zinc-600">Each bar is the average crane wait per container, with its 95% interval.</p>
+              <p className="text-sm leading-relaxed text-zinc-600">
+                We simulate the same ship 30 times, each time with different random crane times and AGV speeds. Every method
+                faces exactly the same 30 versions, so the comparison is fair.
+              </p>
+              <p className="text-sm leading-relaxed text-zinc-600">
+                Each bar is the average crane wait per container over the 30 runs. The thin line on it shows the 95% range of
+                that average.
+              </p>
             </div>
           </motion.div>
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
@@ -564,7 +592,7 @@ export default function ProblemPage() {
             </motion.figure>
             <motion.div {...fade} className="flex flex-col gap-5 rounded-2xl border border-teal-200 bg-teal-50 p-6">
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</span>
+                <span className="whitespace-nowrap text-4xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</span>
                 <span className="text-sm font-semibold text-teal-900">more crane waiting than the target</span>
               </div>
               <div className="flex flex-col gap-3">
@@ -575,7 +603,7 @@ export default function ProblemPage() {
                   <div key={r.label} className="flex flex-col gap-1">
                     <div className="flex items-baseline justify-between text-sm">
                       <span className="font-medium text-zinc-900">{r.label} <span className="text-xs font-normal text-zinc-500">{r.sub}</span></span>
-                      <span className="font-semibold tabular-nums text-zinc-900">{r.v.toFixed(2)} s</span>
+                      <span className="shrink-0 whitespace-nowrap font-semibold tabular-nums text-zinc-900">{r.v.toFixed(2)} s</span>
                     </div>
                     <div className="h-4 rounded bg-white">
                       <motion.div initial={{ width: 0 }} whileInView={{ width: `${(r.v / 3) * 100}%` }} viewport={{ once: true }}
