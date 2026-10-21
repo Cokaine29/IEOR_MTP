@@ -1,5 +1,5 @@
 /* Literature tab data. Every entry is taken from our verified paper notes in public/literature/<id>/notes.md.
-   Papers not yet read in full are kept apart in the group 'unread' and carry no claims about their content. */
+   Papers not yet reviewed are kept apart in the group 'unread' and carry no claims about their content. */
 
 export type GroupId = 'rules' | 'assignment' | 'lookahead' | 'metaheuristic' | 'learning' | 'borrowed' | 'review' | 'unread';
 
@@ -60,7 +60,7 @@ export const GROUPS: { id: GroupId; title: string; text: string }[] = [
   {
     id: 'unread',
     title: 'Not Yet Reviewed',
-    text: 'Papers on our reading list. We have not read them in full yet, so we make no claims about their content here.',
+    text: 'Papers on our reading list. Their review is still to come, so no claims about their content are made here.',
   },
 ];
 
@@ -189,7 +189,7 @@ export const PAPERS: Paper[] = [
     objective: 'Quay crane waiting plus AGV completion time',
     summary: 'One DQN picks a rule (first come first served, shortest distance or longest waiting) and an AGV each time a decision is needed. Compared with a genetic algorithm and the three rules alone.',
     headline: 'With 384 tasks and 12 AGVs, total crane waiting was 397.40 min against 801.61 min for the genetic algorithm. Its AGV completion time was higher than the genetic algorithm’s.',
-    role: 'The closest learned dispatcher we have read. Our DQN baseline in Phase II starts from its setting.',
+    role: 'The closest learned dispatcher among the papers reviewed. Our DQN baseline in Phase II starts from its setting.',
   },
   // ---------------- borrowed methods
   {
