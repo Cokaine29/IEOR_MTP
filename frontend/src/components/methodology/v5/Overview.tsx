@@ -6,7 +6,7 @@ import { Badge } from './common';
 
 const STEPS = [
   { icon: Hammer, title: 'Build the Simulator', text: 'A digital copy of a slice of Yangshan Phase IV, with real AGV motion and traffic.', exp: 'Model v5', status: 'Done' as const, href: '#simulator' },
-  { icon: ShieldCheck, title: 'Check It', text: 'Compare the simulator against answers worked out by hand.', exp: 'Experiment 1.1', status: 'Done' as const, href: '#simulator-check' },
+  { icon: ShieldCheck, title: 'Check It', text: 'Compare the simulator against an independent answer key, and check that AGVs never collide in traffic.', exp: 'Experiment 1.1', status: 'Done' as const, href: '#simulator-check' },
   { icon: SlidersHorizontal, title: 'Choose the Setting', text: 'How many AGVs, how far ahead the dispatcher can see, and how big a ship.', exp: 'Experiments 2.1 to 2.3', status: 'Done' as const, href: '#setting' },
   { icon: FlaskConical, title: 'Test Today’s Methods', text: 'Rules and optimised plans, with crane times and AGV speeds made random.', exp: 'Experiments 3.1 to 4.5', status: 'Done' as const, href: '#methods' },
   { icon: BrainCircuit, title: 'Train a Learned Dispatcher', text: 'Deep reinforcement learning, then scale up to the whole terminal.', exp: 'MTP Phase II', status: 'Phase II' as const, href: '#phase-ii' },

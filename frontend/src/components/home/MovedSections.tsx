@@ -40,11 +40,11 @@ const SPECS = [
 
 type Status = 'done' | 'partly' | 'next';
 const PATH: { n: string; title: string; detail: string; status: Status }[] = [
-  { n: '1', title: 'Simulator Check', detail: 'The simulator matches a hand-built answer key to within 1e-6 s.', status: 'done' },
+  { n: '1', title: 'Simulator Check', detail: 'The simulator matches an independent answer key to within 1e-6 s, and AGVs never collide or deadlock in traffic.', status: 'done' },
   { n: '2', title: 'Where Decisions Matter', detail: 'Fleet size, look-ahead and ship size, now with AGV traffic. 12 AGVs chosen as the operating fleet.', status: 'done' },
-  { n: '3', title: 'Search Check', detail: 'The memetic search recovers 100% of the room for improvement at 12 AGVs, in small cases solved exactly.', status: 'done' },
-  { n: '4', title: 'Crane-Time Randomness', detail: 'Rules, a plan made in advance and the perfect dispatcher are done on the model with traffic. The re-planning GA and its thinking time are running.', status: 'partly' },
-  { n: '5', title: 'Travel-Time Randomness', detail: 'AGV speeds vary on every trip (±0% to ±20%), alone and together with random crane times. Running.', status: 'partly' },
+  { n: '3', title: 'Search Check', detail: 'The memetic search recovers 90 to 100% of the room for improvement at 12 AGVs, in small cases solved exactly.', status: 'done' },
+  { n: '4', title: 'Crane-Time Randomness', detail: 'Rules, a plan made in advance, the re-planning GA with its thinking time and the perfect dispatcher, all on the model with traffic.', status: 'done' },
+  { n: '5', title: 'Travel-Time Randomness', detail: 'AGV speeds vary on every trip (±0% to ±20%), alone and together with random crane times.', status: 'done' },
   { n: '6', title: 'MDP Design', detail: 'What the dispatcher sees and what it can choose, with an imitation-learning baseline.', status: 'next' },
   { n: '7', title: 'DQN', detail: 'A value-based learning dispatcher.', status: 'next' },
   { n: '8', title: 'PPO, then MAPPO', detail: 'One central learned dispatcher, then one cooperating agent per AGV.', status: 'next' },

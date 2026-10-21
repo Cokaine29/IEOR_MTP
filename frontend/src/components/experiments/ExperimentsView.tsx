@@ -157,7 +157,7 @@ function Checks({ c }: { c: Card }) {
         <thead className="bg-zinc-50 text-left text-zinc-600">
           <tr>
             <th className="px-4 py-2.5 font-medium">Check</th>
-            <th className="px-4 py-2.5 font-medium">Worked out by hand</th>
+            <th className="px-4 py-2.5 font-medium">Expected</th>
             <th className="px-4 py-2.5 font-medium">Simulator</th>
             <th className="px-2 py-2.5"><span className="sr-only">Result</span></th>
           </tr>

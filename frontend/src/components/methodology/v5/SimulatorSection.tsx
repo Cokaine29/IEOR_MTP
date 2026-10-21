@@ -18,9 +18,10 @@ const SPECS = [
 ];
 
 const CHECKS = [
-  { stat: '190 events', text: 'In 5 small cases worked out by hand, every event time of the simulator matches the hand answer to within 0.0000005 s.' },
-  { stat: '308 segments', text: 'Every piece of every AGV path, straight or turning, matches the hand answer to within a millionth of a metre.' },
+  { stat: '190 events', text: 'In 5 small cases, every event time of the simulator matches an independent answer key, a separate script that uses none of the simulator code, to within 0.0000005 s.' },
+  { stat: '308 segments', text: 'Every piece of every AGV path, straight or turning, matches the answer key to within a millionth of a metre.' },
   { stat: '7 of 7', text: 'Yard rack checks pass, for example which rack an AGV uses and how long a visit takes.' },
+  { stat: '0 collisions', text: 'In 216 random runs with traffic, 2 to 16 AGVs and both kinds of randomness, no two AGVs ever touch or lock each other in.' },
   { stat: '780 tests', text: 'Automatic tests run after every change to the code. All pass on model v5.' },
 ];
 

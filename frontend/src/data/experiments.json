@@ -196,8 +196,8 @@
   "findings": [
    {
     "value": "Exact",
-    "text": "The simulator reproduces hand-worked cases to within a millionth of a second, and its rack rules give the hand-worked answer in every check.",
-    "conditions": "5 hand-built cases · 96 random runs · 780 automatic tests",
+    "text": "The simulator reproduces an independent answer key to within a millionth of a second, its rack rules give the expected outcome in every check, and AGVs never collide or deadlock in traffic.",
+    "conditions": "5 answer-key cases · 216 random runs · 780 automatic tests",
     "ref": "E0"
    },
    {
@@ -267,7 +267,7 @@
   ]
  },
  "generated": "2026-10-21",
- "source": "ACT_MTP 8978439 / v1_slice",
+ "source": "ACT_MTP 8770b49 / v1_slice",
  "stages": [
   {
    "n": 1,
@@ -316,9 +316,9 @@
   {
    "id": "E0",
    "stage": 1,
-   "title": "The simulator reproduces hand-worked cases exactly",
-   "lead": "Yes. In five hand-built cases with 190 event times and 308 path segments, the largest gap is 5 × 10⁻⁷ s, below the required millionth of a second. The rack rules give the hand-worked answer in every check, and in 96 random runs on the full yard no two AGVs ever used one rack at the same time.",
-   "body": "The five cases were built on the earlier 5-block section of the yard, where every path can be traced on paper. The rack rules of the current yard are checked on separate small cases. A suite of 780 automatic tests repeats all of these checks after every change to the code.",
+   "title": "The simulator matches an independent answer key, and AGVs never collide",
+   "lead": "Yes. In 5 answer-key cases with 190 event times and 308 path segments, the largest gap is 5 × 10⁻⁷ s, below the required millionth of a second. The rack rules and the traffic cases give the expected outcome in every check. In 96 random runs on the full yard and 120 stress runs, no two AGVs ever collided, came inside each other's braking distance, used one rack at the same time, or locked each other in.",
+   "body": "The answer-key cases were built on the earlier 5-block section of the yard, at one speed and with 9 m turns, where every path can be traced step by step. They check the core motion and crane rules. The newer physics of the current model (slower loaded AGVs, 10 m turns, traffic, speed variation) is checked separately: by the rack and traffic cases, the collision checker and the stress runs. The checker is not blind, since on the earlier model without traffic it finds overlapping bodies at 1,362 sampled moments of a single run. A suite of 780 automatic tests repeats all of these checks after every change to the code.",
    "details": [
     [
      "Cases",
@@ -326,7 +326,11 @@
     ],
     [
      "Vehicle motion",
-     "AGVs drive at 6 m/s on straights and 3 m/s in turns, with 0.5 m/s² acceleration and braking (Luo, 2016). A loaded AGV is limited to 3.5 m/s (Zhao et al., 2025). The hand-built cases run at one speed, and the loaded limit is checked by separate automatic tests."
+     "AGVs drive at 6 m/s on straights and 3 m/s in turns of 10 m radius, with 0.5 m/s² acceleration and braking (Luo, 2016). A loaded AGV is limited to 3.5 m/s (Zhao et al., 2025)."
+    ],
+    [
+     "Traffic",
+     "Each trip reserves the space its body and braking distance will cover, and starts later if that space is taken. AGVs wait only where they stand, never on the road."
     ],
     [
      "Rack visit",
@@ -339,16 +343,16 @@
    ],
    "label": "Experiment 1.1 · Simulator check",
    "design": {
-    "question": "Does the simulator move AGVs, cranes and racks exactly as the layout, the vehicle data and the rules say?",
-    "why": "Every later number comes from the simulator. If it moved AGVs wrongly, every comparison of dispatchers would be wrong with it.",
-    "vary": "Small cases that each exercise one rule. Single trips, lane booking under the crane, waiting at a full crane, parking, choosing the nearest free rack, a block whose racks are all busy, and the steps of a rack visit.",
-    "fixed": "Each case is worked out by hand before the simulator is run, without using any of its code.",
-    "measure": "The largest gap between the simulator and the hand-worked value, over every event time and every path segment.",
-    "decide": "The simulator passes only if every gap is below a millionth of a second and every rack rule gives the hand-worked answer."
+    "question": "Does the simulator move AGVs, cranes and racks exactly as the layout, the vehicle data and the rules say, and does it keep AGVs apart in traffic?",
+    "why": "Every later number comes from the simulator. If it moved AGVs wrongly, every comparison of dispatchers would be wrong with it. It matters even more for the learning dispatchers (DQN, PPO, MAPPO), which are trained inside this simulator. A rule or a plan can only be misled by a simulator error, but a learning agent tries many actions and keeps whatever earns reward, so it will find an error and use it. In the earlier model without traffic, AGVs passed through each other in every run. An agent trained there could learn to send many AGVs down one lane at no cost, a policy that looks excellent in training and fails on a real terminal. The physics (speeds, turns, rack steps, traffic, safe distances) sets what an agent is allowed to learn, and the same rules apply to every method, which keeps the comparison fair.",
+    "vary": "Small cases that each exercise one rule. Single trips, lane booking under the crane, waiting at a full crane, parking, choosing the nearest free rack, a block whose racks are all busy, the steps of a rack visit, an AGV catching up with a slower loaded one, and two AGVs at one crossing. Then many random runs with traffic.",
+    "fixed": "Every expected value comes from outside the simulator. The answer key is a separate script that imports none of its code. The rack and traffic cases have outcomes that follow directly from the rules. The collision checker reads only the positions the simulator records, not its traffic control.",
+    "measure": "The largest gap between the simulator and the answer key, over every event time and every path segment, and the number of collisions and deadlocks in random runs.",
+    "decide": "The simulator passes only if every gap is below a millionth of a second, every rack and traffic case gives the expected outcome, and no random run has a collision or a deadlock."
    },
    "checks": [
     {
-     "check": "Hand-built answer key, 5 cases, 190 event times and 308 path segments",
+     "check": "Independent answer key, 5 cases, 190 event times and 308 path segments",
      "expected": "every gap below 10⁻⁶ s",
      "got": "largest gap 5 × 10⁻⁷ s",
      "ok": true
@@ -367,8 +371,8 @@
     },
     {
      "check": "Six AGVs for one block of 5 racks while every rack is busy",
-     "expected": "the sixth waits for the rack that frees first",
-     "got": "waits 0 time, for rack 1 (first reserved: rack 1)",
+     "expected": "the sixth takes rack 1, the one that frees first, after it is free",
+     "got": "takes rack 1, enters at 891.1 s, rack free from 782.5 s",
      "ok": true
     },
     {
@@ -400,6 +404,36 @@
      "expected": "no two AGVs at one rack at a time",
      "got": "0 overlaps",
      "ok": true
+    },
+    {
+     "check": "Collision checker on the same 96 runs, AGV bodies sampled every 0.5 s",
+     "expected": "no bodies overlap, no AGV inside another one's braking distance",
+     "got": "0 overlaps, 0 braking-distance breaks",
+     "ok": true
+    },
+    {
+     "check": "Collision checker on the earlier model without traffic (v3), 10 AGVs",
+     "expected": "overlaps found, so the checker is not blind",
+     "got": "1,362 overlapping samples",
+     "ok": true
+    },
+    {
+     "check": "Empty AGV 20 m behind a loaded one (3.5 m/s) on a 280 m straight",
+     "expected": "waits at least 35.77 s (shortest safe delay)",
+     "got": "waits 36.71 s",
+     "ok": true
+    },
+    {
+     "check": "AGV crossing a lane that another AGV has reserved first",
+     "expected": "enters the crossing only after the first AGV has left it (12.9 s)",
+     "got": "enters at 12.9 s",
+     "ok": true
+    },
+    {
+     "check": "120 stress runs: 2 to 16 AGVs, all rules, crane noise up to ±40%, speed noise up to ±20%, look-ahead 3 to 10",
+     "expected": "every run finishes, with no deadlock and no collision",
+     "got": "120 of 120",
+     "ok": true
     }
    ],
    "maths": [
@@ -421,9 +455,15 @@
      "calc": "$$r = \\frac{2\\times 15.5}{1} + 10 + 10 = 51\\ \\text{s}$$ $$t_{\\text{placed}} = 10 + 15.5 + 10 = 35.5\\ \\text{s},\\qquad t_{\\text{lifted}} = 15.5 + 10 = 25.5\\ \\text{s}$$"
     },
     {
+     "step": "Safe distance behind another AGV",
+     "text": "With traffic, an AGV may only be where it could still stop before reaching the AGV ahead. Its body length $L = 14.8$ m plus its braking distance at speed $v$, with braking rate $a = 0.5$ m/s², must stay clear of the other body.",
+     "tex": "$$d \\ \\ge\\ L + \\frac{v^2}{2a}$$",
+     "calc": "$$6\\ \\text{m/s (empty)}:\\ 14.8 + 36.0 = 50.8\\ \\text{m}, \\qquad 3.5\\ \\text{m/s (loaded)}:\\ 14.8 + 12.3 = 27.1\\ \\text{m}$$"
+    },
+    {
      "step": "The pass criterion",
-     "text": "Every event time of the simulator is compared with the value worked out by hand, and the largest gap must be below a millionth of a second.",
-     "tex": "$$\\max_{e}\\ \\big|t_e^{\\text{simulator}} - t_e^{\\text{hand}}\\big| < 10^{-6}\\ \\text{s}$$",
+     "text": "Every event time of the simulator is compared with the value in the independent answer key, and the largest gap must be below a millionth of a second.",
+     "tex": "$$\\max_{e}\\ \\big|t_e^{\\text{simulator}} - t_e^{\\text{key}}\\big| < 10^{-6}\\ \\text{s}$$",
      "calc": "$$\\max_e |\\Delta t_e| = 5.0\\times 10^{-7}\\ \\text{s}$$"
     }
    ],
