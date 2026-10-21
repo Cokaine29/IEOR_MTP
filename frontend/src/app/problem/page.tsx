@@ -255,7 +255,7 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
           <span className="text-sm font-semibold text-zinc-900">How re-planning works</span>
           <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">1</b> After every 10 containers handed over, the memetic GA starts again from the current situation.</span>
           <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">2</b> It tests 500 new lists in the simulator, about 0.1 s each.</span>
-          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">3</b> The best list replaces the old one. That is 18 new plans per ship.</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">3</b> The best list replaces the old one..</span>
         </div>
         <div className="flex flex-col gap-1">
           <div className="relative h-6 overflow-hidden rounded bg-zinc-200">
