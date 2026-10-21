@@ -141,7 +141,6 @@ const RULES = [
 
 /* ---------- 4. why seconds matter, Experiment 4.5 at level 1 (crane times ±20%, AGV speeds ±10%) */
 const BARS = [
-  { name: 'Knows the Future', note: 'benchmark', mean: 1.05, ci: 0.18, tone: 'bg-teal-600' },
   { name: 'Plan, Re-optimised During Service', note: 'memetic GA', mean: 2.62, ci: 0.39, tone: 'bg-zinc-800' },
   { name: 'Plan Made in Advance', note: 'memetic GA', mean: 3.38, ci: 0.48, tone: 'bg-zinc-800' },
   { name: 'NV/FCFS Rule', note: 'Grunow et al. 2006', mean: 3.77, ci: 0.53, tone: 'bg-zinc-500' },
@@ -150,6 +149,12 @@ const BARS = [
   { name: 'Random Choice', note: 'floor', mean: 7.63, ci: 0.76, tone: 'bg-zinc-300' },
 ];
 const XMAX = 9.5;
+const CRANE_ROWS = [
+  { label: 'NV/FCFS rule', wait: 3.77, target: false },
+  { label: 'Best method we tested', wait: 2.62, target: false },
+  { label: 'Target, knows the future', wait: 1.05, target: true },
+].map((r) => ({ ...r, cranes: (29 * r.wait) / (75 + r.wait) }));
+const TARGET = { name: 'Knows the Future', note: 'target only, not possible in practice', mean: 1.05, ci: 0.18 };
 
 /* ---------- 5. why it is hard */
 function Row({ left, right, tone = 'zinc' }: { left: React.ReactNode; right: React.ReactNode; tone?: 'zinc' | 'red' | 'teal' | 'amber' }) {
@@ -223,7 +228,7 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
           <div className="flex justify-between text-[11px] text-zinc-500"><span>0 s</span><span>one crane cycle, 75 s</span></div>
         </div>
         <Row left="Waiting 54 s for each new plan costs" right="+0.43 s" tone="amber" />
-        <Row left="Re-planning still waits more than the benchmark by" right="+1.57 s" tone="zinc" />
+        <Row left="Re-planning still waits more than the target by" right="+1.57 s" tone="zinc" />
         <p className="text-xs text-zinc-500">Per container, at high randomness. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
       </div>
     ),
@@ -489,41 +494,64 @@ export default function ProblemPage() {
       <section className="border-y border-zinc-200 bg-white px-4 py-20">
         <div className="mx-auto max-w-6xl">
           <motion.div {...fade}>
-            <SectionHead kicker="Why Seconds Matter" title="Today’s Best Methods Still Leave the Cranes Waiting" />
+            <SectionHead kicker="Why Seconds Matter" title="Even the Best Method We Tested Leaves the Cranes Waiting" />
           </motion.div>
           <motion.div {...fade} className="mb-8 grid gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="text-3xl font-bold tracking-tight text-teal-700">1 s = 1.3%</span>
-                <span className="text-sm font-medium text-zinc-700">of the crane’s working time, for every second of waiting per container</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm font-semibold text-zinc-900">What a Few Seconds Mean at Real Scale</span>
+                <span className="text-sm leading-relaxed text-zinc-600">
+                  Yangshan Phase IV runs <b className="text-zinc-900">29 quay cranes</b>. If its cranes waited as long as in our tests,
+                  the lost time would add up to whole cranes standing still, all year round.
+                </span>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <div className="flex h-5 gap-px overflow-hidden rounded" aria-hidden>
-                  {Array.from({ length: 75 }, (_, k) => (
-                    <span key={k} className={`flex-1 ${k === 74 ? 'bg-red-500' : 'bg-zinc-300'}`} />
-                  ))}
-                </div>
-                <div className="flex justify-between text-[11px] font-medium text-zinc-500">
-                  <span>One crane cycle, 75 s per container</span>
-                  <span className="text-red-600">1 s of waiting</span>
-                </div>
+              <div className="flex flex-col gap-3">
+                {CRANE_ROWS.map((r) => (
+                  <div key={r.label} className="flex flex-col gap-1.5">
+                    <div className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="font-medium text-zinc-800">{r.label} <span className="text-xs font-normal text-zinc-500">{r.wait.toFixed(2)} s per container</span></span>
+                      <span className={`shrink-0 font-bold tabular-nums ${r.target ? 'text-teal-700' : 'text-red-600'}`}>≈ {r.cranes.toFixed(1)} {r.cranes < 1.05 && r.cranes > 0.95 ? 'crane' : 'cranes'}</span>
+                    </div>
+                    <div className="flex gap-[3px]" aria-hidden>
+                      {Array.from({ length: 29 }, (_, k) => {
+                        const fill = Math.max(0, Math.min(1, r.cranes - k));
+                        return (
+                          <span key={k} className="relative h-4 flex-1 overflow-hidden rounded-sm bg-zinc-300">
+                            <span className={`absolute inset-y-0 left-0 ${r.target ? 'bg-teal-500' : 'bg-red-500'}`} style={{ width: `${fill * 100}%` }} />
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-xs italic text-zinc-500">1 ÷ 75, our arithmetic. Crane time per container from Zhao et al. (2025) and Liu, Jula and Ioannou (2001).</p>
+              <p className="text-xs italic leading-relaxed text-zinc-500">
+                Illustration, our arithmetic. Share of crane time lost = wait ÷ (75 s + wait), times 29 cranes. 29 cranes from the
+                Shanghai news release (2026), 75 s per container from Zhao et al. (2025) and Liu, Jula and Ioannou (2001). Assumes
+                the real cranes lose time at the rate of our simulated ones.
+              </p>
             </div>
             <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
               <span className="text-sm font-semibold text-zinc-900">The Test in the Chart</span>
               <div className="flex flex-wrap gap-2">
-                {['Crane times vary ±20%', 'AGV speeds vary ±10%', '30 ships', 'Same random draws for every method'].map((c) => (
+                {['Crane times vary ±20%', 'AGV speeds vary ±10%', '30 test ships'].map((c) => (
                   <span key={c} className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs font-medium text-zinc-700">{c}</span>
                 ))}
               </div>
-              <p className="text-sm leading-relaxed text-zinc-600">Each bar is the average crane wait per container, with its 95% interval.</p>
+              <p className="text-sm leading-relaxed text-zinc-600">
+                We simulate the same ship 30 times, each time with different random crane times and AGV speeds. Every method
+                faces exactly the same 30 versions, so the comparison is fair.
+              </p>
+              <p className="text-sm leading-relaxed text-zinc-600">
+                Each bar is the average crane wait per container over the 30 runs. The thin line on it shows the 95% range of
+                that average.
+              </p>
             </div>
           </motion.div>
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
             <motion.figure {...fade} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
               <figcaption className="mb-5 text-sm font-semibold text-zinc-900">Crane Idle Time per Container, in Seconds</figcaption>
-              <ul className="flex flex-col gap-3.5" aria-label="Crane idle time per container for seven methods">
+              <ul className="flex flex-col gap-3.5" aria-label="Crane idle time per container for six methods">
                 {BARS.map((b) => (
                   <li key={b.name} className="!text-left grid grid-cols-[9.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
                     <span className="flex flex-col leading-tight">
@@ -543,29 +571,43 @@ export default function ProblemPage() {
                   </li>
                 ))}
               </ul>
+              <div className="my-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wider text-teal-700">
+                <span className="h-px flex-1 bg-teal-200" /> Target Line, Not a Real Method <span className="h-px flex-1 bg-teal-200" />
+              </div>
+              <div className="grid grid-cols-[9.5rem_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[13rem_minmax(0,1fr)]">
+                <span className="flex flex-col leading-tight">
+                  <span className="text-sm font-medium text-teal-900">{TARGET.name}</span>
+                  <span className="text-xs text-teal-700">{TARGET.note}</span>
+                </span>
+                <span className="relative flex h-6 items-center">
+                  <span className="h-full rounded-r-md border-2 border-dashed border-teal-600 bg-teal-50" style={{ width: `${(TARGET.mean / XMAX) * 100}%` }} />
+                  <span className="absolute text-xs font-semibold tabular-nums text-teal-900" style={{ left: `calc(${((TARGET.mean + TARGET.ci) / XMAX) * 100}% + 6px)` }}>{TARGET.mean.toFixed(2)}</span>
+                </span>
+              </div>
               <p className="mt-5 text-xs italic leading-relaxed text-zinc-500">
-                Experiment 4.5, model v5, 12 AGVs, 30 paired seeds, mean with 95% interval, 21 Oct 2026. The dispatcher that knows
-                the future is the best plan our search found with the real times known in advance.
+                Experiment 4.5, model v5, 12 AGVs, 30 paired seeds, mean with 95% interval, 21 Oct 2026. The target is the same
+                kind of plan, made after seeing the real times of each ship. No real terminal can know those in advance, so it only
+                shows how low the waiting could go.
               </p>
             </motion.figure>
             <motion.div {...fade} className="flex flex-col gap-5 rounded-2xl border border-teal-200 bg-teal-50 p-6">
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</span>
-                <span className="text-sm font-semibold text-teal-900">more crane waiting than needed</span>
+                <span className="whitespace-nowrap text-4xl font-bold tracking-tight tabular-nums text-teal-900">2.5 ×</span>
+                <span className="text-sm font-semibold text-teal-900">more crane waiting than the target</span>
               </div>
               <div className="flex flex-col gap-3">
                 {[
-                  { label: 'Best method today', sub: 'plan re-optimised during service', v: 2.62, tone: 'bg-zinc-800' },
-                  { label: 'Knows the future', sub: 'benchmark', v: 1.05, tone: 'bg-teal-600' },
+                  { label: 'Best method we tested', sub: 'plan re-optimised during service', v: 2.62, tone: 'bg-zinc-800' },
+                  { label: 'Target', sub: 'knows the future, not possible in practice', v: 1.05, tone: 'bg-teal-600' },
                 ].map((r) => (
                   <div key={r.label} className="flex flex-col gap-1">
                     <div className="flex items-baseline justify-between text-sm">
                       <span className="font-medium text-zinc-900">{r.label} <span className="text-xs font-normal text-zinc-500">{r.sub}</span></span>
-                      <span className="font-semibold tabular-nums text-zinc-900">{r.v.toFixed(2)} s</span>
+                      <span className="shrink-0 whitespace-nowrap font-semibold tabular-nums text-zinc-900">{r.v.toFixed(2)} s</span>
                     </div>
                     <div className="h-4 rounded bg-white">
                       <motion.div initial={{ width: 0 }} whileInView={{ width: `${(r.v / 3) * 100}%` }} viewport={{ once: true }}
-                        transition={{ duration: 0.8 }} className={`h-full rounded ${r.tone}`} />
+                        transition={{ duration: 0.8 }} className={`h-full rounded ${r.label === 'Target' ? 'border-2 border-dashed border-teal-600 bg-teal-100' : r.tone}`} />
                     </div>
                   </div>
                 ))}
