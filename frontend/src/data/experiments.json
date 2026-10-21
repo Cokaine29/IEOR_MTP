@@ -267,7 +267,7 @@
   ]
  },
  "generated": "2026-10-21",
- "source": "ACT_MTP ea35a4a / v1_slice",
+ "source": "ACT_MTP 1e6a229 / v1_slice",
  "stages": [
   {
    "n": 1,
@@ -2590,7 +2590,7 @@
    "stage": 4,
    "title": "A plan made in advance loses its lead once crane times vary, and much room remains",
    "lead": "With fixed crane times the plan made in advance beats the best rule (NV/FCFS) clearly, 1.1 s of idle per container against 3.4 s, ahead on all 30 instances. At ±40% its lead is gone, −0.02 ± 0.65 s, and it is ahead on only 16 of the 30 instances. A dispatcher that knew every crane time in advance would still need only 1.4 s, so about 1.8 s per container, 57% of the rules' waiting, is left to win.",
-   "body": "The rules suffer only mildly, since they react to what actually happens. NV/FCFS rises from 3.4 to 4.1 s, fixed groups from 3.9 to 4.3 s, and the Briskorn rule to 4.2 s. A plan whose AGVs keep their planned routes is worse than every real rule as soon as the crane times vary by 10%, reaching 5.9 s at ±40%. Keeping only the planned order of jobs, and letting any free AGV take the next one, holds up better. The benchmark stays between 1.1 and 1.4 s at every level. Random dispatching is far behind and is hidden in the chart. So a plan made in advance fades under randomness, and the rules leave a large gap. Closing that gap in real time is the job of the learning dispatcher.",
+   "body": "The rules suffer only mildly, since they react to what actually happens. NV/FCFS rises from 3.4 to 4.1 s, fixed groups from 3.9 to 4.3 s, and the Briskorn rule to 4.2 s. A plan whose AGVs each keep their planned list of cranes is worse than every real rule as soon as the crane times vary by 10%, reaching 5.9 s at ±40%. Keeping only the planned order of jobs, and letting any free AGV take the next one, holds up better. The benchmark stays between 1.1 and 1.4 s at every level. Random dispatching is far behind and is hidden in the chart. So a plan made in advance fades under randomness, and the rules leave a large gap. Closing that gap in real time is the job of the learning dispatcher.",
    "details": [
     [
      "Setup",
@@ -2606,7 +2606,7 @@
     ],
     [
      "Plan made once",
-     "One memetic search per instance on the planned crane times, 10,000 simulator runs, seed 0. Carried out in two ways. With the job order kept, the planned order in which jobs get an AGV is fixed and whichever AGV is free takes the next job. With the AGV routes kept, each AGV follows its own planned list of cranes."
+     "One memetic search per instance on the planned crane times, 10,000 simulator runs, seed 0. Carried out in two ways. With the job order kept, the planned order in which jobs get an AGV is fixed and whichever AGV is free takes the next job. With the AGV crane lists kept, each AGV serves the cranes in its planned order, takes whatever job its next crane offers, and waits if that crane has none."
     ],
     [
      "Benchmark",
@@ -2745,7 +2745,7 @@
         "hidden": false
        },
        {
-        "name": "Plan, AGV routes",
+        "name": "Plan, AGV crane lists",
         "color": "#be123c",
         "mean": [
          1.13,
@@ -2797,7 +2797,7 @@
      "Fixed groups",
      "Random",
      "Plan, job order",
-     "Plan, AGV routes",
+     "Plan, AGV crane lists",
      "Benchmark"
     ],
     "rows": [
@@ -2852,7 +2852,7 @@
       "1.4 ± 0.2"
      ]
     ],
-    "caption": "Crane idle per container in seconds, 12 AGVs, standard ship, the same 30 instances and crane-time draws for every method. \"Plan\" is the plan made once on the planned crane times, carried out keeping either its order of jobs or each AGV's route. The benchmark is the perfect-information search. At ±0% it is the same plan."
+    "caption": "Crane idle per container in seconds, 12 AGVs, standard ship, the same 30 instances and crane-time draws for every method. \"Plan\" is the plan made once on the planned crane times, carried out keeping either its order of jobs or each AGV's planned list of cranes. The benchmark is the perfect-information search. At ±0% it is the same plan."
    },
    "maths": [
     {
@@ -3591,7 +3591,7 @@
    "stage": 4,
    "title": "Random AGV speeds also wear down a plan made in advance",
    "lead": "Speed randomness hurts the plan made in advance much as crane-time randomness does. Its lead over NV/FCFS falls from 2.26 ± 0.40 s with exact speeds to 0.77 ± 0.52 s at ±5%, 0.53 ± 0.51 s at ±10%, 0.62 ± 0.65 s at ±20%. At ±20% the lead is no longer clear, and the plan is ahead on only 18 of the 30 instances.",
-   "body": "The rules change little up to ±10% and rise at ±20%, NV/FCFS from 3.39 to 4.08 s. A plan whose AGVs keep their planned routes is again the most fragile, 5.66 s at ±20%. The benchmark stays between 1.0 and 1.1 s, so about 2.0 s per container is left to win at ±20%. At ±0% the benchmark is a single search, while every other level takes the best of 3, so the line dips slightly once speeds vary. Random dispatching is far behind and hidden in the chart.",
+   "body": "The rules change little up to ±10% and rise at ±20%, NV/FCFS from 3.39 to 4.08 s. A plan whose AGVs each keep their planned list of cranes is again the most fragile, 5.66 s at ±20%. The benchmark stays between 1.0 and 1.1 s, so about 2.0 s per container is left to win at ±20%. At ±0% the benchmark is a single search, while every other level takes the best of 3, so the line dips slightly once speeds vary. Random dispatching is far behind and hidden in the chart.",
    "details": [
     [
      "Setup",
@@ -3607,7 +3607,7 @@
     ],
     [
      "Plan made once",
-     "One memetic search per instance on the planned speeds, 10,000 simulator runs, carried out keeping either its job order or each AGV's route, as in Experiment 4.1."
+     "One memetic search per instance on the planned speeds, 10,000 simulator runs, carried out keeping either its job order or each AGV's planned list of cranes, as in Experiment 4.1."
     ],
     [
      "Benchmark",
@@ -3735,7 +3735,7 @@
         "hidden": false
        },
        {
-        "name": "Plan, AGV routes",
+        "name": "Plan, AGV crane lists",
         "color": "#be123c",
         "mean": [
          1.13,
@@ -3783,7 +3783,7 @@
      "Fixed groups",
      "Random",
      "Plan, job order",
-     "Plan, AGV routes",
+     "Plan, AGV crane lists",
      "Benchmark"
     ],
     "rows": [
@@ -3850,7 +3850,7 @@
    "stage": 4,
    "title": "With both kinds of randomness, only re-planning keeps a clear lead",
    "lead": "The plan made in advance is no longer clearly better than NV/FCFS, −0.39 ± 0.57 s per container, ahead on 17 of 30 instances. Re-planning keeps a clear lead, −1.15 ± 0.64 s against NV/FCFS, ahead on 25 of 30, and −0.76 ± 0.53 s against the plan made once. It still waits 1.57 ± 0.27 s more than the benchmark.",
-   "body": "A plan whose AGVs keep their planned routes reaches 5.33 s, worse than every rule except Random. Re-planning needs 55 to 74 s per re-plan here, almost a full crane cycle, and gets its plans at once in this experiment. Experiment 4.3 shows what waiting for them costs. With no randomness re-planning even ends 0.10 ± 0.04 s below the benchmark, since it is then just more search on the same problem, so the benchmark is read as the best plan known.",
+   "body": "A plan whose AGVs each keep their planned list of cranes reaches 5.33 s, worse than every rule except Random. Re-planning needs 55 to 74 s per re-plan here, almost a full crane cycle, and gets its plans at once in this experiment. Experiment 4.3 shows what waiting for them costs. With no randomness re-planning even ends 0.10 ± 0.04 s below the benchmark, since it is then just more search on the same problem, so the benchmark is read as the best plan known.",
    "details": [
     [
      "Setup",
@@ -3862,7 +3862,7 @@
     ],
     [
      "Methods",
-     "The four rules, the plan made once (job order and AGV routes), the GA with re-planning of Experiment 4.2, and the benchmark of best of 3 searches told every crane time and speed in advance."
+     "The four rules, the plan made once (job order and AGV crane lists), the GA with re-planning of Experiment 4.2, and the benchmark of best of 3 searches told every crane time and speed in advance."
     ],
     [
      "Statistics",
@@ -3960,7 +3960,7 @@
         "hidden": false
        },
        {
-        "name": "Plan, AGV routes",
+        "name": "Plan, AGV crane lists",
         "color": "#be123c",
         "values": [
          1.13,
@@ -4039,7 +4039,7 @@
       "3.38 ± 0.48"
      ],
      [
-      "Plan, AGV routes",
+      "Plan, AGV crane lists",
       "1.13 ± 0.17",
       "5.33 ± 0.46"
      ],
