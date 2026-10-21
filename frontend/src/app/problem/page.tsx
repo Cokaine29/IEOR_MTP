@@ -248,9 +248,15 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
   },
   {
     icon: Timer, stat: '55 to 74 s', title: 'Little Time to Think',
-    lead: 'Making a new plan during service takes almost a full crane cycle.',
+    lead: 'The obvious fix for stale plans is to make a new plan during service. But that takes time.',
     body: (
       <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
+          <span className="text-sm font-semibold text-zinc-900">How re-planning works</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">1</b> After every 10 containers handed over, the memetic GA starts again from the current situation.</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">2</b> It tests 500 new lists in the simulator, about 0.1 s each.</span>
+          <span className="flex items-start gap-2"><b className="w-4 shrink-0 text-teal-700">3</b> The best list replaces the old one. That is 18 new plans per ship.</span>
+        </div>
         <div className="flex flex-col gap-1">
           <div className="relative h-6 overflow-hidden rounded bg-zinc-200">
             <span className="absolute inset-y-0 left-0 bg-amber-400/80" style={{ width: `${(74 / 75) * 100}%` }} />
@@ -259,12 +265,14 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
           </div>
           <div className="flex justify-between text-[11px] text-zinc-500"><span>0 s</span><span>one crane cycle, 75 s</span></div>
         </div>
-        <Row left="Waiting 54 s for each new plan costs" right="+0.43 s" tone="amber" />
-        <Row left="Re-planning still waits more than the target by" right="+1.57 s" tone="zinc" />
-        <p className="text-xs text-zinc-500">Per container, at high randomness. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
+        <span className="text-xs font-medium text-zinc-500">Extra crane wait per container, compared with a plan that is ready at once</span>
+        <Row left="Wait 54 s for each full search" right="+0.43 s" tone="amber" />
+        <Row left="Use a quick search instead, 1.6 s with 15 tests" right="+0.46 s" tone="amber" />
+        <Row left="And a plan ready at once still waits more than the target by" right="+1.59 s" tone="zinc" />
+        <p className="text-xs leading-relaxed text-zinc-500">A dispatcher that decides in a fraction of a second is needed. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
       </div>
     ),
-    source: 'Experiments 4.3 (crane times ±40%) and 4.5, one processor per search, 21 Oct 2026.',
+    source: 'All rows with crane times varying ±40%. Experiments 4.2 (plan ready at once) and 4.3 (thinking time counted), one processor per search, 21 Oct 2026. The 55 to 74 s is from Experiment 4.5.',
   },
 ];
 
