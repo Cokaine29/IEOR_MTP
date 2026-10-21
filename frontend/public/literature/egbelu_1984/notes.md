@@ -1,28 +1,56 @@
 ---
+schema: 1
 id: egbelu_1984
-title: "Characterization of automatic guided vehicle dispatching rules"
-authors: "Pius J. Egbelu, Jose M. A. Tanchoco"
-venue: "International Journal of Production Research, 22(3), 359-374"
+title: Characterization of automatic guided vehicle dispatching rules
+authors: Pius J. Egbelu, Jose M. A. Tanchoco
+venue: International Journal of Production Research, 22(3), 359-374
 year: 1984
-doi: "10.1080/00207548408942459"
-paper_type: "Simulation study of heuristic dispatching rules"
-domain: "Job-shop manufacturing (not a container terminal)"
-last_updated: "2026-10-05"
-trigger: "Both classes defined: vehicle-initiated and work-centre-initiated"
-decision_variable: "Vehicle-initiated: which work centre to serve next. Work-centre-initiated: which idle vehicle to send."
-objective: "Shop throughput in unit loads (primary); buffer queue lengths; whether the shop locks"
-scale: "13 departments, 6 AGVs, one-way guide path, one facility layout"
-randomness:
-  qc_cycle_time: "n/a (no quay cranes)"
-  travel_time_congestion: "Modelled: transition time between check points depends on speed, congestion and node separation (Appendix); the form of the congestion effect and any randomness are not stated"
-  task_arrival: "Not stated in the paper (simulation details are deferred to Egbelu 1982, ref. [8])"
-  stowage: "n/a"
-  agv_breakdown: "Not described in the paper"
-  yard_crane_delay: "n/a"
-  battery: "Not mentioned in the paper"
-method: "Discrete-event simulation (AGVSim) comparing 15 rule combinations"
-evaluation: "2 runs per combination (Tables 1 and 4); number of runs for Table 3 not stated; no confidence intervals"
-baselines: "None external; rule combinations are compared with each other and with a sequential-loop strategy"
+doi: 10.1080/00207548408942459
+paper_type: simulation_study
+method_family: rule_based
+domain: Job-shop manufacturing (not a container terminal)
+summary_one_line: Defines vehicle-initiated and work-centre-initiated AGV dispatching rules and tests 15 rule combinations by simulation in a 13-department job shop.
+headline_result: 9 of 15 rule combinations locked the shop (1-108 unit loads against over 700 for the rest)
+trigger: both
+trigger_note: Both classes are defined and tested (3 work-centre-initiated rules x 5 vehicle-initiated rules)
+decision: 'Vehicle-initiated: which work centre to serve next. Work-centre-initiated: which idle vehicle to send.'
+objective: Shop throughput in unit loads (primary); buffer queue lengths; whether the shop locks
+scale: 13 departments, 6 AGVs, one-way guide path, one facility layout
+method: Discrete-event simulation (AGVSim) comparing 15 rule combinations
+uncertainty:
+  qc_cycle_time:
+    status: na
+    note: No quay cranes (job shop)
+  travel_congestion:
+    status: emergent
+    note: Transition time between check points depends on speed, congestion and node separation (Appendix); the form of the congestion effect and any randomness are not stated
+  task_arrival:
+    status: not_described
+    note: Not stated in the paper (simulation details are deferred to Egbelu 1982, ref. [8])
+  stowage_workload:
+    status: na
+    note: No ship or stowage plan
+  agv_breakdown:
+    status: not_described
+  yard_crane_delay:
+    status: na
+    note: No yard cranes
+  battery:
+    status: not_described
+evaluation: 2 runs per combination (Tables 1 and 4); number of runs for Table 3 not stated; no confidence intervals
+baselines: None external; rule combinations are compared with each other and with a sequential-loop strategy
+role_in_thesis:
+- vocabulary
+- baseline_source
+used_for:
+- The vocabulary of vehicle-initiated versus work-centre-initiated dispatching
+- STT/D and MFCFS as baseline candidates
+- The locking mechanism as a failure mode to test for
+not_evidence_for:
+- Robustness to stochastic disruption
+- Learning-based dispatching
+- Container-terminal operations
+last_updated: '2026-10-05'
 ---
 
 # Characterization of Automatic Guided Vehicle Dispatching Rules
@@ -58,7 +86,7 @@ baselines: "None external; rule combinations are compared with each other and wi
 
 A *unit load* is one or more parts bound together and moved as a unit. Each job is split into equal-size unit loads that follow the job's route through several **work centres**. Each work centre has machines, an incoming queue and an outgoing queue (Figure 1). When a unit load enters the outgoing queue, the work centre requests a vehicle to take it away.
 
-![Figure 1. Schematic representation of a work centre: delivery point, incoming queue, machines, outgoing queue, pickup point.](/literature/egbelu_1984/figure1.png)
+![Figure 1. Schematic representation of a work centre: delivery point, incoming queue, machines, outgoing queue, pickup point.](figure1.png)
 
 When a vehicle finishes a delivery it is reassigned at once if any task is unattended; otherwise it idles until a task appears (p. 360). The authors argue that the way these assignment decisions are made affects material flow, buffer requirements, machine utilisation and vehicle effectiveness.
 
@@ -110,7 +138,7 @@ Rules **not** included in the experiments: RV, LUV, RW, ULSAT.
 - Performance measure: shop throughput in unit loads.
 - **Locking** is declared when (1) input and output queues are full at some or all departments and machines are blocked, (2) loaded vehicles cannot deliver because input queues are full and no free vehicle can empty the output queues, and (3) empty vehicles sent for pickups cannot reach their destinations because of interference from other vehicles (p. 366).
 
-![Figure 2. Network layout of the demonstrative facility: 13 departments, one-way guide path, D = delivery station, P = pickup station.](/literature/egbelu_1984/figure2.png)
+![Figure 2. Network layout of the demonstrative facility: 13 departments, one-way guide path, D = delivery station, P = pickup station.](figure2.png)
 
 ### 2.5 Results
 
@@ -174,7 +202,7 @@ The paper's own nomenclature under Table 3 reads "maximum remaining outgoing que
 
 **Sequential (loop) dispatching (pp. 370-371).** Vehicles visit pickup points in a fixed loop, which makes locking impossible by construction. The tested sequence was 1→4→13→11→10→8→6→2→12→5→9→7→3→1 (Figure 3), not chosen by any optimisation. Throughput was 406 and 499, well below LIV-MROQS (740, 754) and LIV-MFCFS (770, 783). The authors attribute this partly to the non-optimal sequence and partly to many unproductive visits, and suggest such a policy be justified by simplicity of traffic control or lock elimination rather than by speed.
 
-![Figure 3. A single-loop vehicle assignment system based on the demonstrative facility.](/literature/egbelu_1984/figure3.png)
+![Figure 3. A single-loop vehicle assignment system based on the demonstrative facility.](figure3.png)
 
 ### 2.8 Authors' conclusions and stated limitations (p. 371)
 
@@ -182,9 +210,7 @@ The paper's own nomenclature under Table 3 reads "maximum remaining outgoing que
 - The dispatching problem and its resolution method affect buffer space requirements per department, central buffer requirements, shop throughput, and the identification of poor layout designs.
 - Not addressed: traffic control problems, load-transfer mechanisms at pickup and delivery points, and other operation-related issues.
 
----
-
-## 3. Guide-path model (Appendix, pp. 371-373)
+### 2.9 Guide-path model (Appendix, pp. 371-373)
 
 The simulation represents the guide path as a **network of nodes and arcs**, with nodes at guide-wire intersections, merges, diverges, pickup stations and delivery stations (Figure A1). Key modelling choices:
 
@@ -205,15 +231,15 @@ $$
 
 where $e$ is the distance between a check point and the node it serves, $f$ is the length of the smoothed ramp needed to negotiate a turn, and $\phi=1$ if a turn is required at the check point of node $\alpha$ to reach node $\beta$ (otherwise $0$). The plus sign inside the second term of the Euclidean case is as printed. Because the rectilinear case uses a difference there, and a Euclidean distance requires one, it is most likely a typographical error in the paper. The approximation for $f$ in terms of the turning radius and maximum speed is not reproduced here.
 
-![Figure A1. A guide path system: segments, merges, diverges, crossings, pickup and delivery points.](/literature/egbelu_1984/figureA1.png)
+![Figure A1. A guide path system: segments, merges, diverges, crossings, pickup and delivery points.](figureA1.png)
 
-![Figure A2. A section of a guide path network: nodes, check zones, check points b1-b7 and ramps.](/literature/egbelu_1984/figureA2.png)
+![Figure A2. A section of a guide path network: nodes, check zones, check points b1-b7 and ramps.](figureA2.png)
 
-![Figure A3. Characterization of arcs according to orientation (Family One: straight, Family Two: L-shaped).](/literature/egbelu_1984/figureA3.png)
+![Figure A3. Characterization of arcs according to orientation (Family One: straight, Family Two: L-shaped).](figureA3.png)
 
 ---
 
-## 4. Structured summary
+## 3. Structured summary
 
 | Field | Value |
 |---|---|
@@ -236,6 +262,18 @@ where $e$ is the distance between a check point and the node it serves, $f$ is t
 
 ---
 
+## 4. What the paper does not support
+
+- **It is not evidence about stochastic disruption.** The failure it documents is structural (finite queues, layout, distance-based rules). The paper does not describe injecting disruptions, and it does not say whether job arrivals or processing times are random; simulation details are deferred to the first author's earlier dissertation (ref. [8]).
+- **It does not show that "rule-based dispatching collapses under uncertainty."** Locking was caused by queue blocking and layout, and with infinite queues STT/D reached 669.
+- **It does not prove anything formally.** The evidence is simulation of one layout with two runs per combination.
+- **It does not show that a DRL dispatcher should be work-centre-initiated.** The paper says nothing about learning, and in its terms our decision is vehicle-initiated.
+- **It does not compare layouts.** The claim that layout determines whether a rule locks is argued from a mechanism and illustrated on one layout.
+- **It uses throughput, not quay-crane idle time, as its metric.**
+- **It is not a port.** There are no cranes that vehicles must wait for, no handoff synchronisation, and no yard blocks.
+
+---
+
 ## 5. Our reading (interpretation, not from the paper)
 
 ### 5.1 What we can use
@@ -255,13 +293,3 @@ Proposed mapping (our design choice, to be validated against what the other pape
 | STT/D | Nearest-task greedy dispatcher |
 | MFCFS | Longest-waiting request first |
 | MOQS / MROQS | Queue-pressure rules (needs a queue notion at quay cranes in our simulator) |
-
-### 5.2 What this paper does not support
-
-- **It is not evidence about stochastic disruption.** The failure it documents is structural (finite queues, layout, distance-based rules). The paper does not describe injecting disruptions, and it does not say whether job arrivals or processing times are random; simulation details are deferred to the first author's earlier dissertation (ref. [8]).
-- **It does not show that "rule-based dispatching collapses under uncertainty."** Locking was caused by queue blocking and layout, and with infinite queues STT/D reached 669.
-- **It does not prove anything formally.** The evidence is simulation of one layout with two runs per combination.
-- **It does not show that a DRL dispatcher should be work-centre-initiated.** The paper says nothing about learning, and in its terms our decision is vehicle-initiated.
-- **It does not compare layouts.** The claim that layout determines whether a rule locks is argued from a mechanism and illustrated on one layout.
-- **It uses throughput, not quay-crane idle time, as its metric.**
-- **It is not a port.** There are no cranes that vehicles must wait for, no handoff synchronisation, and no yard blocks.

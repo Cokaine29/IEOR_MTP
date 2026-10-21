@@ -1,28 +1,59 @@
 ---
+schema: 1
 id: briskorn_2006
-title: "Inventory-based dispatching of automated guided vehicles on container terminals"
-authors: "Dirk Briskorn, Andreas Drexl, Sönke Hartmann"
-venue: "OR Spectrum, 28, 611-630"
+title: Inventory-based dispatching of automated guided vehicles on container terminals
+authors: Dirk Briskorn, Andreas Drexl, Sönke Hartmann
+venue: OR Spectrum, 28, 611-630
 year: 2006
-doi: "10.1007/s00291-006-0033-8"
-paper_type: "Assignment formulations and simulation study"
-domain: "Automated container terminal, waterside only (configuration similar to HHLA Altenwerder)"
-trigger: "An event in the control system, mainly the completion of a job (an AGV becomes free); assignments to AGVs that are not yet free are provisional"
-decision_variable: "Assignment of the n most urgent jobs to n AGVs (free or soon free), one job per AGV; the quay crane whose job is served is chosen by the due-time rule or the inventory rule"
-objective: "Waterside productivity, pursued through assignment costs: weighted earliness, tardiness and empty travel (due-time model) or urgency-weighted time to pick-up (inventory model)"
-scale: "Simulation: 10 quay cranes, 20 stacking cranes, 40 AGVs; about 4.6 AGVs per assignment on average"
-randomness:
-  qc_cycle_time: "Modelled: crane handover times and the time before the crane is ready for the next handover are drawn from distributions (modified Altenwerder statistics); parameters not given"
-  travel_time_congestion: "Modelled: an AGV driving-time distribution for every origin-destination pair, covering interference and congestion; parameters not given"
-  task_arrival: "Jobs created at 60 per hour per quay crane (about the technical maximum), so throughput is set by the dispatching strategy; estimated AGV availability times carry random error"
-  stowage: "Precedence relations between loading jobs (reflecting stowage plans) are varied in five scenarios; every crane receives the same job rate"
-  agv_breakdown: "Not described in the paper"
-  yard_crane_delay: "Modelled: stacking-crane transfer times from distributions that implicitly include shuffling and landside work"
-  battery: "Not mentioned in the paper"
-method: "Assignment problems (Hungarian method and a greedy rule) under two cost formulations, with a dual-cycle extension, evaluated in discrete-event simulation"
-evaluation: "100 runs of 11 hours per approach with warm-up and cool-down; results relative to a greedy baseline; no confidence intervals or significance tests reported"
-baselines: "dueTimePrio (greedy due-time rule), dueTimeHung (Hungarian method on the same due-time costs), and a version without look-ahead"
-last_updated: "2026-10-05"
+doi: 10.1007/s00291-006-0033-8
+paper_type: model_and_heuristic
+method_family: assignment_rule
+domain: Automated container terminal, waterside only (configuration similar to HHLA Altenwerder)
+summary_one_line: Compares a due-time and an inventory-based formulation of real-time AGV assignment, solved with the same Hungarian method, in a simulation based on Altenwerder statistics.
+headline_result: Inventory rule +4.5-7.5% productivity over the greedy due-time rule; with forced dual cycles up to +22.9%
+trigger: vehicle_initiated
+trigger_note: Event-driven, mainly job completion; assignments to AGVs that are not yet free are provisional
+decision: Assignment of the n most urgent jobs to n AGVs (free or soon free), one job per AGV; the quay crane whose job is served is chosen by the due-time rule or the inventory rule
+objective: 'Waterside productivity, pursued through assignment costs: weighted earliness, tardiness and empty travel (due-time model) or urgency-weighted time to pick-up (inventory model)'
+scale: 'Simulation: 10 quay cranes, 20 stacking cranes, 40 AGVs; about 4.6 AGVs per assignment on average'
+method: Assignment problems (Hungarian method and a greedy rule) under two cost formulations, with a dual-cycle extension, evaluated in discrete-event simulation
+uncertainty:
+  qc_cycle_time:
+    status: random
+    note: Crane handover and ready-for-next times drawn from distributions (modified Altenwerder statistics); parameters not given
+  travel_congestion:
+    status: random
+    note: A driving-time distribution for every origin-destination pair, covering interference and congestion; parameters not given
+  task_arrival:
+    status: fixed
+    note: 60 jobs per hour per quay crane (about the technical maximum); estimated AGV availability times carry random error
+  stowage_workload:
+    status: fixed
+    note: Five precedence structures between loading jobs (stowage plans) are varied; every crane receives the same job rate
+  agv_breakdown:
+    status: not_described
+  yard_crane_delay:
+    status: random
+    note: Stacking-crane transfer-time distributions that implicitly include shuffling and landside work
+  battery:
+    status: not_described
+evaluation: 100 runs of 11 hours per approach with warm-up and cool-down; results relative to a greedy baseline; no confidence intervals or significance tests reported
+baselines: dueTimePrio (greedy due-time rule), dueTimeHung (Hungarian method on the same due-time costs), and a version without look-ahead
+role_in_thesis:
+- baseline_source
+- design_input
+used_for:
+- A simple, fast, fully specified benchmark policy
+- State-feature ideas (AGVs assigned to or heading for each crane)
+- Four performance measures
+- Evidence on the value of looking ahead
+- A simulation design with realistic stochastic inputs
+not_evidence_for:
+- Proof that time-based methods fail
+- Elimination of time estimates
+- Gains for large fleets
+- Learning-based or multi-agent dispatching
+last_updated: '2026-10-05'
 ---
 
 # Inventory-Based Dispatching of Automated Guided Vehicles on Container Terminals
@@ -58,7 +89,7 @@ last_updated: "2026-10-05"
 
 The study was carried out with the HHLA Container Terminal Altenwerder in Hamburg and considers a similar configuration: quay cranes, AGVs (which cannot load or unload themselves) and automated stacking cranes serving yard blocks. Only the **waterside** is considered (discharging from and loading onto vessels); the landside is excluded.
 
-![Figure 1. Layout of the container terminal: vessels along the quay, quay cranes with AGV waiting buffers, AGV lanes, handover lanes and stacking cranes serving the stacking area.](/literature/briskorn_2006/figure1.png)
+![Figure 1. Layout of the container terminal: vessels along the quay, quay cranes with AGV waiting buffers, AGV lanes, handover lanes and stacking cranes serving the stacking area.](figure1.png)
 
 A **job** is the transport of one container from a pick-up to a delivery location: an empty drive to the pick-up, a handover there, a loaded drive, and a handover at the delivery. For discharging, pick-up is at a quay crane and delivery at a stack; for loading, the reverse. Both locations are fixed for each job, so assignment decisions influence only the empty drive. An AGV carries one container at a time. Estimates of driving and handover times are assumed to be available where a method needs them.
 
