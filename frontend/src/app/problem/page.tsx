@@ -543,8 +543,8 @@ export default function ProblemPage() {
                 faces exactly the same 30 versions, so the comparison is fair.
               </p>
               <p className="text-sm leading-relaxed text-zinc-600">
-                Each bar is the average crane wait per container over the 30 runs. The thin line on it shows the 95% range of
-                that average.
+                Each bar is the average crane wait per container over the 30 runs. How sure we are of each average is shown
+                on the Results tab.
               </p>
             </div>
           </motion.div>
@@ -561,12 +561,8 @@ export default function ProblemPage() {
                     <span className="relative flex h-6 items-center">
                       <motion.span initial={{ width: 0 }} whileInView={{ width: `${(b.mean / XMAX) * 100}%` }} viewport={{ once: true }}
                         transition={{ duration: 0.8 }} className={`h-full rounded-r-md ${b.tone}`} />
-                      <span className="absolute h-3 border-x border-zinc-900/60"
-                        style={{ left: `${((b.mean - b.ci) / XMAX) * 100}%`, width: `${((2 * b.ci) / XMAX) * 100}%` }}>
-                        <span className="absolute left-0 right-0 top-1/2 border-t border-zinc-900/60" />
-                      </span>
                       <span className="absolute text-xs font-semibold tabular-nums text-zinc-900"
-                        style={{ left: `calc(${((b.mean + b.ci) / XMAX) * 100}% + 6px)` }}>{b.mean.toFixed(2)}</span>
+                        style={{ left: `calc(${(b.mean / XMAX) * 100}% + 6px)` }}>{b.mean.toFixed(2)}</span>
                     </span>
                   </li>
                 ))}
@@ -581,11 +577,11 @@ export default function ProblemPage() {
                 </span>
                 <span className="relative flex h-6 items-center">
                   <span className="h-full rounded-r-md border-2 border-dashed border-teal-600 bg-teal-50" style={{ width: `${(TARGET.mean / XMAX) * 100}%` }} />
-                  <span className="absolute text-xs font-semibold tabular-nums text-teal-900" style={{ left: `calc(${((TARGET.mean + TARGET.ci) / XMAX) * 100}% + 6px)` }}>{TARGET.mean.toFixed(2)}</span>
+                  <span className="absolute text-xs font-semibold tabular-nums text-teal-900" style={{ left: `calc(${(TARGET.mean / XMAX) * 100}% + 6px)` }}>{TARGET.mean.toFixed(2)}</span>
                 </span>
               </div>
               <p className="mt-5 text-xs italic leading-relaxed text-zinc-500">
-                Experiment 4.5, model v5, 12 AGVs, 30 paired seeds, mean with 95% interval, 21 Oct 2026. The target is the same
+                Experiment 4.5, model v5, 12 AGVs, average over 30 test ships, 21 Oct 2026. The target is the same
                 kind of plan, made after seeing the real times of each ship. No real terminal can know those in advance, so it only
                 shows how low the waiting could go.
               </p>
