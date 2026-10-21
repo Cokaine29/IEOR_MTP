@@ -32,7 +32,7 @@ const RULES: Rule[] = [
     words: 'Serve the job that has been waiting longest. When several AGVs are parked, the nearest one takes it.',
     formula: String.raw`$$j^{*}=\arg\min_{j}\ r_j$$ $$a^{*}=\arg\min_{a}\ \big(|x_a-x_{j^*}|+|y_a-y_{j^*}|\big)$$`,
     symbols: [
-      [String.raw`$r_j$`, 'the moment job j became visible to the rule, which is when the job five places earlier was handed over (window of 5 jobs, Experiment 2.2)'],
+      [String.raw`$r_j$`, 'the moment job j became visible to the rule, which is when the job ten places earlier was handed over (window of 10 jobs, Experiment 2.2)'],
       [String.raw`$(x,y)$`, 'positions in metres. The pick-up point of a job is the crane for a discharge and the block for a load'],
       ['Distance', 'measured along the lanes (rectilinear), since AGVs drive on a grid'],
     ],
@@ -43,10 +43,10 @@ const RULES: Rule[] = [
     words: 'Split the fleet in half and give each crane its own AGVs. An AGV never helps the other crane.',
     formula: String.raw`$$q(a)=(a-1)\bmod 2$$`,
     symbols: [
-      [String.raw`$a$`, 'AGV number, from 1 to 8'],
+      [String.raw`$a$`, 'AGV number, from 1 to 12'],
       [String.raw`$q(a)$`, 'the only crane AGV a serves, 0 for QC1 and 1 for QC2'],
     ],
-    example: String.raw`With 8 AGVs, AGVs 1, 3, 5 and 7 serve **QC1**, and AGVs 2, 4, 6 and 8 serve **QC2**.`,
+    example: String.raw`With 12 AGVs, AGVs 1, 3, 5, 7, 9 and 11 serve **QC1**, and AGVs 2, 4, 6, 8, 10 and 12 serve **QC2**.`,
   },
   {
     name: 'Random dispatching',

@@ -4,9 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { AGV_COLORS, Replay, TerminalMap, agvPose, fmtTime, lastIdx, prepare, stats } from './ReplayPlayer';
 
-const FILE = 'n10_d0_nvfcfs';     // model v3, recorded by ACT_MTP webapp/export_replays.py home
+const FILE = 'n12_d0_nvfcfs';     // model v5, recorded by ACT_MTP webapp/export_replays.py home5
 const SPEED = 20;        // simulated seconds per real second
-const START = 2150;      // start inside the run, when all ten AGVs are busy
+const START = 2150;      // start inside the run, when all twelve AGVs are busy
 const PX_PER_M = 2;      // the 2.1 km yard is drawn to scale and scrolled sideways
 
 const ORANGE = '#ea580c';   // container
@@ -375,7 +375,7 @@ function YardStrip({ r, t, view, onSeek }: { r: Replay; t: number; view: [number
 
 const SPECS: { pic: () => React.JSX.Element; value: string; detail: string; source: string }[] = [
   { pic: PicCrane, value: '75 s', detail: 'per crane move, 2 quay cranes', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
-  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '10 AGVs, 5 per crane, at 6 m/s empty and 3.5 m/s loaded on straights, 3 m/s in turns', source: 'Luo, 2016; Zhao et al., 2025' },
+  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '12 AGVs, 6 per crane, at 6 m/s empty and 3.5 m/s loaded on straights, 3 m/s in turns of 10 m radius', source: 'Luo, 2016; Luo, 2016b; Zhao et al., 2025' },
   { pic: PicYard, value: '50 blocks', detail: '31 m wide with 5 transfer racks each, about 2.1 km of yard in all', source: 'Wu et al., 2016; Liu et al., 2016' },
   { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard, across 7 handover lanes, a 27 m buffer and 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
   { pic: PicWork, value: '200 containers', detail: '100 discharge (orange) and 100 load (teal) in each run', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
@@ -391,7 +391,7 @@ export default function SetupFigure() {
   const last = useRef<number | null>(null);
 
   useEffect(() => {
-    fetch(`/replays/v3/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
+    fetch(`/replays/v5/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
   }, []);
 
@@ -464,8 +464,9 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
         <figcaption className="text-sm leading-relaxed text-zinc-600">
-          A recording of one simulation run, played at {SPEED}× real time. Ten AGVs are dispatched by the NV/FCFS rule with
-          a window of 5 jobs, and the cranes work exactly at their planned times. The map opens at the two cranes. Scroll it
+          A recording of one simulation run, played at {SPEED}× real time. Twelve AGVs are dispatched by the NV/FCFS rule with
+          a window of 10 jobs, and the cranes work exactly at their planned times. Each AGV books the road ahead of it, its body
+          plus its braking distance, so AGVs wait for each other and never collide. The map opens at the two cranes. Scroll it
           sideways, or use the strip below it, to follow AGVs to distant blocks. Each AGV takes the nearest free rack of its block,
           raises or lowers its platform and drives into the rack and back out. Lanes, slots, blocks and racks are drawn to scale,
           while the crane structures and the vessel are schematic.
