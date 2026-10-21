@@ -8,10 +8,20 @@ import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import { BookOpen, ArrowUpRight, Target, Zap, Lightbulb, FileText } from 'lucide-react';
 import { Timeline, ObjectiveMap, UncertaintyHeatmap, TestingMatrix } from '@/components/literature/CompareVisuals';
+import { GROUP_STYLE } from '@/components/literature/compareData';
 import { GROUPS, PAPERS, type Paper, type GroupId } from '@/components/literature/papers';
 
 const DISPATCH: GroupId[] = ['rules', 'assignment', 'lookahead', 'metaheuristic', 'learning'];
 const STUDY_COUNT = 11;
+
+/* Card text marks key words with **double stars**. They are rendered in bold. */
+function rich(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith('**') && part.endsWith('**')
+      ? <b key={i} className="font-semibold text-zinc-950">{part.slice(2, -2)}</b>
+      : <span key={i}>{part}</span>,
+  );
+}
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -149,17 +159,20 @@ function NotesModal({ paper, onClose }: { paper: Paper; onClose: () => void }) {
 function PaperCard({ paper, onOpen }: { paper: Paper; onOpen: () => void }) {
   const unread = paper.group === 'unread';
   const link = paper.url ?? (paper.doi ? `https://doi.org/${paper.doi}` : undefined);
+  const color = GROUP_STYLE[paper.group].dot;
   return (
-    <motion.article {...fade} id={`paper-${paper.id}`} className={`scroll-mt-28 flex flex-col gap-4 rounded-3xl border bg-white p-6 sm:p-7 ${unread ? 'border-dashed border-zinc-300' : 'border-zinc-200'}`}>
+    <motion.article {...fade} id={`paper-${paper.id}`} style={{ borderTopColor: color }} className={`scroll-mt-28 flex flex-col gap-4 rounded-3xl border border-t-4 bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:p-7 ${unread ? 'border-dashed border-zinc-300' : 'border-zinc-200'}`}>
       <div className="flex items-start justify-between gap-3">
-        <span className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-teal-800">{paper.approach}</span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-zinc-800">
+          <span className="h-2 w-2 rounded-full" style={{ background: color }} />{paper.approach}
+        </span>
         <span className="font-mono text-sm font-bold text-zinc-600">{paper.year}</span>
       </div>
       <div>
         <h3 className="text-lg font-bold leading-snug tracking-tight text-zinc-900">{paper.title}</h3>
         <p className="mt-1.5 text-sm text-zinc-600">{paper.authors} · <span className="italic">{paper.venue}</span></p>
       </div>
-      <p className="text-sm leading-relaxed text-zinc-800">{paper.summary}</p>
+      <p className="text-[15px] leading-relaxed text-zinc-700">{rich(paper.summary)}</p>
 
       {(paper.trigger || paper.objective) && (
         <div className="grid gap-2 sm:grid-cols-2">
@@ -181,13 +194,13 @@ function PaperCard({ paper, onOpen }: { paper: Paper; onOpen: () => void }) {
       {paper.headline && (
         <div className="rounded-xl border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3 text-sm leading-relaxed text-zinc-800">
           <b className="mb-0.5 block text-xs uppercase tracking-wide text-teal-800">Key Result</b>
-          {paper.headline}
+          {rich(paper.headline)}
         </div>
       )}
 
       <div className="flex gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-relaxed text-amber-950">
         <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-        <span><b className="block text-xs uppercase tracking-wide text-amber-800">In Our Thesis</b>{paper.role}</span>
+        <span><b className="block text-xs uppercase tracking-wide text-amber-800">In Our Thesis</b>{rich(paper.role)}</span>
       </div>
 
       <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-zinc-100 pt-4">
