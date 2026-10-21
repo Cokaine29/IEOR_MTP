@@ -285,7 +285,7 @@ const SCOPE: { title: string; tone: 'yes' | 'simple' | 'later'; items: string[] 
     'No breakdowns',
     'One ship at a time',
   ] },
-  { title: 'Next', tone: 'later', items: [
+  { title: 'Next (MTP Phase II)', tone: 'later', items: [
     'A learned dispatcher, first DQN, then PPO',
     'MAPPO, one cooperating agent per AGV',
     'Curriculum learning, from easy cases to harder ones',
