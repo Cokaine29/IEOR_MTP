@@ -196,35 +196,38 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
     source: 'Counts and 9 × 10⁵⁸ ÷ 10⁹ per second are our arithmetic. Search check, Experiment 3.1, 20 Oct 2026.',
   },
   {
-    icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
-    lead: 'What a plan made in advance saves per container, compared with the NV/FCFS rule.',
+    icon: Shuffle, stat: '30 of 30 → 17 of 30', title: 'Plans Go Stale',
+    lead: 'A plan made in advance against the simple NV/FCFS rule, on the same 30 test ships.',
     body: (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {[
-          { label: 'Exact times', v: 2.26, ci: 0.40, note: 'clear saving', tone: 'bg-teal-600' },
-          { label: 'Random times', v: 0.39, ci: 0.57, note: 'not clear', tone: 'bg-amber-500' },
-        ].map((r) => (
-          <div key={r.label} className="flex flex-col gap-1">
-            <div className="flex items-baseline justify-between text-sm">
-              <span className="font-medium text-zinc-800">{r.label}</span>
-              <span className="tabular-nums text-zinc-900"><b>{r.v.toFixed(2)} s</b> <span className="text-xs text-zinc-500">± {r.ci.toFixed(2)}, {r.note}</span></span>
+          { label: 'With exact times', plan: 1.13, rule: 3.39, wins: 30, verdict: 'The plan wins on every ship.', good: true },
+          { label: 'With random times', plan: 3.38, rule: 3.77, wins: 17, verdict: 'The plan wins on only 17 ships, close to a coin toss.', good: false },
+        ].map((c) => (
+          <div key={c.label} className={`flex flex-col gap-2 rounded-lg border p-3 ${c.good ? 'border-teal-200 bg-teal-50' : 'border-amber-200 bg-amber-50'}`}>
+            <span className="text-sm font-semibold text-zinc-900">{c.label}</span>
+            {[['Plan', c.plan, 'bg-zinc-800'], ['NV/FCFS', c.rule, 'bg-zinc-400']].map(([n, v, tone]) => (
+              <div key={n as string} className="flex items-center gap-2 text-xs">
+                <span className="w-14 shrink-0 text-zinc-600">{n}</span>
+                <span className="h-2.5 flex-1 rounded bg-white">
+                  <span className={`block h-full rounded ${tone}`} style={{ width: `${((v as number) / 4) * 100}%` }} />
+                </span>
+                <span className="w-12 shrink-0 text-right font-semibold tabular-nums text-zinc-900">{(v as number).toFixed(2)} s</span>
+              </div>
+            ))}
+            <div className="mt-1 flex flex-wrap gap-[3px]" aria-label={`Plan wins on ${c.wins} of 30 ships`}>
+              {Array.from({ length: 30 }, (_, k) => (
+                <span key={k} className={`h-2.5 w-2.5 rounded-full ${k < c.wins ? (c.good ? 'bg-teal-600' : 'bg-amber-500') : 'bg-zinc-300'}`} />
+              ))}
             </div>
-            <div className="relative h-3.5 rounded bg-zinc-100">
-              <span className="absolute left-[12%] top-[-4px] z-10 h-[22px] border-l-2 border-dashed border-zinc-500" />
-              <span className={`absolute top-0 h-full rounded ${r.tone}`} style={{ left: '12%', width: `${(r.v / 2.8) * 88}%` }} />
-              <span className="absolute top-1/2 h-2 -translate-y-1/2 border-x border-t-0 border-zinc-800"
-                style={{ left: `${12 + ((r.v - r.ci) / 2.8) * 88}%`, width: `${((2 * r.ci) / 2.8) * 88}%` }}>
-                <span className="absolute left-0 right-0 top-1/2 border-t border-zinc-800" />
-              </span>
-            </div>
+            <span className="text-xs text-zinc-700">Each dot is one ship, coloured where the plan waited less. {c.verdict}</span>
           </div>
         ))}
-        <p className="text-[11px] text-zinc-500">Dashed line is zero saving. With random times the interval crosses it.</p>
-        <Row left="Plan followed rigidly" right="5.33 s" tone="red" />
-        <p className="-mt-1 text-xs text-zinc-500">Worse than every rule except Random.</p>
+        <Row left="Plan followed rigidly, random times" right="5.33 s" tone="red" />
+        <p className="-mt-2 text-xs text-zinc-500">Worse than every rule except Random.</p>
       </div>
     ),
-    source: 'Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 30 paired seeds, 95% intervals.',
+    source: 'Crane wait per container, average over 30 test ships. Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 20 to 21 Oct 2026.',
   },
   {
     icon: Timer, stat: '55 to 74 s', title: 'Little Time to Think',
