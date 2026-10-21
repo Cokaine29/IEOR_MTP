@@ -181,7 +181,9 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
         </div>
         <span className="text-xs font-medium text-zinc-500">How many different lists are possible</span>
         <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
+        <Md className="-mt-1 px-1 text-xs text-zinc-600">{String.raw`Pick which 6 of the 12 slots say C1, the rest say C2. $$\binom{12}{6} = \frac{12!}{6!\;6!} = 924$$`}</Md>
         <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ <span className="text-red-600">✕</span></span>} tone="red" />
+        <Md className="-mt-1 px-1 text-xs text-zinc-600">{String.raw`Pick which 100 of the 200 slots say C1. $$\binom{200}{100} \approx 9 \times 10^{58}$$`}</Md>
         <div className="rounded-lg bg-zinc-900 px-3 py-2.5 text-sm leading-snug text-white">
           Checking a billion lists every second would take about <b className="text-amber-300">3 × 10⁴² years</b>.
         </div>
@@ -191,7 +193,7 @@ const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; bo
         </p>
       </div>
     ),
-    source: '200 choose 100 lists, and 9 × 10⁵⁸ ÷ 10⁹ per second, our arithmetic. Search check, Experiment 3.1, 20 Oct 2026.',
+    source: 'Counts and 9 × 10⁵⁸ ÷ 10⁹ per second are our arithmetic. Search check, Experiment 3.1, 20 Oct 2026.',
   },
   {
     icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
