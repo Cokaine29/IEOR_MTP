@@ -586,7 +586,12 @@ export default function ProblemPage() {
       <section className="bg-zinc-50 px-4 py-20">
         <div className="mx-auto max-w-6xl">
           <motion.div {...fade}>
-            <SectionHead kicker="Why It Is Hard" title="Three Reasons, Each Measured in Our Simulator" />
+            <SectionHead kicker="Why It Is Hard" title="Why Planning Ahead Is Not Enough">
+              <p>
+                Three things make this job hard. We saw each of them when we tested today’s methods in our simulator, so every
+                number below is our own result.
+              </p>
+            </SectionHead>
           </motion.div>
           <div className="grid gap-5 md:grid-cols-3">
             {HARD.map((h, i) => (
