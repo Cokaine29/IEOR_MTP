@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, CircleCheck, FileText, Gauge, Lock, MessageCircleQuestion, Sigma, SlidersHorizontal, Target } from 'lucide-react';
 import LineChart, { ChartSpec } from './LineChart';
+import BarChart, { BarSpec } from './BarChart';
 import ReplayPlayer, { ReplayPair } from './ReplayPlayer';
 import ExperimentsHeader from './ExperimentsHeader';
 import MethodsSection from './MethodsSection';
@@ -19,6 +20,7 @@ type Card = {
   details: [string, string][];
   reproduce: string;
   chart?: ChartSpec;
+  bars?: BarSpec;
   replay?: ReplayPair[];
   table?: { head: string[]; rows: string[][] };
   tableTop?: { head: string[]; rows: string[][]; caption?: string; highlightRow?: number };
@@ -219,6 +221,7 @@ function ResultCard({ c }: { c: Card }) {
       <Checks c={c} />
       <TopTable c={c} />
       {c.chart && <LineChart spec={c.chart} />}
+      {c.bars && <BarChart spec={c.bars} />}
       {c.replay && <ReplayPlayer pairs={c.replay} />}
       <p className="leading-relaxed text-zinc-600">{c.body}</p>
       <Maths c={c} />
