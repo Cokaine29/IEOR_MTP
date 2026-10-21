@@ -6,9 +6,10 @@ import SettingSection from '@/components/methodology/v5/SettingSection';
 import MethodsSection from '@/components/methodology/v5/MethodsSection';
 import RandomnessSection from '@/components/methodology/v5/RandomnessSection';
 import FairnessSection from '@/components/methodology/v5/FairnessSection';
+import PhaseTwoSection from '@/components/methodology/v5/PhaseTwoSection';
 
-/* Methodology tab, rebuilt on model v5 (21 Oct 2026). The earlier Phase1 to Phase7 components stay in
-   components/methodology until their real Yangshan data has moved into the Phase II section. */
+/* Methodology tab, rebuilt on model v5 (21 Oct 2026). The real Yangshan data of the earlier Phase1 and Phase3
+   components now lives in v5/YangshanReference.tsx. The old Phase1 to Phase7 files are kept, unused, for reference. */
 export default function MethodologyPage() {
   return (
     <div className="min-h-screen bg-white text-zinc-900 [&_p:not(.italic)]:text-justify [&_p]:hyphens-auto">
@@ -18,6 +19,7 @@ export default function MethodologyPage() {
       <MethodsSection />
       <RandomnessSection />
       <FairnessSection />
+      <PhaseTwoSection />
     </div>
   );
 }
