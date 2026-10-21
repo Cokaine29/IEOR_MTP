@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, ArrowUpRight, Check, Minus, Clock3, Route, TrafficCone, Target,
-  Truck, MousePointerClick, Navigation, Handshake, Layers, Shuffle, Timer,
+  Truck, MousePointerClick, Navigation, Handshake, Layers, Shuffle, Timer, RotateCcw,
 } from 'lucide-react';
 import Md from '@/components/experiments/Md';
 
@@ -51,11 +51,74 @@ const LEVELS = [
 ];
 
 /* ---------- 2. when a decision happens */
-const LOOP = [
-  { icon: Truck, title: 'An AGV Becomes Free', text: 'It has just set a container on a yard rack, or handed one to the crane.' },
-  { icon: MousePointerClick, title: 'The Dispatcher Chooses', text: 'It gives the AGV the next job of one crane, or tells it to park.' },
-  { icon: Navigation, title: 'The AGV Drives', text: 'Empty to the crane to collect a container, or to the yard first to fetch one for loading.' },
-  { icon: Handshake, title: 'Crane and AGV Meet', text: 'The container changes hands. If the crane was ready first, its wait counts as idle time.' },
+function Tag({ kind }: { kind: 'Unloading' | 'Loading' }) {
+  return (
+    <span className={`w-fit shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-semibold ${kind === 'Unloading' ? 'bg-sky-100 text-sky-800' : 'bg-violet-100 text-violet-800'}`}>{kind}</span>
+  );
+}
+
+function Hop({ items }: { items: string[] }) {
+  return (
+    <span className="flex flex-wrap items-center gap-1">
+      {items.map((it, i) => (
+        <span key={it} className="flex items-center gap-1">
+          <span className="rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-xs text-zinc-700">{it}</span>
+          {i < items.length - 1 && <ArrowRight className="h-3 w-3 text-zinc-400" />}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+const LOOP: { icon: typeof Truck; title: string; body: React.ReactNode }[] = [
+  {
+    icon: Truck, title: 'An AGV Becomes Free',
+    body: (
+      <ul className="flex flex-col gap-2 text-sm text-zinc-600">
+        <li className="flex flex-col gap-1"><Tag kind="Unloading" /> It has just set a container down on a yard rack.</li>
+        <li className="flex flex-col gap-1"><Tag kind="Loading" /> It has just handed a container to the crane.</li>
+      </ul>
+    ),
+  },
+  {
+    icon: MousePointerClick, title: 'The Dispatcher Chooses',
+    body: (
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-medium text-teal-800">Its options for this AGV</span>
+        {['Next job of Crane 1', 'Next job of Crane 2', 'Park and wait'].map((o) => (
+          <span key={o} className="rounded-lg border border-teal-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-800">{o}</span>
+        ))}
+      </div>
+    ),
+  },
+  {
+    icon: Navigation, title: 'The AGV Drives',
+    body: (
+      <ul className="flex flex-col gap-2.5 text-sm text-zinc-600">
+        <li className="flex flex-col gap-1.5"><Tag kind="Unloading" /><Hop items={['Drives empty', 'Crane']} /></li>
+        <li className="flex flex-col gap-1.5"><Tag kind="Loading" /><Hop items={['Yard rack', 'Picks up', 'Crane']} /></li>
+      </ul>
+    ),
+  },
+  {
+    icon: Handshake, title: 'Crane and AGV Meet',
+    body: (
+      <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] font-medium text-zinc-500">The crane’s time</span>
+          <div className="flex h-7 overflow-hidden rounded-md text-[11px] font-semibold">
+            <span className="flex w-[55%] items-center justify-center bg-zinc-300 text-zinc-700">Handles</span>
+            <span className="flex w-[45%] items-center justify-center bg-red-500 text-white">Waits for AGV</span>
+          </div>
+          <div className="relative h-4 text-[11px] font-medium text-zinc-500">
+            <span className="absolute left-[55%] -translate-x-1/2">↑ ready</span>
+            <span className="absolute right-0">AGV arrives ↑</span>
+          </div>
+        </div>
+        <span className="text-sm text-zinc-600">If the AGV comes late, the crane stands still. That wait is the <b className="text-zinc-900">Crane Idle Time</b>.</span>
+      </div>
+    ),
+  },
 ];
 
 /* ---------- 3. what the dispatcher may do */
@@ -223,29 +286,55 @@ export default function ProblemPage() {
           <motion.div {...fade}>
             <SectionHead kicker="The Moment of Choice" title="A Decision Every Time an AGV Becomes Free">
               <p>
-                The dispatcher is asked when an AGV finishes a job, as in <i>Kim and Bae (2004)</i> and <i>Briskorn et al. (2006)</i>.
-                A parked AGV is asked again whenever a crane completes a handover, because new jobs then come into view.
+                Every container needs its own AGV trip, so the dispatcher decides again and again while the ship is served. This
+                is one round of that loop.
               </p>
             </SectionHead>
           </motion.div>
           <motion.ol {...fade} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {LOOP.map((s, i) => (
-              <li key={s.title} className={`relative flex flex-col gap-3 rounded-2xl border p-5 ${i === 1 ? 'border-teal-300 bg-teal-50' : 'border-zinc-200 bg-zinc-50'}`}>
-                <div className="flex items-center justify-between">
-                  <span className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${i === 1 ? 'bg-teal-600 text-white' : 'bg-zinc-900 text-white'}`}>{i + 1}</span>
-                  <s.icon className={`h-5 w-5 ${i === 1 ? 'text-teal-700' : 'text-zinc-400'}`} />
+              <li key={s.title} className={`relative flex flex-col gap-4 rounded-2xl border p-5 ${i === 1 ? 'border-teal-300 bg-teal-50 shadow-sm' : 'border-zinc-200 bg-zinc-50'}`}>
+                <div className="flex items-center gap-3">
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${i === 1 ? 'bg-teal-600 text-white' : 'bg-zinc-900 text-white'}`}>
+                    <s.icon className="h-5 w-5" />
+                  </span>
+                  <span className="flex flex-col leading-tight">
+                    <span className={`text-xs font-semibold uppercase tracking-wider ${i === 1 ? 'text-teal-700' : 'text-zinc-400'}`}>Step {i + 1}</span>
+                    <span className="font-semibold text-zinc-900">{s.title}</span>
+                  </span>
                 </div>
-                <span className="font-semibold text-zinc-900">{s.title}</span>
-                <span className="text-sm leading-relaxed text-zinc-600">{s.text}</span>
+                {s.body}
                 {i < LOOP.length - 1 && (
-                  <ArrowRight className="absolute -right-3.5 top-1/2 hidden h-5 w-5 -translate-y-1/2 text-zinc-300 lg:block" />
+                  <span className="absolute -right-3.5 top-9 z-10 hidden h-7 w-7 items-center justify-center rounded-full border border-zinc-200 bg-white lg:flex">
+                    <ArrowRight className="h-4 w-4 text-zinc-400" />
+                  </span>
                 )}
               </li>
             ))}
           </motion.ol>
-          <motion.p {...fade} className="mt-5 text-sm text-zinc-500">
-            Then the AGV is free again, and the loop starts over. A ship of 200 containers needs 200 of these decisions or more.
-          </motion.p>
+          <motion.div {...fade} className="mt-4 flex items-center gap-3 rounded-2xl border border-dashed border-zinc-300 px-5 py-3.5 text-sm text-zinc-600">
+            <RotateCcw className="h-5 w-5 shrink-0 text-teal-700" />
+            <span>Then the AGV is free again, and the loop repeats. One ship of 200 containers needs at least 200 of these decisions, one after the other.</span>
+          </motion.div>
+
+          <motion.div {...fade} className="mt-10 grid gap-4 md:grid-cols-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 md:col-span-2">When the Dispatcher Is Asked</h3>
+            <div className="flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-bold text-white">A</span>
+              <span className="flex flex-col gap-1 text-sm leading-relaxed text-zinc-600">
+                <b className="text-zinc-900">An AGV Finishes Its Job</b>
+                <span>This is the usual moment, and the same as in <i>Kim and Bae (2004)</i> and <i>Briskorn et al. (2006)</i>.</span>
+              </span>
+            </div>
+            <div className="flex gap-4 rounded-2xl border border-zinc-200 bg-white p-5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-bold text-white">B</span>
+              <span className="flex flex-col gap-1 text-sm leading-relaxed text-zinc-600">
+                <b className="text-zinc-900">A Crane Finishes a Container</b>
+                <span>The dispatcher only sees the next 10 containers of each crane. When a crane finishes one, a new container joins
+                that list. So an AGV that was told to park gets another chance at a job.</span>
+              </span>
+            </div>
+          </motion.div>
         </div>
       </section>
 
