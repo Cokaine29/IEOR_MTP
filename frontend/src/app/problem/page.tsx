@@ -152,21 +152,82 @@ const BARS = [
 const XMAX = 9.5;
 
 /* ---------- 5. why it is hard */
-const HARD = [
+function Row({ left, right, tone = 'zinc' }: { left: React.ReactNode; right: React.ReactNode; tone?: 'zinc' | 'red' | 'teal' | 'amber' }) {
+  const c = { zinc: 'border-zinc-200 bg-zinc-50', red: 'border-red-200 bg-red-50', teal: 'border-teal-200 bg-teal-50', amber: 'border-amber-200 bg-amber-50' }[tone];
+  return (
+    <div className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 text-sm ${c}`}>
+      <span className="text-zinc-700">{left}</span>
+      <span className="shrink-0 font-semibold tabular-nums text-zinc-900">{right}</span>
+    </div>
+  );
+}
+
+const HARD: { icon: typeof Layers; stat: string; title: string; lead: string; body: React.ReactNode; source: string }[] = [
   {
     icon: Layers, stat: '9 × 10⁵⁸', title: 'Too Many Possible Orders',
-    text: 'Our simulated ship has 2 cranes with 100 containers each. The containers can get their AGVs in about 9 × 10⁵⁸ different orders, far too many to try. On small ships of 12 containers, where all 924 orders can be tried, our search finds the best one in 17 to 19 of 20 cases.',
+    lead: 'The number of orders in which containers can get their AGVs explodes with ship size.',
+    body: (
+      <div className="flex flex-col gap-2">
+        <Row left={<>Small test ship, <b>12</b> containers</>} right={<span className="flex items-center gap-1.5">924 orders <Check className="h-4 w-4 text-teal-700" /></span>} tone="teal" />
+        <Row left={<>Our ship, <b>200</b> containers</>} right={<span className="flex items-center gap-1.5">9 × 10⁵⁸ orders <span className="text-red-600">✕</span></span>} tone="red" />
+        <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+          All 924 can be tried, and there our search finds the best order in <b className="text-zinc-800">17 to 19 of 20</b> cases.
+          The big ship can only be searched, never checked fully.
+        </p>
+      </div>
+    ),
     source: 'Number of orders is 200 choose 100 (our arithmetic). Search check, Experiment 3.1, 20 Oct 2026.',
   },
   {
     icon: Shuffle, stat: '2.26 s → 0.39 s', title: 'Plans Go Stale',
-    text: 'With exact times, a plan made in advance saves 2.26 s per container against the NV/FCFS rule. With random crane times and AGV speeds, the saving drops to 0.39 s, and that is no longer a clear result (±0.57 s). A plan followed rigidly does worse than every rule except Random, at 5.33 s.',
-    source: 'Experiments 4.1 and 4.5, 30 paired seeds, 95% intervals, 20 to 21 Oct 2026.',
+    lead: 'What a plan made in advance saves per container, compared with the NV/FCFS rule.',
+    body: (
+      <div className="flex flex-col gap-3">
+        {[
+          { label: 'Exact times', v: 2.26, ci: 0.40, note: 'clear saving', tone: 'bg-teal-600' },
+          { label: 'Random times', v: 0.39, ci: 0.57, note: 'not clear', tone: 'bg-amber-500' },
+        ].map((r) => (
+          <div key={r.label} className="flex flex-col gap-1">
+            <div className="flex items-baseline justify-between text-sm">
+              <span className="font-medium text-zinc-800">{r.label}</span>
+              <span className="tabular-nums text-zinc-900"><b>{r.v.toFixed(2)} s</b> <span className="text-xs text-zinc-500">± {r.ci.toFixed(2)}, {r.note}</span></span>
+            </div>
+            <div className="relative h-3.5 rounded bg-zinc-100">
+              <span className="absolute left-[12%] top-[-4px] z-10 h-[22px] border-l-2 border-dashed border-zinc-500" />
+              <span className={`absolute top-0 h-full rounded ${r.tone}`} style={{ left: '12%', width: `${(r.v / 2.8) * 88}%` }} />
+              <span className="absolute top-1/2 h-2 -translate-y-1/2 border-x border-t-0 border-zinc-800"
+                style={{ left: `${12 + ((r.v - r.ci) / 2.8) * 88}%`, width: `${((2 * r.ci) / 2.8) * 88}%` }}>
+                <span className="absolute left-0 right-0 top-1/2 border-t border-zinc-800" />
+              </span>
+            </div>
+          </div>
+        ))}
+        <p className="text-[11px] text-zinc-500">Dashed line is zero saving. With random times the interval crosses it.</p>
+        <Row left="Plan followed rigidly" right="5.33 s" tone="red" />
+        <p className="-mt-1 text-xs text-zinc-500">Worse than every rule except Random.</p>
+      </div>
+    ),
+    source: 'Experiments 4.1 (exact times) and 4.5 (crane times ±20%, AGV speeds ±10%), 30 paired seeds, 95% intervals.',
   },
   {
     icon: Timer, stat: '55 to 74 s', title: 'Little Time to Think',
-    text: 'Finding a new plan takes 55 to 74 s on one processor, almost a full 75 s crane cycle. Re-planning during service helps, but the cranes still wait 1.57 s per container longer than with a dispatcher that knows the future.',
-    source: 'Experiment 4.5, 21 Oct 2026. Choe et al. (2016) report 10 to 40 s per decision for their rolling search.',
+    lead: 'Making a new plan during service takes almost a full crane cycle.',
+    body: (
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <div className="relative h-6 overflow-hidden rounded bg-zinc-200">
+            <span className="absolute inset-y-0 left-0 bg-amber-400/80" style={{ width: `${(74 / 75) * 100}%` }} />
+            <span className="absolute inset-y-0 left-0 bg-amber-500" style={{ width: `${(55 / 75) * 100}%` }} />
+            <span className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-zinc-900">one new plan, 55 to 74 s</span>
+          </div>
+          <div className="flex justify-between text-[11px] text-zinc-500"><span>0 s</span><span>one crane cycle, 75 s</span></div>
+        </div>
+        <Row left="Waiting 54 s for each new plan costs" right="+0.43 s" tone="amber" />
+        <Row left="Re-planning still waits more than the benchmark by" right="+1.57 s" tone="zinc" />
+        <p className="text-xs text-zinc-500">Per container, at high randomness. Choe et al. (2016) report 10 to 40 s per decision for their own rolling search.</p>
+      </div>
+    ),
+    source: 'Experiments 4.3 (crane times ±40%) and 4.5, one processor per search, 21 Oct 2026.',
   },
 ];
 
@@ -533,8 +594,9 @@ export default function ProblemPage() {
                 className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-6">
                 <h.icon className="mb-5 h-7 w-7 text-teal-700" />
                 <div className="text-2xl font-bold tracking-tight tabular-nums">{h.stat}</div>
-                <h3 className="mb-3 mt-1 text-sm font-semibold text-zinc-800">{h.title}</h3>
-                <p className="mb-5 flex-grow text-sm leading-relaxed text-zinc-600">{h.text}</p>
+                <h3 className="mt-1 text-sm font-semibold text-zinc-800">{h.title}</h3>
+                <p className="mb-4 mt-2 text-sm leading-relaxed text-zinc-600">{h.lead}</p>
+                <div className="mb-5 flex-grow">{h.body}</div>
                 <Source>{h.source}</Source>
               </motion.div>
             ))}
