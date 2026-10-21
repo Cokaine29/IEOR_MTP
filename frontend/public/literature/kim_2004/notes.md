@@ -1,28 +1,58 @@
 ---
+schema: 1
 id: kim_2004
-title: "A look-ahead dispatching method for automated guided vehicles in automated port container terminals"
-authors: "Kap Hwan Kim, Jong Wook Bae"
-venue: "Transportation Science, 38(2), 224-234"
+title: A look-ahead dispatching method for automated guided vehicles in automated port container terminals
+authors: Kap Hwan Kim, Jong Wook Bae
+venue: Transportation Science, 38(2), 224-234
 year: 2004
-doi: "10.1287/trsc.1030.0082"
-paper_type: "Mathematical model, heuristic and simulation study"
-domain: "Automated container terminal (hypothetical layout, Figure 1)"
-trigger: "An AGV becomes free (vehicle-initiated in Egbelu and Tanchoco's sense), over known sequence lists"
-decision_variable: "Static: assignment of transfer events to AGVs. Real time: which imminent task, among the next few per crane, the newly free AGV serves"
-objective: "Lexicographic: total container-crane delay first, total AGV travel time second"
-scale: "Simulation: 2 cranes, 100 operations per crane, 5 yard blocks, 3-7 AGVs. Heuristic against optimiser: 1-2 cranes, 2-4 AGVs, 10-20 operations"
-randomness:
-  qc_cycle_time: "Uniform noise of plus or minus delta times the mean on crane operation times, delta = 0 to 0.4"
-  travel_time_congestion: "Travel times are fixed inputs (the paper cites Table 1, which does not contain them); congestion is explicitly excluded"
-  task_arrival: "Task sequence fixed and known (sequence lists)"
-  stowage: "Not modelled; the sequence list is given"
-  agv_breakdown: "Not described in the paper"
-  yard_crane_delay: "Excluded by assumption (no AGV queueing at yard cranes)"
-  battery: "Not mentioned in the paper"
-method: "MIP formulation, constructive heuristic (event delaying plus matching), look-ahead over the next few tasks in real time"
-evaluation: "50 random instances against LINDO; 1,500 simulation runs (150 combinations x 10 replications); significance tests at the 1% level"
-baselines: "STT/D, EDD and revised shortest imminent operation (r-SI)"
-last_updated: "2026-10-05"
+doi: 10.1287/trsc.1030.0082
+paper_type: model_and_heuristic
+method_family: mip_heuristic
+domain: Automated container terminal (hypothetical layout, Figure 1)
+summary_one_line: Mixed-integer formulation and heuristic for AGV dispatching with known crane sequences, run in real time as a look-ahead over the next few tasks per crane.
+headline_result: At 7 AGVs the other rules' crane delay was about 4.5 times that of look-ahead; look-ahead travel time was about 75-85% of STT/D's
+trigger: vehicle_initiated
+trigger_note: Triggered when an AGV becomes free; only the newly free AGV is committed after each re-plan
+decision: 'Static: assignment of transfer events to AGVs. Real time: which imminent task, among the next few per crane, the newly free AGV serves'
+objective: 'Lexicographic: total container-crane delay first, total AGV travel time second'
+scale: 'Simulation: 2 cranes, 100 operations per crane, 5 yard blocks, 3-7 AGVs. Heuristic against optimiser: 1-2 cranes, 2-4 AGVs, 10-20 operations'
+method: MIP formulation, constructive heuristic (event delaying plus matching), look-ahead over the next few tasks in real time
+uncertainty:
+  qc_cycle_time:
+    status: random
+    note: Uniform noise of plus or minus delta times the mean on crane operation times, delta = 0 to 0.4
+  travel_congestion:
+    status: fixed
+    note: Travel times are fixed inputs (the paper cites Table 1, which does not contain them); congestion is explicitly excluded
+  task_arrival:
+    status: fixed
+    note: Task sequence fixed and known (sequence lists)
+  stowage_workload:
+    status: fixed
+    note: The sequence list is given; stowage imbalance is not modelled
+  agv_breakdown:
+    status: not_described
+  yard_crane_delay:
+    status: fixed
+    note: Excluded by assumption (no AGV queueing at yard cranes)
+  battery:
+    status: not_described
+evaluation: 50 random instances against LINDO; 1,500 simulation runs (150 combinations x 10 replications); significance tests at the 1% level
+baselines: STT/D, EDD and revised shortest imminent operation (r-SI)
+role_in_thesis:
+- baseline_source
+- objective_precedent
+used_for:
+- A delay-first objective with travel time as a tie-breaker
+- Exact definitions of STT/D, EDD and r-SI
+- A complete heuristic that can serve as a classical baseline
+- Evidence on how far ahead it pays to look
+not_evidence_for:
+- Congestion or yard-crane effects
+- Large fleets
+- Learning-based dispatching
+- The speed of the exact model in seconds
+last_updated: '2026-10-05'
 ---
 
 # A Look-Ahead Dispatching Method for Automated Guided Vehicles in Automated Port Container Terminals
@@ -75,13 +105,13 @@ They cite Egbelu and Tanchoco's two classes (vehicle-initiated rules, triggered 
 4. The time between a CC releasing a container onto an AGV and picking up from the next waiting AGV is negligible.
 5. Congestion among AGVs on the guide paths is not considered, because interference is difficult to anticipate without scheduling and controlling detailed vehicle movements.
 
-![Figure 1. A layout of an automated port container terminal: five crane working positions on the apron, a one-way AGV guide path, and yard blocks A to E with one AYC each and a pickup/dropoff position at the seaside end of each block.](/literature/kim_2004/figure1.png)
+![Figure 1. A layout of an automated port container terminal: five crane working positions on the apron, a one-way AGV guide path, and yard blocks A to E with one AYC each and a pickup/dropoff position at the seaside end of each block.](figure1.png)
 
 ### 2.2 Static formulation (Sec. 1, Eqs. 1-7)
 
 A container crane's operations are **events**: for the $i$th operation of CC $k$, event $e_i^k$ is the moment an AGV transfers the container, that is, the start of a pickup from an AGV (loading) or the start of a release onto an AGV (discharging). Its time is $y_i^k$, a decision variable; with no delay it equals the earliest possible event time $s_i^k$ (Table 1, Figure 2).
 
-![Figure 2. The progress of the ship operation of CC 1 and its events: at times 0, about 220, about 240 and 450 an empty AGV must be ready under the crane.](/literature/kim_2004/figure2.png)
+![Figure 2. The progress of the ship operation of CC 1 and its events: at times 0, about 220, about 240 and 450 an empty AGV must be ready under the crane.](figure2.png)
 
 **Table 1. An example of a working sequence list** ($s$ = earliest possible event time without delay; L loading, D discharging; ship location is ship-bay/row/tier, yard location is yard block/yard-bay/row/tier).
 
@@ -137,7 +167,7 @@ with $s_i^O=0$ and $y_i^O=0$ for all AGVs.
 
 The assignment variables carry no AGV index, but a solution can be read as per-AGV task chains. In the paper's example with 2 CCs, 2 AGVs and 2 tasks each, AGV 1 starts, serves CC 2's first operation, then CC 1's second operation, and stops; AGV 2 serves CC 1's first operation, then CC 2's second, and stops (Figure 3).
 
-![Figure 3. A graphical representation of a feasible solution for the assignment variables: supply-side nodes (AGV starts and crane events) are matched one-to-one with demand-side nodes (crane events and AGV stops).](/literature/kim_2004/figure3.png)
+![Figure 3. A graphical representation of a feasible solution for the assignment variables: supply-side nodes (AGV starts and crane events) are matched one-to-one with demand-side nodes (crane events and AGV stops).](figure3.png)
 
 **Size and complexity.** The formulation has about $\bigl(\sum_{k=1}^{|K|+1} m_k\bigr)^2$ variables and $2\bigl(\sum_{k=1}^{|K|+1} m_k\bigr)^2$ constraints. The authors note its similarity to parallel-machine scheduling with sequence-dependent setup times and parallel precedence chains, and to the multiple travelling salesmen problem with precedence constraints and time windows, and say both "must be NP-hard"; no proof is given. A heuristic is therefore proposed.
 
@@ -191,17 +221,17 @@ $$\text{Uniform}\bigl(\text{mean}-\delta\times\text{mean},\ \text{mean}+\delta\t
 
 Figures 4 to 9 give the following; numbers marked ≈ are read off the graphs and are approximate.
 
-![Figure 4. The effects of the NFTs for looking ahead on the sum of delay times, for 3 to 7 AGVs.](/literature/kim_2004/figure4.png)
+![Figure 4. The effects of the NFTs for looking ahead on the sum of delay times, for 3 to 7 AGVs.](figure4.png)
 
-![Figure 5. The effects of the NFTs for looking ahead on the average total travel time.](/literature/kim_2004/figure5.png)
+![Figure 5. The effects of the NFTs for looking ahead on the average total travel time.](figure5.png)
 
 **Effect of looking ahead (Figures 4 and 5; each point averages 50 runs).**
 - With few AGVs, looking further ahead did not reduce delay. With more than 3 AGVs, delay fell as NFT grew (tested at the 1% level), but the reduction diminished as NFT increased. With 7 AGVs, delay falls from ≈7.6k s at NFT 4 to ≈2.3-2.6k s at NFT 10-14; with 3 AGVs it stays near ≈24-25k s.
 - Total travel time rises with NFT (also tested at the 1% level), opposite to the delay trend. The authors attribute this to the algorithm minimising delay first, and conclude that using more tasks to cut delay hurts travel distance. The rise is small (for example ≈95k to ≈97k s with 7 AGVs).
 
-![Figure 6. The effects of the degree of uncertainties of operation times on the sum of delay times.](/literature/kim_2004/figure6.png)
+![Figure 6. The effects of the degree of uncertainties of operation times on the sum of delay times.](figure6.png)
 
-![Figure 7. The effects of the degree of uncertainties of operation times on the total travel time.](/literature/kim_2004/figure7.png)
+![Figure 7. The effects of the degree of uncertainties of operation times on the total travel time.](figure7.png)
 
 **Effect of uncertainty $\delta$ (Figures 6 and 7).**
 - With few AGVs (vehicles overloaded, AGVs the bottleneck), more variance did not raise delay. With more AGVs delay rose with $\delta$, supported at the 1% level for 5, 6 and 7 AGVs (for example ≈6.6k to ≈7.5k s with 5 AGVs; ≈3.4k to ≈3.9k s with 7).
@@ -215,9 +245,9 @@ Figures 4 to 9 give the following; numbers marked ≈ are read off the graphs an
 | EDD (earliest due date) | $Z_i^k=s_i^k$ | $Z_i^k=s_i^k$ |
 | r-SI (revised shortest imminent operation) | $Z_i^k=s_i^k-t(o,a_i^k)$ | $Z_i^k=s_i^k-t(o,b_i^k)-(\text{AYC transfer time})-t(b_i^k,a_i^k)$ |
 
-![Figure 8. Comparison of the total delay times for various dispatching methods (look-ahead with NFT = 10 against EDD, STT/D and r-SI).](/literature/kim_2004/figure8.png)
+![Figure 8. Comparison of the total delay times for various dispatching methods (look-ahead with NFT = 10 against EDD, STT/D and r-SI).](figure8.png)
 
-![Figure 9. Comparison of the total travel times for various dispatching methods.](/literature/kim_2004/figure9.png)
+![Figure 9. Comparison of the total travel times for various dispatching methods.](figure9.png)
 
 - NFT was 10 for look-ahead; values average 10 replications of 25 problems with different parameter combinations.
 - Look-ahead significantly outperformed the other rules in total delay (null hypothesis of no difference rejected at the 1% level). At 7 AGVs the other rules' delay was about 4.5 times that of look-ahead.

@@ -1,28 +1,62 @@
 ---
+schema: 1
 id: carlo_2014
-title: "Transport operations in container terminals: Literature overview, trends, research directions and classification scheme"
-authors: "Hector J. Carlo, Iris F. A. Vis, Kees Jan Roodbergen"
-venue: "European Journal of Operational Research, 236(1), 1-13 (invited review)"
+title: 'Transport operations in container terminals: Literature overview, trends, research directions and classification scheme'
+authors: Hector J. Carlo, Iris F. A. Vis, Kees Jan Roodbergen
+venue: European Journal of Operational Research, 236(1), 1-13 (invited review)
 year: 2014
-doi: "10.1016/j.ejor.2013.11.023"
-paper_type: "Literature review with a classification scheme"
-domain: "Container terminal transport operations, all vehicle types (AGV, ALV, straddle carrier, yard truck)"
-review_scope: "Journal papers up to 2012; papers after 2004 discussed in detail"
-search: "Engineering Village, Google Scholar, ProQuest, Web of Science and handbooks; keywords container / container terminal / port(s); plus citation chasing. No search date, screening counts or exclusion log reported."
-corpus_size: "56 rows in Table A.1 (55 journal papers + 1 book chapter, by our reconciliation in 2.3)"
-last_updated: "2026-10-05"
-trigger: "Not applicable (review). States that dispatching in terminals is mainly vehicle-initiated (Sec. 7)."
-objective: "Not applicable (review)"
-randomness:
-  qc_cycle_time: "Mentioned in text (unloading time shows large variance, Sec. 2.1); no Table A.1 attribute"
-  travel_time_congestion: "Attribute 14a (congestion); RA3 calls for congestion models"
-  task_arrival: "Attributes readys / dues (stochastic container ready / due times)"
-  stowage: "No attribute"
-  agv_breakdown: "No attribute"
-  yard_crane_delay: "No attribute"
-  battery: "RA5 (recharging) listed as a research avenue; no attribute"
-method: "Literature classification (30 binary attributes) and narrative synthesis"
-evaluation: "n/a"
+doi: 10.1016/j.ejor.2013.11.023
+paper_type: review
+method_family: review
+domain: Container terminal transport operations, all vehicle types (AGV, ALV, straddle carrier, yard truck)
+summary_one_line: Invited review of container-terminal transport operations to 2012 with a 30-attribute classification of 56 publications and 16 research avenues.
+headline_result: 56 publications classified; roughly twice as many single-load AGVs as lifting vehicles in the studies reviewed
+trigger: not_applicable
+trigger_note: States that dispatching in terminals is mainly vehicle-initiated (Sec. 7)
+decision: Not applicable (review)
+objective: Not applicable (review)
+scale: Corpus of 56 classified publications
+method: Literature classification (30 binary attributes) and narrative synthesis
+uncertainty:
+  qc_cycle_time:
+    status: na
+    note: Review; no model
+  travel_congestion:
+    status: na
+    note: Review; no model
+  task_arrival:
+    status: na
+    note: Review; no model
+  stowage_workload:
+    status: na
+    note: Review; no model
+  agv_breakdown:
+    status: na
+    note: Review; no model
+  yard_crane_delay:
+    status: na
+    note: Review; no model
+  battery:
+    status: na
+    note: Review; no model
+evaluation: n/a
+baselines: Not applicable (review)
+role_in_thesis:
+- context
+- vocabulary
+used_for:
+- Vocabulary and the vehicle-initiated trigger statement
+- Evidence that most models assume deterministic times
+- Briskorn's inventory-based policy as a benchmark
+- A reading queue
+not_evidence_for:
+- Counts of stochastic dispatching papers
+- Learning-based dispatching (the review stops in 2012)
+- Automated terminals only
+review_scope: Journal papers up to 2012; papers after 2004 discussed in detail
+corpus_size: 56 rows in Table A.1 (55 journal papers + 1 book chapter, by our reconciliation in 2.3)
+search: Engineering Village, Google Scholar, ProQuest, Web of Science and handbooks; keywords container / container terminal / port(s); plus citation chasing. No search date, screening counts or exclusion log reported.
+last_updated: '2026-10-05'
 ---
 
 # Transport Operations in Container Terminals: Literature Overview, Trends, Research Directions and Classification Scheme
@@ -58,9 +92,9 @@ evaluation: "n/a"
 
 A container terminal has five areas: berth, quay, **transport area**, storage yard and gate. The berth and quay are seaside; the yard and gate are landside. The transport area sits between them and is the focus of the paper (Figure 1). Only papers after 2004 are discussed in detail, as a partial follow-up to Vis and De Koster (2003); earlier work is classified but not discussed.
 
-![Figure 1. Container terminal main areas: seaside (quay crane), transport area (transfer vehicles), landside (storage yard, gate).](/literature/carlo_2014/figure1.png)
+![Figure 1. Container terminal main areas: seaside (quay crane), transport area (transfer vehicles), landside (storage yard, gate).](figure1.png)
 
-![Figure 2. Unloading and loading processes at container terminals: arrival, unloading and loading of the ship, transport of containers, stack, inter-terminal transport, other modalities, with the unload and load plans.](/literature/carlo_2014/figure2.png)
+![Figure 2. Unloading and loading processes at container terminals: arrival, unloading and loading of the ship, transport of containers, stack, inter-terminal transport, other modalities, with the unload and load plans.](figure2.png)
 
 ### 2.2 Decision problems and vehicles (Sec. 2)
 
@@ -69,9 +103,9 @@ A container terminal has five areas: berth, quay, **transport area**, storage ya
 - **Vehicle classes.** *Self-lifting* vehicles (straddle carriers, automated lifting vehicles, ALVs) can lift containers themselves. *Non-lifting* vehicles (yard trucks, AGVs) need external equipment to load and unload (Figure 3). AGVs are fully automated and controlled by a central computer that decides the dispatching and movement of each vehicle.
 - **Trends.** Automation, free-travelling GPS-guided AGVs (harder traffic management), zone-based control with permission requests, deadlock prevention versus resolution, twin-load vehicles, double cycling and indented berths.
 
-![Figure 3. Two common transfer vehicles: (a) straddle carrier, (b) AGV.](/literature/carlo_2014/figure3.png)
+![Figure 3. Two common transfer vehicles: (a) straddle carrier, (b) AGV.](figure3.png)
 
-![Figure 4. Yard layout with straddle carriers (a) and by blocks (b).](/literature/carlo_2014/figure4.png)
+![Figure 4. Yard layout with straddle carriers (a) and by blocks (b).](figure4.png)
 
 ### 2.3 Search and corpus (Sec. 3)
 
@@ -79,7 +113,7 @@ A container terminal has five areas: berth, quay, **transport area**, storage ya
 - **Corpus counts.** The text speaks of 55 journal articles (plus 6 book chapters). Figure 5 sums to 55 bars including "before 2004". Table A.1 has 56 rows. By matching the paper names and years in Table A.1 to the bars of Figure 5, every year matches exactly except 2008 (4 rows against 3 bars); the extra row is Gawrilow et al. (2008), which the reference list shows to be a book chapter. We therefore read **56 = 55 journal papers + 1 book chapter**, with 6 papers before 2004 and 50 from 2004 to 2012. This reconciliation is ours, not the authors'.
 - **Spread.** 132 authors, 30 journals; OR Spectrum contributed 16 papers and Transportation Research Part E 5. Most papers originate in Asia (23) and Europe (22).
 
-![Figure 5. Number of journal papers on container terminal transport operations published up to 2012.](/literature/carlo_2014/figure5.png)
+![Figure 5. Number of journal papers on container terminal transport operations published up to 2012.](figure5.png)
 
 ### 2.4 Classification scheme (Sec. 4, Table 4)
 

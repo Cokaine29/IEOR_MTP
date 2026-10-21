@@ -1,6 +1,6 @@
 'use client';
 
-/* The two study tables, moved from the Problem tab on 21 Oct 2026 unchanged. To be reviewed with the Literature tab. */
+/* The two study tables, from GAP_TABLES.md of the literature notes. To be replaced by visuals in Round B. */
 import { motion } from 'framer-motion';
 
 const fadeUp = {
@@ -98,17 +98,17 @@ export default function StudyTables() {
                 <tbody className="divide-y divide-zinc-200 text-sm font-medium text-zinc-700">
                   {
                     [
-                      ['Egbelu & Tanchoco 1984','Shop throughput (not crane-related)','No','No','Other rule combinations only','2 runs; no intervals','No'],
-                      ['Liu et al. 2001','Design targets; crane idle rate reported as an output','No','No','None','One 24 h run','No'],
-                      ['Briskorn et al. 2006','Waterside productivity (crane-related)','No','No (noise present, not varied)','Greedy and Hungarian due-time rules','100 runs of 11 h; no intervals','No'],
-                      ['Grunow et al. 2006','Processing time incl. crane waiting (crane-related)','No','Yes (cycle-time variance x0.5, x1, x2)','On-line NV/FCFS rule; lower bound','10 replications; spread not shown','No'],
-                      ['Kim & Bae 2004','Crane delay, then travel (crane-related)','No','Yes (noise swept)','STT/D, EDD, r-SI','10 replications; 1% tests','No'],
-                      ['Angeloudis & Bell 2010','Net benefit (no crane metric)','No','No (weights and fleet size swept)','Closest, Greedy, First, mTSP','Seeds not stated; no intervals','No'],
+                      ['Egbelu & Tanchoco 1984','Shop throughput (not crane-related)','No','No','Other rule combinations only','2 runs, no intervals','No'],
+                      ['Liu et al. 2001','Design targets, crane idle rate reported as an output','No','No','None','One 24 h run','No'],
+                      ['Briskorn et al. 2006','Waterside productivity (crane-related)','No','No (noise present, not varied)','Greedy and Hungarian due-time rules','100 runs of 11 h, no intervals','No'],
+                      ['Grunow et al. 2006','Processing time incl. crane waiting (crane-related)','No','Yes (cycle-time variance x0.5, x1, x2)','On-line NV/FCFS rule, lower bound','10 replications, spread not shown','No'],
+                      ['Kim & Bae 2004','Crane delay, then travel (crane-related)','No','Yes (noise swept)','STT/D, EDD, r-SI','10 replications, 1% tests','No'],
+                      ['Angeloudis & Bell 2010','Net benefit (no crane metric)','No','No (weights and fleet size swept)','Closest, Greedy, First, mTSP','Seeds not stated, no intervals','No'],
                       ['Song et al. 2024','Longest vehicle completion time (not crane-related)','No','No (charging threshold swept)','One-threshold charging only','Runs not described','No'],
-                      ['Zhao, Li & Yang 2025','Vehicle energy (not crane-related)','No','No','Greedy start; GA','10 groups; no tests','No'],
-                      ['Choe et al. 2016','Crane makespan + empty travel (crane-related)','Yes (supervised preference learning)','Two scenario families, not graded','Rolling-horizon GA, policy search, Q-learning','50 scenarios; t-tests','No'],
-                      ['Gao et al. 2023','Earliness + lateness; congestion (not crane-related)','Yes (tabular Q-learning for routing)','No','CNA, Dijkstra, GA, PSO','GA/PSO mean of 10 runs; own runs not described','Contract-net agents (not multi-agent RL)'],
-                      ['Zheng et al. 2022','Crane waiting for vehicle + vehicle completion (crane-related)','Yes (DQN)','No (one level; sweep is over size)','Static GA; FCFS, STD, LWT','Not described; no intervals','No'],
+                      ['Zhao, Li & Yang 2025','Vehicle energy (not crane-related)','No','No','Greedy start, GA','10 groups, no tests','No'],
+                      ['Choe et al. 2016','Crane makespan + empty travel (crane-related)','Yes (supervised preference learning)','Two scenario families, not graded','Rolling-horizon GA, policy search, Q-learning','50 scenarios, t-tests','No'],
+                      ['Gao et al. 2023','Earliness + lateness, congestion (not crane-related)','Yes (tabular Q-learning for routing)','No','CNA, Dijkstra, GA, PSO','GA/PSO mean of 10 runs, own runs not described','Contract-net agents (not multi-agent RL)'],
+                      ['Zheng et al. 2022','Crane waiting for vehicle + vehicle completion (crane-related)','Yes (DQN)','No (one level, sweep is over size)','Static GA, FCFS, STD, LWT','Not described, no intervals','No'],
                     ].map((row, i) => (
                       <tr key={i} className="hover:bg-zinc-50">
                         <td className="px-4 py-3 font-bold text-zinc-900 sticky left-0 bg-white shadow-[1px_0_0_rgba(0,0,0,0.05)] z-10">{row[0]}</td>
@@ -129,13 +129,13 @@ export default function StudyTables() {
           <motion.div variants={fadeUp} className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
             <h3 className="font-bold text-zinc-900 mb-4">What the tables show</h3>
             <ul className="list-disc pl-5 space-y-2 text-zinc-700 text-sm mb-4">
-              <li>Among these 11 studies, no learning-based dispatcher was evaluated across graded uncertainty levels; the two studies with level sweeps (Kim & Bae 2004; Grunow et al. 2006) are not learning-based.</li>
+              <li>Among these 11 studies, no learning-based dispatcher was evaluated across graded uncertainty levels. The two studies with level sweeps, Kim & Bae (2004) and Grunow et al. (2006), are not learning-based.</li>
               <li>No study compares rules, a metaheuristic, tabular Q-learning and DQN on the same scenarios with seeds and intervals.</li>
               <li>No study in this set uses multi-agent learning.</li>
               <li>Vehicle breakdown and battery are not modelled as random in any of them.</li>
               <li>Gao et al. (2023) list deep reinforcement learning as future work for dispatching AGVs together with other equipment.</li>
             </ul>
-            <p className="text-xs text-zinc-500 italic">This summarises the papers we read; it is not evidence about the wider literature. A &lsquo;?&rsquo; means the paper does not describe it, not that the paper is weak.</p>
+            <p className="text-xs text-zinc-500 italic">This summarises the papers we read. It is not evidence about the wider literature. A &lsquo;?&rsquo; means the paper does not describe it, not that the paper is weak.</p>
           </motion.div>
     </motion.section>
   );
