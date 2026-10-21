@@ -42,7 +42,8 @@ const STAKES = [
     icon: Truck, stat: '155 AGVs',
     title: 'One System Dispatches Them All',
     desc: 'At Yangshan Phase IV in Shanghai, one central system dispatches 155 AGVs serving 29 quay cranes. The terminal handled more than 8 million TEU in 2025, and its fastest crane handles over 60 containers an hour. Each of those containers needed an AGV chosen for it.',
-    source: 'Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, 14 Aug 2026',
+    source: 'Shanghai Municipal People’s Government, Yangshan Port Phase IV Boasts World-Class Efficiency, news release, 14 Aug 2026',
+    href: 'https://english.shanghai.gov.cn/en-Latest-WhatsNew/20260814/f4427a05be154fc4957a5f62d67d6f2e.html',
   },
   {
     icon: FileSearch, stat: '1 of 20 Studies',
@@ -242,7 +243,11 @@ export default function HomePage() {
                 <div className="text-2xl font-bold tracking-tight tabular-nums">{s.stat}</div>
                 <h3 className="mb-3 mt-1 text-sm font-semibold text-zinc-800">{s.title}</h3>
                 <p className="mb-5 flex-grow text-sm leading-relaxed text-zinc-600">{s.desc}</p>
-                <p className="border-t border-zinc-200 pt-3 text-xs italic leading-relaxed text-zinc-500">{s.source}</p>
+                <p className="border-t border-zinc-200 pt-3 text-xs italic leading-relaxed text-zinc-500">
+                  {'href' in s && s.href
+                    ? <a href={s.href} target="_blank" rel="noreferrer" className="underline decoration-zinc-300 underline-offset-2 hover:text-zinc-700">{s.source}</a>
+                    : s.source}
+                </p>
               </motion.div>
             ))}
           </div>
