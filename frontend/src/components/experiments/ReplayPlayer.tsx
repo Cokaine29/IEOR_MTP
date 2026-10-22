@@ -355,6 +355,7 @@ export default function ReplayPlayer({ pairs }: { pairs: ReplayPair[] }) {
 const SEA = 66;                       // drawn sea band north of the quay edge (schematic)
 const BAY_W = 12.2;                   // one 40 ft bay (schematic)
 const VESSEL = { y0: -56, y1: -5 };   // hull, schematic beam about 51 m
+const YARD_DEPTH = 46;               // drawn depth of each yard block behind its racks (schematic, the real blocks are longer)
 const LOA = 400;                      // vessel length overall (m), schematic: a large container ship centred on the two cranes
 const ZONE_INFO = [
   'The quay apron is 30 m between the crane rails and holds the manual truck lanes and hatch covers. No AGVs drive here (Liu et al., 2016; Wu et al., 2016).',
@@ -406,6 +407,11 @@ export function TerminalMap({ r, t, prep, labels = true }: {
   const shipMid = (L.qcs[0].x + L.qcs[L.qcs.length - 1].x) / 2;
   const hullX0 = shipMid - LOA / 2, hullX1 = shipMid + LOA / 2;
   const clipId = `clip-${r.name}`;
+  // yard blocks behind the transfer racks (schematic depth, not part of the simulated area): container stacks and one
+  // automated yard crane (ARMG) per block, drawn at the rack end while an AGV visits a rack of that block
+  const yb0 = L.rackY + L.agvLen / 2 + (L.rackLane ?? 0) - 2;
+  const H = Math.max(L.height, yb0 + YARD_DEPTH + 2);
+  const busyBlocks = new Set(r.racks.filter(([, s0, e0]) => s0 <= t && t < e0).map(([, , , b]) => b));
 
   // containers currently in each worked bay (5 x 5 stacks drawn)
   const worked = new Map<number, { present: number; cap: number; active: boolean }>();
@@ -423,10 +429,10 @@ export function TerminalMap({ r, t, prep, labels = true }: {
   });
 
   return (
-    <svg viewBox={`${-pad} ${-SEA - pad} ${L.width + 2 * pad} ${L.height + SEA + 2 * pad}`} className="w-full rounded-xl border border-zinc-200 bg-white"
-      role="img" aria-label="Plan view of the simulated terminal with the vessel, two quay cranes, AGVs and yard blocks">
+    <svg viewBox={`${-pad} ${-SEA - pad} ${L.width + 2 * pad} ${H + SEA + 2 * pad}`} className="w-full rounded-xl border border-zinc-200 bg-white"
+      role="img" aria-label="Plan view of the simulated terminal with the vessel, quay cranes, AGVs, transfer racks, yard blocks and yard cranes">
       <defs>
-        <clipPath id={clipId}><rect x={0} y={-SEA} width={L.width} height={L.height + SEA} /></clipPath>
+        <clipPath id={clipId}><rect x={0} y={-SEA} width={L.width} height={H + SEA} /></clipPath>
       </defs>
       <g clipPath={`url(#${clipId})`}>
         {/* sea and vessel (schematic) */}
@@ -491,18 +497,50 @@ export function TerminalMap({ r, t, prep, labels = true }: {
         {L.slots.map((x, k) => (
           <rect key={`s${k}`} x={x - L.slotW / 2} y={L.bufY0 + 1} width={L.slotW} height={L.bufY1 - L.bufY0 - 2} fill="none" stroke="#d4d4d8" strokeWidth={0.25} pointerEvents="none" />
         ))}
-        {/* yard blocks and racks */}
-        {L.blocks.map((b) => (
-          <g key={`b${b.id}`} pointerEvents="none">
-            <rect x={b.x0} y={L.rackY + L.agvLen / 2 - 2 + (L.rackLane ?? 0)} width={b.w} height={9} fill="#d4d4d8" rx={0.8} />
-            <text x={b.x0 + b.w / 2} y={L.rackY + L.agvLen / 2 + 4 + (L.rackLane ?? 0)} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
-            {b.racks.map((x, k) => {
-              const on = activeRacks.has(`${b.id}-${k + 1}`);
-              return <rect key={k} x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1 + (L.rackLane ?? 0)}
-                fill={on ? '#fcd34d' : 'none'} stroke={on ? '#d97706' : '#d4d4d8'} strokeWidth={on ? 0.8 : 0.25} />;
-            })}
-          </g>
-        ))}
+        {/* yard blocks, stacks, yard cranes and transfer racks */}
+        <rect x={0} y={L.height} width={L.width} height={H - L.height} fill="#f4f4f5" />
+        {L.blocks.map((b) => {
+          const cols = 10, cw = 2.44, gap = (b.w - 2 - cols * cw) / (cols - 1);
+          const rows = 3, rl = 12.2, ry0 = yb0 + 6;
+          const busy = busyBlocks.has(b.id);
+          const yc = busy ? yb0 + 3.5 : yb0 + 6 + (rows * (rl + 1)) * 0.55;
+          const stacks: React.JSX.Element[] = [];
+          for (let c = 0; c < cols; c++) for (let w = 0; w < rows; w++) {
+            const h = (b.id * 7 + c * 3 + w * 5) % 9;
+            if (h === 0) continue;                                   // a free stack
+            stacks.push(<rect key={`${c}-${w}`} x={b.x0 + 1 + c * (cw + gap)} y={ry0 + w * (rl + 1)} width={cw} height={rl}
+              fill={['#9a3412', '#115e59', '#52525b', '#854d0e', '#1e3a8a'][(c + w + b.id) % 5]} opacity={0.35 + 0.08 * (h % 5)} />);
+          }
+          return (
+            <g key={`b${b.id}`} pointerEvents="none">
+              <rect x={b.x0} y={yb0} width={b.w} height={YARD_DEPTH} fill="#e4e4e7" stroke="#a1a1aa" strokeWidth={0.3} />
+              {stacks}
+              {/* ARMG rails and gantry */}
+              <line x1={b.x0 - 0.6} y1={yb0} x2={b.x0 - 0.6} y2={yb0 + YARD_DEPTH} stroke="#52525b" strokeWidth={0.35} />
+              <line x1={b.x0 + b.w + 0.6} y1={yb0} x2={b.x0 + b.w + 0.6} y2={yb0 + YARD_DEPTH} stroke="#52525b" strokeWidth={0.35} />
+              <g transform={`translate(0 ${yc})`}>
+                <rect x={b.x0 - 1.6} y={-1.6} width={b.w + 3.2} height={3.2} fill={busy ? '#1d4ed8' : '#64748b'} rx={0.4} />
+                <rect x={b.x0 - 2.2} y={-2.4} width={2.2} height={4.8} fill="#1e293b" />
+                <rect x={b.x0 + b.w} y={-2.4} width={2.2} height={4.8} fill="#1e293b" />
+                <rect x={b.x0 + b.w / 2 - 2} y={-1.2} width={4} height={2.4} fill="#f8fafc" stroke="#1e293b" strokeWidth={0.3} />
+              </g>
+              {labels && <text x={b.x0 + b.w + 2.6} y={yc + 1.2} fontSize={2.6} fill={busy ? '#1d4ed8' : '#475569'}>YC</text>}
+              <rect x={b.x0 + 0.5} y={yb0 + YARD_DEPTH - 6.5} width={b.w - 1} height={5.5} fill="#ffffff" fillOpacity={0.85} rx={0.8} />
+              <text x={b.x0 + b.w / 2} y={yb0 + YARD_DEPTH - 2.6} fontSize={3.4} textAnchor="middle" fill="#3f3f46">Block {b.id}</text>
+              {b.racks.map((x, k) => {
+                const on = activeRacks.has(`${b.id}-${k + 1}`);
+                return (
+                  <g key={k}>
+                    <rect x={x - 2.2} y={L.rackY - L.agvLen / 2 - 1} width={4.4} height={L.agvLen + 1 + (L.rackLane ?? 0)}
+                      fill={on ? '#fcd34d' : '#ffffff'} fillOpacity={on ? 1 : 0.6} stroke={on ? '#d97706' : '#a1a1aa'} strokeWidth={on ? 0.8 : 0.3} />
+                    <rect x={x - 1.9} y={yb0 - 1.6} width={3.8} height={1.6} fill={on ? '#d97706' : '#71717a'} />
+                    {labels && <text x={x} y={L.rackY - L.agvLen / 2 + 2.4} fontSize={2.2} textAnchor="middle" fill="#71717a">R{k + 1}</text>}
+                  </g>
+                );
+              })}
+            </g>
+          );
+        })}
 
         {/* AGVs (drawn before the cranes: they drive underneath the backreach) */}
         {r.agvs.map((a, k) => {
