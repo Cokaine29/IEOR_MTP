@@ -205,7 +205,7 @@ export function Readouts({ r, t, prep, playing, onToggle }: {
             <div key={q.id} className="flex flex-col gap-1.5">
               <div className="flex items-baseline justify-between gap-2 text-sm">
                 <span className="font-medium text-zinc-900">QC{q.id}</span>
-                <span className={s.waiting ? 'font-medium text-red-600' : 'text-zinc-600'}>{phase}</span>
+                <span className={`truncate ${s.waiting ? 'font-medium text-red-600' : 'text-zinc-600'}`}>{phase}</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200">
                 <div className="h-full rounded-full bg-zinc-800" style={{ width: `${(100 * s.done) / s.total}%` }} />
@@ -226,10 +226,10 @@ export function Readouts({ r, t, prep, playing, onToggle }: {
             const s = agvStatus(r, a, t, prep);
             const col = AGV_COLORS[k % AGV_COLORS.length];
             return (
-              <li key={a.id} className="flex items-center gap-3 text-sm">
+              <li key={a.id} className="flex h-6 items-center gap-3 text-sm" title={s.text}>
                 <span className="flex h-5 w-9 shrink-0 items-center justify-center rounded text-[11px] font-bold"
                   style={{ background: s.loaded ? col : '#fff', color: s.loaded ? '#fff' : col, border: `2px solid ${col}` }}>{a.id}</span>
-                <span className="leading-snug text-zinc-700">{s.text}</span>
+                <span className="min-w-0 truncate text-zinc-700">{s.text}</span>
               </li>
             );
           })}
