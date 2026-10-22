@@ -4,9 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 import { AGV_COLORS, Replay, TerminalMap, agvPose, fmtTime, lastIdx, prepare, stats } from './ReplayPlayer';
 
-const FILE = 'n12_d0_nvfcfs';     // model v5, recorded by ACT_MTP webapp/export_replays.py home5
+const FILE = 'n16_d0_nvfcfs';     // model v6, recorded by ACT_MTP webapp/export_replays.py v6
 const SPEED = 20;        // simulated seconds per real second
-const START = 2150;      // start inside the run, when all twelve AGVs are busy
+const START = 2040;      // start inside the run, just before all four cranes wait for an AGV (about 2,090 s)
 const PX_PER_M = 2;      // the 2.1 km yard is drawn to scale and scrolled sideways
 
 const ORANGE = '#ea580c';   // container
@@ -366,7 +366,7 @@ function YardStrip({ r, t, view, onSeek }: { r: Replay; t: number; view: [number
       <p className="text-xs leading-relaxed text-zinc-600">
         These two ranges are an assumption of this thesis. No published source says where Yangshan Phase IV stores the containers
         of one ship, so the ranges were set so that the cranes come close to the productivity of the simulation study by <i>Luo (2016)</i>,
-        30.5 moves per hour with two AGVs per crane. With loaded AGVs at 3.5 m/s the cranes reach about 26. The 50 blocks, about 2.1 km, fit within the 2,350 m quay
+        30.5 moves per hour with two AGVs per crane. With loaded AGVs at 3.5 m/s and traffic, the cranes reach about 23 in model v6 (Experiment 2.1). The 50 blocks, about 2.1 km, fit within the 2,350 m quay
         of <i>Liu et al. (2016)</i>.
       </p>
     </div>
@@ -374,11 +374,11 @@ function YardStrip({ r, t, view, onSeek }: { r: Replay; t: number; view: [number
 }
 
 const SPECS: { pic: () => React.JSX.Element; value: string; detail: string; source: string }[] = [
-  { pic: PicCrane, value: '75 s', detail: 'per crane move, 2 quay cranes', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
-  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '12 AGVs, 6 per crane, at 6 m/s empty and 3.5 m/s loaded on straights, 3 m/s in turns of 10 m radius', source: 'Luo, 2016; Luo, 2016b; Zhao et al., 2025' },
+  { pic: PicCrane, value: '75 s', detail: 'per crane move, 4 quay cranes 82 m apart', source: 'Zhao et al., 2025; Liu, Jula & Ioannou, 2001' },
+  { pic: PicAgv, value: '14.8 × 3.0 m', detail: '16 AGVs, 4 per crane, at 6 m/s empty and 3.5 m/s loaded on straights, 3 m/s in turns of 10 m radius', source: 'Luo, 2016; Luo, 2016b; Zhao et al., 2025' },
   { pic: PicYard, value: '50 blocks', detail: '31 m wide with 5 transfer racks each, about 2.1 km of yard in all', source: 'Wu et al., 2016; Liu et al., 2016' },
   { pic: PicLanes, value: '81.5 m', detail: 'from crane to yard, across 7 handover lanes, a 27 m buffer and 6 driving lanes', source: 'Liu et al., 2016; Wu et al., 2016' },
-  { pic: PicWork, value: '200 containers', detail: '100 discharge (orange) and 100 load (teal) in each run', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
+  { pic: PicWork, value: '400 containers', detail: '200 discharge (orange) and 200 load (teal) in each run', source: 'Kim & Bae, 2004; Zhao et al., 2025' },
 ];
 
 /* ---------------------------------------------------------------- section */
@@ -391,7 +391,7 @@ export default function SetupFigure() {
   const last = useRef<number | null>(null);
 
   useEffect(() => {
-    fetch(`/replays/v5/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
+    fetch(`/replays/v6/${FILE}.json`).then((res) => res.json()).then(setR).catch(() => setR(null));
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
   }, []);
 
@@ -412,7 +412,7 @@ export default function SetupFigure() {
 
   const prep = useMemo(() => (r ? prepare(r) : {}), [r]);
 
-  // start the map centred on the two cranes
+  // start the map centred on the cranes
   const scroller = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<[number, number] | null>(null);
   const onScroll = () => {
@@ -421,7 +421,7 @@ export default function SetupFigure() {
   };
   useEffect(() => {
     if (!r || !scroller.current) return;
-    const mid = (r.layout.qcs[0].x + r.layout.qcs[1].x) / 2;
+    const mid = r.layout.qcs.reduce((a, q) => a + q.x, 0) / r.layout.qcs.length;
     scroller.current.scrollLeft = mid * PX_PER_M - scroller.current.clientWidth / 2;
   }, [r]);
 
@@ -430,7 +430,7 @@ export default function SetupFigure() {
       <div className="flex flex-col gap-3">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900">The simulated terminal</h2>
         <p className="leading-relaxed text-zinc-700">
-          Two quay cranes unload and load a vessel. Every container passes through the same chain of equipment, in one
+          Four quay cranes unload and load one vessel. Every container passes through the same chain of equipment, in one
           direction or the other, and the AGVs are the link the dispatcher controls.
         </p>
       </div>
@@ -464,9 +464,9 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
         </div>
         <figcaption className="text-sm leading-relaxed text-zinc-600">
-          A recording of one simulation run, played at {SPEED}× real time. Twelve AGVs are dispatched by the NV/FCFS rule with
-          a window of 10 jobs, and the cranes work exactly at their planned times. Each AGV books the road ahead of it, its body
-          plus its braking distance, so AGVs wait for each other and never collide. The map opens at the two cranes. Scroll it
+          A recording of one simulation run, played at {SPEED}× real time. Sixteen AGVs are dispatched by the NV/FCFS rule with
+          its own window of 5 jobs, and the cranes work exactly at their planned times. Each AGV books the road ahead of it, its body
+          plus its braking distance, so AGVs wait for each other and never collide. The map opens at the four cranes. Scroll it
           sideways, or use the strip below it, to follow AGVs to distant blocks. Each AGV takes the nearest free rack of its block,
           raises or lowers its platform and drives into the rack and back out. Lanes, slots, blocks and racks are drawn to scale,
           while the crane structures and the vessel are schematic.
