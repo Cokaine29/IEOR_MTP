@@ -462,13 +462,14 @@ export default function SetupFigure() {
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-3" style={{ background: ORANGE }} />container on a crane trolley</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" />rack visit in progress</span>
           <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm border-2 border-red-600 bg-red-100" />crane waiting for an AGV</span>
+          <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-5 rounded-sm" style={{ background: '#64748b' }} />yard crane (YC) over its block, blue while it serves a rack</span>
         </div>
         <figcaption className="text-sm leading-relaxed text-zinc-600">
           A recording of one simulation run, played at {SPEED}× real time. Sixteen AGVs are dispatched by the NV/FCFS rule with
           its own window of 5 jobs, and the cranes work exactly at their planned times. Each AGV books the road ahead of it, its body
           plus its braking distance, so AGVs wait for each other and never collide. The map opens at the four cranes. Scroll it
           sideways, or use the strip below it, to follow AGVs to distant blocks. Each AGV takes the nearest free rack of its block,
-          raises or lowers its platform and drives into the rack and back out. Lanes, slots, blocks and racks are drawn to scale,
+          raises or lowers its platform and drives into the rack (R1 to R5) and back out. The yard crane of the block then moves the container between the rack and the stacks. The simulator counts the rack visit as 51 s and does not model the yard crane itself, so the yard cranes and the stacks are drawn only to show where the racks lead. Lanes, slots, blocks and racks are drawn to scale,
           while the crane structures and the vessel are schematic.
         </figcaption>
       </figure>
